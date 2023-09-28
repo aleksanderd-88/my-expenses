@@ -6,7 +6,8 @@
 
   //- Define `dark-mode` theme colors
   body.dark & {
-    background-color: $white !important;
-    color: $dark !important;
+    background-color: lighten($dark, 5%) !important;
+    border: 2px solid lighten($dark, 18%) !important;
+    color: $white!important;
   }
 }
