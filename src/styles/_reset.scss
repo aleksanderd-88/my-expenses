@@ -22,6 +22,17 @@ textarea,
   font-family: 'Montserrat', sans-serif;
 }
 
+body,
+html {
+  background-color: #e8eaf6;
+  transition: background-color .25s, color .25s ease;
+
+  &.dark {
+    background-color: #212121;
+    color: #e8eaf6;
+  }
+}
+
 ol, ul {
   list-style: none;
 }
