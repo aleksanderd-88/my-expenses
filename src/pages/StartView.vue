@@ -1,6 +1,6 @@
 <template>
   <div>
-    Start view
+    <p class="caption center-align">No records created yet ...</p>
   </div>
 </template>
 
