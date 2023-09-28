@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="caption center-align">No records created yet ...</p>
+    <p class="start__caption caption center-align">No records created yet ...</p>
   </div>
 </template>
 
@@ -8,6 +8,11 @@
 
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+  .start {
+    &__caption {
+      width: 100%;
+      text-align: center;
+    }
+  }
 </style>
