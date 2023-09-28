@@ -24,12 +24,12 @@ textarea,
 
 body,
 html {
-  background-color: #e8eaf6;
+  background-color: $white;
   transition: background-color .25s, color .25s ease;
 
   &.dark {
-    background-color: #212121;
-    color: #e8eaf6;
+    background-color: $dark;
+    color: $white;
   }
 }
 

@@ -16,6 +16,7 @@
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile"
   },
   "dependencies": {
+    "light-icons": "^1.0.10",
     "lightvue": "^1.5.1",
     "pinia": "^2.1.6",
     "vue": "^3.3.4",

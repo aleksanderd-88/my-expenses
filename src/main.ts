@@ -1,4 +1,5 @@
 import '@/styles/main.scss'
+import "light-icons/dist/light-icon.css";
 
 import { createApp } from 'vue'
 import { createPinia } from 'pinia'
