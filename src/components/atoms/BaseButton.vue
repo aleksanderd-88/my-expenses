@@ -43,12 +43,5 @@ defineProps({
         background: $dark !important;
       }
     }
-
-
-    //- Define `dark-mode` theme colors
-    body.dark & {
-      background-color: $white !important;
-      color: $dark !important;
-    }
   }
 </style>

@@ -1,0 +1,12 @@
+//- Lightvue - button
+.lv-button {
+  &.--deep-shadow {
+    box-shadow: 0 6px 16px -1px rgba($dark, .5) !important;
+  }
+
+  //- Define `dark-mode` theme colors
+  body.dark & {
+    background-color: $white !important;
+    color: $dark !important;
+  }
+}
