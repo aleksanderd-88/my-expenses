@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="start__caption caption center-align">No records created yet ...</p>
+    <p class="start__caption caption center-align">No expenses created yet ...</p>
     <BaseButton class="start__add-btn" icon="plus" deep-shadow />
   </div>
 </template>
