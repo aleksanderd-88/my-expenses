@@ -7,7 +7,6 @@
 </template>
 
 <script setup lang="ts">
-import LvButton from 'lightvue/button'
 import ripple from 'lightvue/ripple'
 
 const vRipple = ripple
