@@ -14,6 +14,7 @@
               icon="stack"
               icon-left
               class="start__action-btn"
+              @click="displayExpenseDialog()"
             >
               Add expenses
             </BaseButton>
@@ -48,17 +49,90 @@
         @click="togglePanel($event)"
       />
     </div>
+
+    <LvDialog 
+      header="Add new expense" 
+      v-model="expenseDialogIsVisible"
+      :style="{ 
+        width: '95%',
+        maxWidth: '700px'
+      }"
+    >
+      <LvInput 
+        type="text"
+        v-model="expense.name"
+        label="Give your expense a name"
+        placeholder="E.g. phone bills"
+        bottom-bar
+        clearable 
+      />
+
+      <div class="col col--flex">
+        <LvInput 
+          type="text"
+          v-model="expense.cost"
+          label="Enter expense cost"
+          placeholder="E.g. $59.99"
+          bottom-bar
+          clearable 
+        />
+
+        <LvInput 
+          type="date"
+          v-model="expense.date"
+          label="Enter due date"
+          bottom-bar
+          clearable 
+        />
+      </div>
+
+      <template #footer>
+        <BaseButton 
+          icon="x" 
+          class="lv-button--ml-10"
+          @click="closeExpenseDialog()"
+        >
+          Cancel
+        </BaseButton>
+
+        <BaseButton 
+          icon="check"
+          class="lv-button--ml-10"
+          @click.prevent
+        >
+          Save
+        </BaseButton>
+      </template>
+    </LvDialog>
   </div>
 </template>
 
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvOverlayPanel  from 'lightvue/overlay-panel'
-import { ref } from 'vue'
+import LvDialog from 'lightvue/dialog';
+import LvInput from 'lightvue/input';
+import { reactive, ref } from 'vue'
 
 const op = ref()
+const expenseDialogIsVisible = ref(false)
+const expenseInitialValue = {
+  name: null,
+  cost: null,
+  date: null
+}
+
+const expense = reactive({ ...expenseInitialValue })
 
 const togglePanel = (event: Event) => op.value.toggle(event)
+const displayExpenseDialog = () => {
+  togglePanel(op.value)
+  expenseDialogIsVisible.value = true
+}
+const closeExpenseDialog = () => {
+  Object.assign(expense, expenseInitialValue)
+  expenseDialogIsVisible.value = false
+}
 </script>
 
 <style lang="scss" scoped>

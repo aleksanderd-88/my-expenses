@@ -1,7 +1,7 @@
 //- Lightvue - button
 .lv-button {
   $root: &;
-  
+
   &.--deep-shadow {
     box-shadow: 0 6px 16px -1px rgba($dark, .5) !important;
   }
@@ -23,5 +23,44 @@
     #{$root}__label {
       justify-content: center !important;
     }
+  }
+
+  &--ml-10 {
+    margin-right: unset !important;
+    margin-left: 10px !important;
+  }
+}
+
+//- Lightvue - dialog
+.lv-dialog {
+  &-footer {
+    display: flex !important;
+    justify-content: flex-end !important;
+  }
+}
+
+//- Lightvue - input
+.lv-input {
+  &__group {
+    flex: 1 !important;
+    width: 100% !important;
+  }
+
+  &__field {
+    &::after {
+      background-color: $dark !important;
+    }
+  }
+}
+
+//- Custom styles
+.col {
+  margin-top: 1rem;
+  
+  &--flex {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
   }
 }
