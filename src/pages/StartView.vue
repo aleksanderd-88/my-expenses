@@ -150,11 +150,17 @@ const closeExpenseDialog = () => {
       max-width: auto;
       display: flex;
       justify-content: flex-end;
+
+      @media (min-width: 1024px) {
+        right: 1.5rem;
+        bottom: 1.5rem;
+      }
     }
 
     &__add-btn {
       width: 70px;
       height: 70px;
+      border-radius: 50%;
     }
 
     &__panel {
