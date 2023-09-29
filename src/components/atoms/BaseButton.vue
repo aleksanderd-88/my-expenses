@@ -26,15 +26,10 @@ defineProps({
 
 <style lang="scss">
   .base-btn {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    text-align: center !important;
-    gap: 1rem !important;
     background-color: $dark !important;
 
     i {
-      font-size: 1.5rem;
+      font-size: 1.25rem;
     }
 
     &.dark-ripple {

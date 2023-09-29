@@ -1,7 +1,15 @@
 //- Lightvue - button
 .lv-button {
+  $root: &;
+  
   &.--deep-shadow {
     box-shadow: 0 6px 16px -1px rgba($dark, .5) !important;
+  }
+
+  &__label {
+    display: flex !important;
+    align-items: center !important;
+    gap: .5rem !important;
   }
 
   //- Define `dark-mode` theme colors
@@ -9,5 +17,11 @@
     background-color: lighten($dark, 5%) !important;
     border: 2px solid lighten($dark, 18%) !important;
     color: $white!important;
+  }
+
+  &--center-content {
+    #{$root}__label {
+      justify-content: center !important;
+    }
   }
 }
