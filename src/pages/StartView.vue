@@ -86,6 +86,26 @@
         />
       </div>
 
+      <h2 class="sub-headline">Optional</h2>
+
+      <div class="col col--flex">
+        <LvColorpicker 
+          v-model="initialColor" 
+          clearable
+          bottom-bar
+          label="Attach a color" 
+        />
+
+        <lv-dropdown 
+          v-model="selectedOption" 
+          :options="options" 
+          placeholder="Select bank account" 
+          optionLabel="label"
+          label="Choose bank account"
+          clearable 
+        />
+      </div>
+
       <template #footer>
         <BaseButton 
           icon="x" 
@@ -113,6 +133,8 @@ import LvOverlayPanel  from 'lightvue/overlay-panel'
 import LvDialog from 'lightvue/dialog';
 import LvInput from 'lightvue/input';
 import { reactive, ref } from 'vue'
+import LvColorpicker from 'lightvue/color-picker';
+import LvDropdown from 'lightvue/dropdown';
 
 const op = ref()
 const expenseDialogIsVisible = ref(false)
@@ -121,6 +143,14 @@ const expenseInitialValue = {
   cost: null,
   date: null
 }
+const initialColor = ref('#607C8A')
+const selectedOption = ref(null)
+const options = ref([
+  { id: 1, label: 'Bank account 1' },
+  { id: 2, label: 'Bank account 2' },
+  { id: 3, label: 'Bank account 3' },
+  { id: 4, label: 'Bank account 4' }
+])
 
 const expense = reactive({ ...expenseInitialValue })
 

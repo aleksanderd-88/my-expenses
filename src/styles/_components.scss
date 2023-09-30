@@ -53,6 +53,15 @@
   }
 }
 
+.lv-colorpicker-wrapper {
+  flex: 1 !important;
+  width: 100% !important;
+}
+
+.lv-dropdown {
+  flex: 1 !important;
+}
+
 //- Custom styles
 .col {
   margin-top: 1rem;
@@ -63,4 +72,13 @@
     flex-wrap: wrap;
     gap: 1rem;
   }
+}
+
+//- Headline
+//- Sub headline
+.sub-headline {
+  font-size: 1.25rem;
+  margin: 2rem 0 1.5rem;
+  font-weight: 600;
+  color: #495057;
 }
