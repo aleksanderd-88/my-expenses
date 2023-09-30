@@ -275,7 +275,10 @@ const createExpense = () => {
     return
 
   API.createExpense({ data: expense })
-    .then(() => doSearch(0, 10, 'id', 'asc'))
+    .then(() => {
+      doSearch(0, 10, 'id', 'asc')
+      resetDialog()
+    })
     .catch(err => console.log(`Error: ${ err }`))
 }
 </script>
