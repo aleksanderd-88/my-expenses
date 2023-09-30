@@ -76,7 +76,7 @@
         type="text"
         v-model="expense.name"
         label="Give your expense a name"
-        placeholder="E.g. phone bills"
+        placeholder="E.g. Telenor"
         bottom-bar
         clearable 
       />
@@ -86,7 +86,7 @@
           type="text"
           v-model="expense.cost"
           label="Enter expense cost"
-          placeholder="E.g. $59.99"
+          placeholder="E.g. 600 SEK"
           bottom-bar
           clearable 
         />
