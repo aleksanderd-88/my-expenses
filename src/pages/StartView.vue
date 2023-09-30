@@ -190,10 +190,10 @@ const table = reactive({
       sortable: true,
     },
     {
-      label: "Actions",
-      field: "actions",
+      label: "Created at",
+      field: "createdAt",
       width: "15%",
-      sortable: false,
+      sortable: true,
     }
   ],
   rows: [] as { id: number, name: string, cost: number }[],
@@ -206,7 +206,7 @@ const table = reactive({
 
 const expense = reactive({ ...expenseInitialValue })
 
-const rowClicked = (row: { id: number, name: string, cost: number }) => console.log(row);
+const rowClicked = (row: { id: number, name: string, cost: number, createdAt: string }) => console.log(row);
 
 const doSearch = (offset: number, limit: number, order: string, sort: string) => {
   console.log(offset, limit, order, sort);
