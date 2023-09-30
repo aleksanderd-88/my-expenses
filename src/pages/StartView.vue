@@ -16,6 +16,10 @@
       @row-clicked="rowClicked"
     />
 
+    <div class="col col--flex col--flex-end">
+      <h2 class="sub-headline">Total expenses: {{ totalExpense }} SEK</h2>
+    </div>
+
     <div class="start__actions">
       <LvOverlayPanel 
         ref="op" 
@@ -180,7 +184,7 @@ const table = reactive({
   isLoading: false,
   columns: [
     {
-      label: "No",
+      label: "No.",
       field: "no",
       width: "1%",
       sortable: true,
@@ -227,6 +231,10 @@ watch(() => expenseDialogIsVisible.value, (val: boolean) => {
 })
 
 const rowsLength = computed(() => table.rows.length)
+
+const totalExpense = computed(() => {
+  return table.rows.reduce((sum, item) => sum += item.cost, 0)
+})
 
 const rowClicked = (row: RowType) => console.log(row);
 
