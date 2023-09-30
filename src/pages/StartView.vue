@@ -1,6 +1,20 @@
 <template>
   <div>
-    <p class="start__caption caption center-align">No expenses created yet ...</p>
+    <p class="start__caption caption center-align" v-if="!data">No expenses created yet ...</p>
+
+    <TableLite
+      v-else
+      title="Expenses"
+      :is-slot-mode="true"
+      :is-loading="table.isLoading"
+      :columns="table.columns"
+      :rows="table.rows"
+      :total="table.totalRecordCount"
+      :sortable="table.sortable"
+      @do-search="doSearch"
+      @is-finished="table.isLoading = false"
+      @row-clicked="rowClicked"
+    />
 
     <div class="start__actions">
       <LvOverlayPanel 
@@ -137,6 +151,7 @@ import LvColorpicker from 'lightvue/color-picker';
 import LvDropdown from 'lightvue/dropdown';
 
 const op = ref()
+const data = ref(true)
 const expenseDialogIsVisible = ref(false)
 const expenseInitialValue = {
   name: null,
@@ -152,7 +167,101 @@ const options = ref([
   { id: 4, label: 'Bank account 4' }
 ])
 
+const table = reactive({
+  isLoading: false,
+  columns: [
+    {
+      label: "No",
+      field: "id",
+      width: "3%",
+      sortable: true,
+      isKey: true,
+    },
+    {
+      label: "Expense name",
+      field: "name",
+      width: "10%",
+      sortable: true,
+    },
+    {
+      label: "Cost",
+      field: "cost",
+      width: "15%",
+      sortable: true,
+    },
+    {
+      label: "Actions",
+      field: "actions",
+      width: "15%",
+      sortable: false,
+    }
+  ],
+  rows: [] as { id: number, name: string, cost: number }[],
+  totalRecordCount: 0,
+  sortable: {
+    order: "id",
+    sort: "asc",
+  },
+});
+
 const expense = reactive({ ...expenseInitialValue })
+
+const rowClicked = (row: { id: number, name: string, cost: number }) => console.log(row);
+
+const doSearch = (offset: number, limit: number, order: string, sort: string) => {
+  console.log(offset, limit, order, sort);
+  //   table.isLoading = true;
+
+  // Point: your response is like it on this example.
+  //   {
+  //   rows: [{
+  //     id: 1,
+  //     name: 'jack',
+  //     email: 'example@example.com'
+  //   },{
+  //     id: 2,
+  //     name: 'rose',
+  //     email: 'example@example.com'
+  //   }],
+  //   count: 2,
+  //   ...something
+  // }
+
+  const rows = [
+    {
+      id: 1,
+      name: 'Telenor',
+      cost: 600
+    },
+    {
+      id: 2,
+      name: 'Inet',
+      cost: 1200
+    },
+    {
+      id: 3,
+      name: 'Bil',
+      cost: 3200
+    },
+  ]
+
+  // refresh table rows
+  table.rows = rows;
+  table.totalRecordCount = rows.length
+  table.sortable.order = order;
+  table.sortable.sort = sort;
+  // End use axios to get data from Server
+};
+
+/**
+ * Table search finished event
+**/
+// const tableLoadingFinish = (elements) => {
+//   table.isLoading = false;
+// };
+
+// Get data first
+doSearch(0, 10, 'id', 'asc');
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 const displayExpenseDialog = () => {

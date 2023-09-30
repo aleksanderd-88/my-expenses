@@ -53,13 +53,27 @@
   }
 }
 
+//- Lightvue color picker
 .lv-colorpicker-wrapper {
   flex: 1 !important;
   width: 100% !important;
 }
 
+//- Lightvue drop down
 .lv-dropdown {
   flex: 1 !important;
+}
+
+//- Table lite
+.vtl {
+  &-card {
+    background-color: $white !important;
+    &-title {
+      font-size: 1.5rem;
+      margin: 2rem 0 1rem;
+      font-weight: 500;
+    }
+  }
 }
 
 //- Custom styles
