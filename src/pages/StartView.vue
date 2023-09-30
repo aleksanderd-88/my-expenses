@@ -93,7 +93,7 @@
 
         <LvInput 
           type="date"
-          v-model="expense.date"
+          v-model="expense.paymentDue"
           label="Enter due date"
           bottom-bar
           clearable 
@@ -124,7 +124,7 @@
         <BaseButton 
           icon="x" 
           class="lv-button--ml-10"
-          @click="closeExpenseDialog()"
+          @click="resetDialog()"
         >
           Cancel
         </BaseButton>
@@ -132,7 +132,7 @@
         <BaseButton 
           icon="check"
           class="lv-button--ml-10"
-          @click.prevent
+          @click="createExpense()"
         >
           Save
         </BaseButton>
@@ -146,7 +146,7 @@ import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvOverlayPanel  from 'lightvue/overlay-panel'
 import LvDialog from 'lightvue/dialog';
 import LvInput from 'lightvue/input';
-import { reactive, ref, computed } from 'vue'
+import { reactive, ref, computed, watch } from 'vue'
 import LvColorpicker from 'lightvue/color-picker';
 import LvDropdown from 'lightvue/dropdown';
 import API from '@/services/api'
@@ -165,7 +165,7 @@ const expenseDialogIsVisible = ref(false)
 const expenseInitialValue = {
   name: null,
   cost: null,
-  date: null
+  paymentDue: null
 }
 const initialColor = ref('#607C8A')
 const selectedOption = ref(null)
@@ -221,6 +221,11 @@ const table = reactive({
 
 const expense = reactive({ ...expenseInitialValue })
 
+watch(() => expenseDialogIsVisible.value, (val: boolean) => {
+  if ( !val ) 
+    resetDialog()
+})
+
 const rowsLength = computed(() => table.rows.length)
 
 const rowClicked = (row: RowType) => console.log(row);
@@ -254,14 +259,24 @@ const doSearch = (offset: number, limit: number, order: string, sort: string) =>
 // Get data first
 doSearch(0, 10, 'id', 'asc');
 
+const resetDialog = () => {
+  Object.assign(expense, expenseInitialValue)
+  expenseDialogIsVisible.value = false
+}
+
 const togglePanel = (event: Event) => op.value.toggle(event)
 const displayExpenseDialog = () => {
   togglePanel(op.value)
   expenseDialogIsVisible.value = true
 }
-const closeExpenseDialog = () => {
-  Object.assign(expense, expenseInitialValue)
-  expenseDialogIsVisible.value = false
+
+const createExpense = () => {
+  if ( !expense || Object.values(expense).some(o => !o) ) 
+    return
+
+  API.createExpense({ data: expense })
+    .then(() => doSearch(0, 10, 'id', 'asc'))
+    .catch(err => console.log(`Error: ${ err }`))
 }
 </script>
 
