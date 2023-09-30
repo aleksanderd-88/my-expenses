@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p class="start__caption caption center-align" v-if="!data">No expenses created yet ...</p>
+    <p class="start__caption caption center-align" v-if="!rowsLength">No expenses created yet ...</p>
 
     <TableLite
       v-else
@@ -146,12 +146,21 @@ import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvOverlayPanel  from 'lightvue/overlay-panel'
 import LvDialog from 'lightvue/dialog';
 import LvInput from 'lightvue/input';
-import { reactive, ref } from 'vue'
+import { reactive, ref, computed } from 'vue'
 import LvColorpicker from 'lightvue/color-picker';
 import LvDropdown from 'lightvue/dropdown';
+import API from '@/services/api'
+import Sugar from 'sugar-date'
+
+type RowType = { 
+  no: number, 
+  name: string, 
+  cost: number,
+  paymentDue: string,
+  createdAt: string 
+}
 
 const op = ref()
-const data = ref(true)
 const expenseDialogIsVisible = ref(false)
 const expenseInitialValue = {
   name: null,
@@ -172,85 +181,67 @@ const table = reactive({
   columns: [
     {
       label: "No",
-      field: "id",
-      width: "3%",
+      field: "no",
+      width: "1%",
       sortable: true,
       isKey: true,
     },
     {
       label: "Expense name",
       field: "name",
-      width: "10%",
+      width: "5%",
       sortable: true,
     },
     {
       label: "Cost",
       field: "cost",
-      width: "15%",
+      width: "5%",
+      sortable: true,
+    },
+    {
+      label: "Payment due",
+      field: "paymentDue",
+      width: "5%",
       sortable: true,
     },
     {
       label: "Created at",
       field: "createdAt",
-      width: "15%",
+      width: "5%",
       sortable: true,
     }
   ],
-  rows: [] as { id: number, name: string, cost: number }[],
+  rows: [] as RowType[],
   totalRecordCount: 0,
   sortable: {
-    order: "id",
+    order: "no",
     sort: "asc",
   },
 });
 
 const expense = reactive({ ...expenseInitialValue })
 
-const rowClicked = (row: { id: number, name: string, cost: number, createdAt: string }) => console.log(row);
+const rowsLength = computed(() => table.rows.length)
+
+const rowClicked = (row: RowType) => console.log(row);
 
 const doSearch = (offset: number, limit: number, order: string, sort: string) => {
   console.log(offset, limit, order, sort);
-  //   table.isLoading = true;
 
-  // Point: your response is like it on this example.
-  //   {
-  //   rows: [{
-  //     id: 1,
-  //     name: 'jack',
-  //     email: 'example@example.com'
-  //   },{
-  //     id: 2,
-  //     name: 'rose',
-  //     email: 'example@example.com'
-  //   }],
-  //   count: 2,
-  //   ...something
-  // }
+  return API.listExpenses().then(({ data }) => {
+    const rows = data.rows.map((r: RowType, index: number) => {
+      r.no = index + 1
+      r.createdAt = Sugar.Date(new Date(r.createdAt)).long().raw
+      r.paymentDue = Sugar.Date(new Date(r.paymentDue)).medium().raw
+      return r
+    })
 
-  const rows = [
-    {
-      id: 1,
-      name: 'Telenor',
-      cost: 600
-    },
-    {
-      id: 2,
-      name: 'Inet',
-      cost: 1200
-    },
-    {
-      id: 3,
-      name: 'Bil',
-      cost: 3200
-    },
-  ]
-
-  // refresh table rows
-  table.rows = rows;
-  table.totalRecordCount = rows.length
-  table.sortable.order = order;
-  table.sortable.sort = sort;
-  // End use axios to get data from Server
+    table.rows = rows;
+    table.totalRecordCount = rows.length
+    table.sortable.order = order;
+    table.sortable.sort = sort;
+  })
+  .catch((err) => console.log(`Error: ${ err }`))
 };
 
 /**
