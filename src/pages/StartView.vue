@@ -134,6 +134,16 @@
 
       <template #footer>
         <BaseButton 
+          icon="trash" 
+          class="lv-button--ml-10"
+          @click="deleteExpense()"
+          danger
+          v-if="editMode"
+        >
+          Delete
+        </BaseButton>
+
+        <BaseButton 
           icon="x" 
           class="lv-button--ml-10"
           @click="resetDialog()"
@@ -279,8 +289,10 @@ const expense = reactive({ ...expenseInitialValue })
 const income = reactive({ ...initialIncomeValue })
 
 watch(() => expenseDialogIsVisible.value, (val: boolean) => {
-  if ( !val ) 
+  if ( !val ) {
+    editMode.value = false
     resetDialog()
+  }
 })
 
 
@@ -344,6 +356,7 @@ const resetDialog = () => {
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 const displayExpenseDialog = () => {
+  editMode.value = false
   togglePanel(op.value)
   expenseDialogIsVisible.value = true
 }
@@ -392,6 +405,19 @@ const createIncome = () => {
     return
 
   API.updateIncome({ data: income })
+    .then(() => {
+      doSearch(0, 10, 'id', 'asc')
+      resetDialog()
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+}
+
+const deleteExpense = () => {
+  if ( !editMode.value || !rowData.value )
+    return
+
+  const id = rowData.value?._id
+  return API.deleteExpense(id)
     .then(() => {
       doSearch(0, 10, 'id', 'asc')
       resetDialog()

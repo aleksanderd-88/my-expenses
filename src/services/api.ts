@@ -21,6 +21,9 @@ export default {
   updateExpense(id: string, params: ParameterType): Promise<AxiosResponse> {
     return client.patch(`/expenses/${ id }/update`, params)
   },
+  deleteExpense(id: string): Promise<AxiosResponse> {
+    return client.delete(`/expenses/${ id }/delete`)
+  },
 
   //- Income
   updateIncome(params: ParameterType): Promise<AxiosResponse> {

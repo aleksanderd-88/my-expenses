@@ -1,5 +1,5 @@
 <template>
-  <LvButton class="base-btn dark-ripple" v-ripple>
+  <LvButton class="base-btn dark-ripple" :class="modifiedClass" v-ripple>
     <i :class="`light-icon-${ icon }`" v-if="iconLeft && icon"></i>
     <slot />
     <i :class="`light-icon-${ icon }`" v-if="!iconLeft && icon"></i>
@@ -8,11 +8,16 @@
 
 <script setup lang="ts">
 import ripple from 'lightvue/ripple'
+import { computed } from 'vue';
 
 const vRipple = ripple
 
-defineProps({
+const props = defineProps({
   iconLeft: {
+    type: Boolean,
+    default: false
+  },
+  danger: {
     type: Boolean,
     default: false
   },
@@ -22,6 +27,13 @@ defineProps({
   }
 })
 
+const modifiedClass = computed(() => {
+  let className = ''
+  if ( props.danger )
+    className += ' base-btn--bg-danger'
+
+  return className
+})
 </script>
 
 <style lang="scss">
@@ -37,5 +49,10 @@ defineProps({
         background: $dark !important;
       }
     }
+  
+    &--bg-danger {
+      background-color: $red !important;
+    }
+    
   }
 </style>
