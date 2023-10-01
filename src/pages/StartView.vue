@@ -14,6 +14,7 @@
         @do-search="doSearch"
         @is-finished="table.isLoading = false"
         @row-clicked="rowClicked"
+        :is-hide-paging="true"
       />
   
       <div class="col col--flex col--flex-end">
