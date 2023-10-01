@@ -43,6 +43,7 @@
               icon="currency-euro"
               icon-left
               class="start__action-btn"
+              @click="displayIncomeDialog()"
             >
               Add income
             </BaseButton>
@@ -68,6 +69,7 @@
       />
     </div>
 
+    <!-- Expense dialog -->
     <LvDialog 
       header="Add new expense" 
       v-model="expenseDialogIsVisible"
@@ -142,6 +144,44 @@
         </BaseButton>
       </template>
     </LvDialog>
+    <!-- End -->
+
+    <!-- Incomde dialog -->
+    <LvDialog 
+      header="Add income" 
+      v-model="incomeDialogVisible"
+      :style="{ 
+        width: '95%',
+        maxWidth: '700px'
+      }"
+    >
+      <LvInput 
+        type="text"
+        v-model="income.amount"
+        label="Enter monthly income"
+        placeholder="E.g. 34,000 SEK"
+        bottom-bar
+        clearable 
+      />
+
+      <template #footer>
+        <BaseButton 
+          icon="x" 
+          class="lv-button--ml-10"
+          @click="resetDialog()"
+        >
+          Cancel
+        </BaseButton>
+
+        <BaseButton 
+          icon="check"
+          class="lv-button--ml-10"
+          @click="createExpense()"
+        >
+          Save
+        </BaseButton>
+      </template>
+    </LvDialog>
   </div>
 </template>
 
@@ -168,11 +208,13 @@ type RowType = {
 
 const op = ref()
 const expenseDialogIsVisible = ref(false)
+const incomeDialogVisible = ref(false)
 const expenseInitialValue = {
   name: null,
   cost: null,
   paymentDue: null
 }
+const initialIncomeValue = { amount: null }
 const initialColor = ref('#607C8A')
 const selectedOption = ref(null)
 const options = ref([
@@ -226,8 +268,15 @@ const table = reactive({
 });
 
 const expense = reactive({ ...expenseInitialValue })
+const income = reactive({ ...initialIncomeValue })
 
 watch(() => expenseDialogIsVisible.value, (val: boolean) => {
+  if ( !val ) 
+    resetDialog()
+})
+
+
+watch(() => incomeDialogVisible.value, (val: boolean) => {
   if ( !val ) 
     resetDialog()
 })
@@ -272,13 +321,20 @@ doSearch(0, 10, 'id', 'asc');
 
 const resetDialog = () => {
   Object.assign(expense, expenseInitialValue)
+  Object.assign(income, initialIncomeValue)
   expenseDialogIsVisible.value = false
+  incomeDialogVisible.value = false
 }
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 const displayExpenseDialog = () => {
   togglePanel(op.value)
   expenseDialogIsVisible.value = true
+}
+
+const displayIncomeDialog = () => {
+  togglePanel(op.value)
+  incomeDialogVisible.value = true
 }
 
 const createExpense = () => {
