@@ -174,7 +174,7 @@
       <LvInput 
         type="text"
         v-model="income.amount"
-        label="Enter monthly income"
+        label="Enter monthly income (after taxes)"
         placeholder="E.g. 34,000 SEK"
         bottom-bar
         clearable 
