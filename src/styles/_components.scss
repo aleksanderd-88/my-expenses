@@ -12,13 +12,6 @@
     gap: .5rem !important;
   }
 
-  //- Define `dark-mode` theme colors
-  body.dark & {
-    background-color: lighten($dark, 5%) !important;
-    border: 2px solid lighten($dark, 18%) !important;
-    color: $white!important;
-  }
-
   &--center-content {
     #{$root}__label {
       justify-content: center !important;
@@ -28,6 +21,13 @@
   &--ml-10 {
     margin-right: unset !important;
     margin-left: 10px !important;
+  }
+
+  //- Define `dark-mode` theme colors
+  body.dark & {
+    background-color: lighten($dark, 5%) !important;
+    border: 2px solid lighten($dark, 18%) !important;
+    color: $white!important;
   }
 }
 
