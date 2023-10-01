@@ -1,6 +1,35 @@
 <template>
   <div>
+<<<<<<< Updated upstream
     <p class="start__caption caption center-align">No expenses created yet ...</p>
+=======
+    <p class="start__caption caption center-align" v-if="!rowsLength">No expenses created yet ...</p>
+    
+    <template v-else>
+      <TableLite
+        title="Expenses"
+        :is-slot-mode="true"
+        :is-loading="table.isLoading"
+        :columns="table.columns"
+        :rows="table.rows"
+        :total="table.totalRecordCount"
+        :sortable="table.sortable"
+        @do-search="doSearch"
+        @is-finished="table.isLoading = false"
+        @row-clicked="rowClicked"
+        @get-now-page="getCurrentPage($event)"
+      />
+  
+      <div class="col col--flex col--flex-end">
+        <h2 class="sub-headline">
+          Total expenses: {{ formatCurrency(Number(totalExpense)) }}
+          <p v-if="addedIncome"> 
+            Remaining income: <span :style="{ color: `${ Number(addedIncome) < Number(totalExpense) ? '#ef5350' : '#495057'}` }"><b>{{ formatCurrency(Number(addedIncome) - Number(totalExpense)) }}</b></span>
+          </p>
+        </h2>
+      </div>
+    </template>
+>>>>>>> Stashed changes
 
     <div class="start__actions">
       <LvOverlayPanel 
@@ -135,7 +164,30 @@ import LvInput from 'lightvue/input';
 import { reactive, ref } from 'vue'
 import LvColorpicker from 'lightvue/color-picker';
 import LvDropdown from 'lightvue/dropdown';
+<<<<<<< Updated upstream
 
+=======
+import API from '@/services/api'
+import Sugar from 'sugar-date'
+import { formatCurrency } from '@/utils/formatter'
+
+type RowType = { 
+  no: number, 
+  name: string, 
+  cost: number,
+  strCost: string
+  paymentDue: string,
+  createdAt: string 
+}
+const criteria = ref({
+  offset: 0, 
+  limit: 10,
+  order: 'asc',
+  sort: 'id',
+  perPage: 10,
+  page: 1
+})
+>>>>>>> Stashed changes
 const op = ref()
 const expenseDialogIsVisible = ref(false)
 const expenseInitialValue = {
@@ -153,15 +205,154 @@ const options = ref([
 ])
 
 const expense = reactive({ ...expenseInitialValue })
+<<<<<<< Updated upstream
+=======
+const income = reactive({ ...initialIncomeValue })
+
+watch(() => expenseDialogIsVisible.value, (val: boolean) => {
+  if ( !val ) {
+    editMode.value = false
+    resetDialog()
+  }
+})
+
+watch(() => incomeDialogVisible.value, (val: boolean) => {
+  if ( !val ) 
+    resetDialog()
+})
+
+const rowsLength = computed(() => table.rows.length)
+
+const totalExpense = computed(() => {
+  return table.rows.reduce((sum, item) => sum += item.cost, 0)
+})
+
+const rowClicked = (row: RowType) => {
+  editMode.value = true
+  rowData.value = row
+  expenseDialogIsVisible.value = true
+  const parsedDate = Sugar.Date(new Date(row.paymentDue)).format('{yyyy}-{MM}-{dd}').raw
+  Object.assign(expense, { ...row, paymentDue: parsedDate })
+};
+
+const doSearch = () => {
+  console.log(criteria.value.page);
+  return API.listExpenses({ data: criteria.value }).then((response) => {
+    const rows = response.data.rows.map((r: RowType, index: number) => {
+      r.no = index + 1
+      r.createdAt = Sugar.Date(new Date(r.createdAt)).long().raw
+      r.paymentDue = Sugar.Date(new Date(r.paymentDue)).medium().raw
+      r.strCost = formatCurrency(Number(r.cost))
+      return r
+    })
+
+    table.rows = rows;
+    table.totalRecordCount = response.data.count
+    table.sortable.order = criteria.value.order
+    table.sortable.sort = criteria.value.sort
+
+    getIncome()
+  })
+  .catch((err) => console.log(`Error: ${ err }`))
+};
+
+/**
+ * Table search finished event
+**/
+// const tableLoadingFinish = (elements) => {
+//   table.isLoading = false;
+// };
+
+// Get data first
+doSearch();
+
+const resetDialog = () => {
+  Object.assign(expense, expenseInitialValue)
+  Object.assign(income, initialIncomeValue)
+  expenseDialogIsVisible.value = false
+  incomeDialogVisible.value = false
+}
+>>>>>>> Stashed changes
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 const displayExpenseDialog = () => {
   togglePanel(op.value)
   expenseDialogIsVisible.value = true
 }
+<<<<<<< Updated upstream
 const closeExpenseDialog = () => {
   Object.assign(expense, expenseInitialValue)
   expenseDialogIsVisible.value = false
+=======
+
+const displayIncomeDialog = () => {
+  togglePanel(op.value)
+  incomeDialogVisible.value = true
+}
+
+const updateExpense = () => {
+  if ( !editMode.value || !rowData.value )
+    return
+
+  const id = rowData.value?._id
+  return API.updateExpense(id, { data: expense })
+    .then(() => {
+      doSearch()
+      resetDialog()
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+}
+
+const getCurrentPage = (page: number) => {
+  console.log(page);
+  criteria.value.page = page + 1
+};
+
+const createExpense = () => {
+
+  if ( editMode.value )
+    updateExpense()
+
+  if ( !expense || Object.values(expense).some(o => !o) ) 
+    return
+
+  API.createExpense({ data: expense })
+    .then(() => {
+      doSearch()
+      resetDialog()
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+}
+
+const getIncome = () => {
+  return API.getIncome().then(({ data }: { data: { amount: number } }) => addedIncome.value = data.amount.toString())
+  .catch(err => console.log(`Error: ${ err }`))
+}
+
+const createIncome = () => {
+  if ( !income || Object.values(income).some(o => !o) ) 
+    return
+
+  API.updateIncome({ data: income })
+    .then(() => {
+      doSearch()
+      resetDialog()
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+}
+
+const deleteExpense = () => {
+  if ( !editMode.value || !rowData.value )
+    return
+
+  const id = rowData.value?._id
+  return API.deleteExpense(id)
+    .then(() => {
+      doSearch()
+      resetDialog()
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+>>>>>>> Stashed changes
 }
 </script>
 
