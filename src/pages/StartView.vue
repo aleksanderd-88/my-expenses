@@ -17,7 +17,7 @@
     />
 
     <div class="col col--flex col--flex-end">
-      <h2 class="sub-headline">Total expenses: {{ totalExpense }} SEK</h2>
+      <h2 class="sub-headline">Total expenses: {{ formatCurrency(Number(totalExpense)) }}</h2>
     </div>
 
     <div class="start__actions">
@@ -155,11 +155,13 @@ import LvColorpicker from 'lightvue/color-picker';
 import LvDropdown from 'lightvue/dropdown';
 import API from '@/services/api'
 import Sugar from 'sugar-date'
+import { formatCurrency } from '@/utils/formatter'
 
 type RowType = { 
   no: number, 
   name: string, 
   cost: number,
+  strCost: string
   paymentDue: string,
   createdAt: string 
 }
@@ -198,7 +200,7 @@ const table = reactive({
     },
     {
       label: "Cost",
-      field: "cost",
+      field: "strCost",
       width: "5%",
       sortable: true,
     },
@@ -246,6 +248,7 @@ const doSearch = (offset: number, limit: number, order: string, sort: string) =>
       r.no = index + 1
       r.createdAt = Sugar.Date(new Date(r.createdAt)).long().raw
       r.paymentDue = Sugar.Date(new Date(r.paymentDue)).medium().raw
+      r.strCost = formatCurrency(Number(r.cost))
       return r
     })
 
