@@ -213,6 +213,7 @@ type RowType = {
 }
 
 const op = ref()
+const editMode = ref(false)
 const expenseDialogIsVisible = ref(false)
 const incomeDialogVisible = ref(false)
 const expenseInitialValue = {
@@ -220,6 +221,7 @@ const expenseInitialValue = {
   cost: null,
   paymentDue: null
 }
+const rowData = ref()
 const initialIncomeValue = { amount: null }
 const initialColor = ref('#607C8A')
 const selectedOption = ref(null)
@@ -293,7 +295,13 @@ const totalExpense = computed(() => {
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
 })
 
-const rowClicked = (row: RowType) => console.log(row);
+const rowClicked = (row: RowType) => {
+  editMode.value = true
+  rowData.value = row
+  expenseDialogIsVisible.value = true
+  const parsedDate = Sugar.Date(new Date(row.paymentDue)).format('{yyyy}-{MM}-{dd}').raw
+  Object.assign(expense, { ...row, paymentDue: parsedDate })
+};
 
 const doSearch = (offset: number, limit: number, order: string, sort: string) => {
   console.log(offset, limit, order, sort);
@@ -345,7 +353,24 @@ const displayIncomeDialog = () => {
   incomeDialogVisible.value = true
 }
 
+const updateExpense = () => {
+  if ( !editMode.value || !rowData.value )
+    return
+
+  const id = rowData.value?._id
+  return API.updateExpense(id, { data: expense })
+    .then(() => {
+      doSearch(0, 10, 'id', 'asc')
+      resetDialog()
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+}
+
 const createExpense = () => {
+
+  if ( editMode.value )
+    updateExpense()
+
   if ( !expense || Object.values(expense).some(o => !o) ) 
     return
 

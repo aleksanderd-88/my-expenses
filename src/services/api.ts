@@ -18,6 +18,9 @@ export default {
   listExpenses(): Promise<AxiosResponse> {
     return client.patch('/expenses/list')
   },
+  updateExpense(id: string, params: ParameterType): Promise<AxiosResponse> {
+    return client.patch(`/expenses/${ id }/update`, params)
+  },
 
   //- Income
   updateIncome(params: ParameterType): Promise<AxiosResponse> {
