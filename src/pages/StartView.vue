@@ -17,7 +17,12 @@
     />
 
     <div class="col col--flex col--flex-end">
-      <h2 class="sub-headline">Total expenses: {{ formatCurrency(Number(totalExpense)) }}</h2>
+      <h2 class="sub-headline">
+        Total expenses: {{ formatCurrency(Number(totalExpense)) }}
+        <p v-if="addedIncome"> 
+          Remaining income: <span :style="{ color: `${ Number(addedIncome) < Number(totalExpense) ? '#ef5350' : '#495057'}` }"><b>{{ formatCurrency(Number(addedIncome) - Number(totalExpense)) }}</b></span>
+        </p>
+      </h2>
     </div>
 
     <div class="start__actions">
@@ -45,7 +50,7 @@
               class="start__action-btn"
               @click="displayIncomeDialog()"
             >
-              Add income
+              Update income
             </BaseButton>
           </li>
 
@@ -148,7 +153,7 @@
 
     <!-- Incomde dialog -->
     <LvDialog 
-      header="Add income" 
+      header="Update income" 
       v-model="incomeDialogVisible"
       :style="{ 
         width: '95%',
@@ -176,7 +181,7 @@
         <BaseButton 
           icon="check"
           class="lv-button--ml-10"
-          @click="createExpense()"
+          @click="createIncome()"
         >
           Save
         </BaseButton>
@@ -223,7 +228,7 @@ const options = ref([
   { id: 3, label: 'Bank account 3' },
   { id: 4, label: 'Bank account 4' }
 ])
-
+const addedIncome = ref<null | string>(null)
 const table = reactive({
   isLoading: false,
   columns: [
@@ -305,6 +310,8 @@ const doSearch = (offset: number, limit: number, order: string, sort: string) =>
     table.totalRecordCount = rows.length
     table.sortable.order = order;
     table.sortable.sort = sort;
+
+    getIncome()
   })
   .catch((err) => console.log(`Error: ${ err }`))
 };
@@ -342,6 +349,23 @@ const createExpense = () => {
     return
 
   API.createExpense({ data: expense })
+    .then(() => {
+      doSearch(0, 10, 'id', 'asc')
+      resetDialog()
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+}
+
+const getIncome = () => {
+  return API.getIncome().then(({ data }: { data: { amount: number } }) => addedIncome.value = data.amount.toString())
+  .catch(err => console.log(`Error: ${ err }`))
+}
+
+const createIncome = () => {
+  if ( !income || Object.values(income).some(o => !o) ) 
+    return
+
+  API.updateIncome({ data: income })
     .then(() => {
       doSearch(0, 10, 'id', 'asc')
       resetDialog()

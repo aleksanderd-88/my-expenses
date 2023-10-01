@@ -11,10 +11,19 @@ type ParameterType = {
 }
 
 export default {
+  //- Expenses
   createExpense(params: ParameterType): Promise<AxiosResponse> {
     return client.post('/expenses/create', params)
   },
   listExpenses(): Promise<AxiosResponse> {
     return client.patch('/expenses/list')
+  },
+
+  //- Income
+  updateIncome(params: ParameterType): Promise<AxiosResponse> {
+    return client.patch('/income/update', params)
+  },
+  getIncome(): Promise<AxiosResponse> {
+    return client.get('/income/get')
   }
 }
