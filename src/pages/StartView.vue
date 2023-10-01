@@ -1,29 +1,30 @@
 <template>
   <div>
     <p class="start__caption caption center-align" v-if="!rowsLength">No expenses created yet ...</p>
-
-    <TableLite
-      v-else
-      title="Expenses"
-      :is-slot-mode="true"
-      :is-loading="table.isLoading"
-      :columns="table.columns"
-      :rows="table.rows"
-      :total="table.totalRecordCount"
-      :sortable="table.sortable"
-      @do-search="doSearch"
-      @is-finished="table.isLoading = false"
-      @row-clicked="rowClicked"
-    />
-
-    <div class="col col--flex col--flex-end">
-      <h2 class="sub-headline">
-        Total expenses: {{ formatCurrency(Number(totalExpense)) }}
-        <p v-if="addedIncome"> 
-          Remaining income: <span :style="{ color: `${ Number(addedIncome) < Number(totalExpense) ? '#ef5350' : '#495057'}` }"><b>{{ formatCurrency(Number(addedIncome) - Number(totalExpense)) }}</b></span>
-        </p>
-      </h2>
-    </div>
+    
+    <template v-else>
+      <TableLite
+        title="Expenses"
+        :is-slot-mode="true"
+        :is-loading="table.isLoading"
+        :columns="table.columns"
+        :rows="table.rows"
+        :total="table.totalRecordCount"
+        :sortable="table.sortable"
+        @do-search="doSearch"
+        @is-finished="table.isLoading = false"
+        @row-clicked="rowClicked"
+      />
+  
+      <div class="col col--flex col--flex-end">
+        <h2 class="sub-headline">
+          Total expenses: {{ formatCurrency(Number(totalExpense)) }}
+          <p v-if="addedIncome"> 
+            Remaining income: <span :style="{ color: `${ Number(addedIncome) < Number(totalExpense) ? '#ef5350' : '#495057'}` }"><b>{{ formatCurrency(Number(addedIncome) - Number(totalExpense)) }}</b></span>
+          </p>
+        </h2>
+      </div>
+    </template>
 
     <div class="start__actions">
       <LvOverlayPanel 
