@@ -17,7 +17,7 @@
         :is-hide-paging="true"
       />
   
-      <div class="col col--flex col--flex-end">
+      <div class="vtl__bottom col col--flex col--flex-end">
         <h2 class="sub-headline">
           Total expenses: {{ formatCurrency(Number(totalExpense)) }}
           <p v-if="addedIncome"> 
