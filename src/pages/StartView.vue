@@ -135,6 +135,16 @@
 
       <template #footer>
         <BaseButton 
+          icon="thumb-up" 
+          class="lv-button--ml-10"
+          @click="markAsPaid()"
+          success
+          v-if="editMode"
+        >
+          {{ rowData.isPaid ? 'Un-mark as paid' : 'Mark as paid' }}
+        </BaseButton>
+
+        <BaseButton 
           icon="trash" 
           class="lv-button--ml-10"
           @click="deleteExpense()"
@@ -215,11 +225,12 @@ import Sugar from 'sugar-date'
 import { formatCurrency } from '@/utils/formatter'
 
 type RowType = { 
-  no: number, 
-  name: string, 
-  cost: number,
+  no: number
+  name: string
+  cost: number
+  isPaid: boolean
   strCost: string
-  paymentDue: string,
+  paymentDue: string
   createdAt: string 
 }
 
@@ -323,7 +334,7 @@ const doSearch = (offset: number, limit: number, order: string, sort: string) =>
     const rows = data.rows.map((r: RowType, index: number) => {
       r.no = index + 1
       r.createdAt = Sugar.Date(new Date(r.createdAt)).long().raw
-      r.paymentDue = Sugar.Date(new Date(r.paymentDue)).medium().raw
+      r.paymentDue = `${ Sugar.Date(new Date(r.paymentDue)).medium().raw }`
       r.strCost = formatCurrency(Number(r.cost))
       return r
     })
@@ -419,6 +430,19 @@ const deleteExpense = () => {
 
   const id = rowData.value?._id
   return API.deleteExpense(id)
+    .then(() => {
+      doSearch(0, 10, 'id', 'asc')
+      resetDialog()
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+}
+
+const markAsPaid = () => {
+  if ( !editMode.value || !rowData.value )
+    return
+
+  const id = rowData.value?._id
+  return API.updateExpense(id, { data: { isPaid: (rowData.value.isPaid = !rowData.value?.isPaid) } } )
     .then(() => {
       doSearch(0, 10, 'id', 'asc')
       resetDialog()

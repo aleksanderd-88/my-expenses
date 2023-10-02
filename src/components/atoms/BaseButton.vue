@@ -21,6 +21,10 @@ const props = defineProps({
     type: Boolean,
     default: false
   },
+  success: {
+    type: Boolean,
+    default: false
+  },
   icon: {
     type: String,
     default: null
@@ -31,6 +35,8 @@ const modifiedClass = computed(() => {
   let className = ''
   if ( props.danger )
     className += ' base-btn--bg-danger'
+  if ( props.success )
+    className += ' base-btn--bg-success'
 
   return className
 })
@@ -54,5 +60,8 @@ const modifiedClass = computed(() => {
       background-color: $red !important;
     }
     
+    &--bg-success {
+      background-color: $success !important;
+    }
   }
 </style>
