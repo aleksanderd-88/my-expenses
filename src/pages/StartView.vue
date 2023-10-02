@@ -35,7 +35,7 @@
       <div class="vtl__bottom col col--flex">
         <h2 class="sub-headline sub-headline--flex-start" v-if="paidExpensesLength">
           Paid expenses
-          <p v-if="addedIncome"> 
+          <p> 
             {{ paidExpensesDetails }}
           </p>
         </h2>
@@ -43,7 +43,17 @@
         <h2 class="sub-headline sub-headline--flex-end">
           Total expenses: {{ formatCurrency(Number(calculatedRemaingExpenses)) }}
           <p v-if="addedIncome"> 
-            Remaining income: <span :style="{ color: `${ Number(addedIncome) < Number(calculatedTotalExpense) ? '#ef5350' : '#495057'}` }"><b>{{ formatCurrency(Number(addedIncome) - Number(calculatedTotalExpense)) }}</b></span>
+            Remaining income: 
+            <span :style="{ color: `${ Number(addedIncome) < Number(calculatedTotalExpense) ? 
+              '#ef5350' : '#495057'}` }">
+              <b>
+                {{ formatCurrency(Number(addedIncome) - Number(calculatedTotalExpense)) }}
+              </b>
+            </span>
+
+            <span>
+              (Income: <b>{{ `${ formatCurrency(Number(addedIncome)) }` }}</b>)
+            </span>
           </p>
         </h2>
       </div>
