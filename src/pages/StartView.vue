@@ -34,14 +34,14 @@
   
       <div class="vtl__bottom col col--flex">
         <h2 class="sub-headline sub-headline--flex-start" v-if="paidExpensesLength">
-          Paid expenses
+          Remaining expenses: {{ formatCurrency(Number(calculatedRemaingExpenses)) }}
           <p> 
-            {{ paidExpensesDetails }}
+            {{ paidExpensesDetails }} <b>({{ `${ formatCurrency(calculatedPaidExpenses) } of ${ formatCurrency(calculatedTotalExpense) }` }})</b>
           </p>
         </h2>
 
         <h2 class="sub-headline sub-headline--flex-end">
-          Total expenses: {{ formatCurrency(Number(calculatedRemaingExpenses)) }}
+          Total expenses: {{ formatCurrency(Number(calculatedTotalExpense)) }}
           <p v-if="addedIncome"> 
             Remaining income: 
             <span :style="{ color: `${ Number(addedIncome) < Number(calculatedTotalExpense) ? 
@@ -329,7 +329,7 @@ const table = reactive({
   },
 });
 
-const paidExpensesDetails = computed(() => `${ table.rows.filter(r => r.isPaid).length } expenses of ${ table.rows.length }`)
+const paidExpensesDetails = computed(() => `${ table.rows.filter(r => r.isPaid).length } expenses of ${ table.rows.length } paid`)
 const paidExpensesLength = computed(() => table.rows.filter(r => r.isPaid).length)
 
 const expense = reactive({ ...expenseInitialValue })
@@ -356,6 +356,10 @@ const calculatedTotalExpense = computed(() => {
 
 const calculatedRemaingExpenses = computed(() => {
   return table.rows.reduce((sum, item) => sum -= item.isPaid ? item.cost : 0, calculatedTotalExpense.value)
+})
+
+const calculatedPaidExpenses = computed(() => {
+  return table.rows.reduce((sum, item) => sum += item.isPaid ? item.cost : 0, 0)
 })
 
 const rowClicked = (row: RowType) => {
