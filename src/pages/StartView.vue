@@ -1,7 +1,7 @@
 <template>
   <div>
     <p class="start__caption caption center-align" v-if="!rowsLength">No expenses created yet ...</p>
-    
+
     <template v-else>
       <TableLite
         title="Expenses"
@@ -15,13 +15,35 @@
         @is-finished="table.isLoading = false"
         @row-clicked="rowClicked"
         :is-hide-paging="true"
-      />
+      >
+
+        <template v-slot:name="data">
+          <div class="vtl__row" :class="{'vtl__row--linethrough': data.value.isPaid}">
+            {{ data.value.name }}
+          </div>
+        </template>
+
+        <template v-slot:paymentDue="data">
+            <div class="vtl__row">
+              {{ data.value.paymentDue }}
+              <i class="light-icon-check" v-if="data.value.isPaid"></i>
+            </div>
+        </template>
+
+      </TableLite>
   
-      <div class="vtl__bottom col col--flex col--flex-end">
-        <h2 class="sub-headline">
-          Total expenses: {{ formatCurrency(Number(totalExpense)) }}
+      <div class="vtl__bottom col col--flex">
+        <h2 class="sub-headline sub-headline--flex-start" v-if="paidExpensesLength">
+          Paid expenses
           <p v-if="addedIncome"> 
-            Remaining income: <span :style="{ color: `${ Number(addedIncome) < Number(totalExpense) ? '#ef5350' : '#495057'}` }"><b>{{ formatCurrency(Number(addedIncome) - Number(totalExpense)) }}</b></span>
+            {{ paidExpensesDetails }}
+          </p>
+        </h2>
+
+        <h2 class="sub-headline sub-headline--flex-end">
+          Total expenses: {{ formatCurrency(Number(calculatedRemaingExpenses)) }}
+          <p v-if="addedIncome"> 
+            Remaining income: <span :style="{ color: `${ Number(addedIncome) < Number(calculatedTotalExpense) ? '#ef5350' : '#495057'}` }"><b>{{ formatCurrency(Number(addedIncome) - Number(calculatedTotalExpense)) }}</b></span>
           </p>
         </h2>
       </div>
@@ -297,6 +319,9 @@ const table = reactive({
   },
 });
 
+const paidExpensesDetails = computed(() => `${ table.rows.filter(r => r.isPaid).length } expenses of ${ table.rows.length }`)
+const paidExpensesLength = computed(() => table.rows.filter(r => r.isPaid).length)
+
 const expense = reactive({ ...expenseInitialValue })
 const income = reactive({ ...initialIncomeValue })
 
@@ -315,8 +340,12 @@ watch(() => incomeDialogVisible.value, (val: boolean) => {
 
 const rowsLength = computed(() => table.rows.length)
 
-const totalExpense = computed(() => {
+const calculatedTotalExpense = computed(() => {
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
+})
+
+const calculatedRemaingExpenses = computed(() => {
+  return table.rows.reduce((sum, item) => sum -= item.isPaid ? item.cost : 0, calculatedTotalExpense.value)
 })
 
 const rowClicked = (row: RowType) => {

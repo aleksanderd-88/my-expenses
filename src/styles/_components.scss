@@ -75,6 +75,22 @@
     }
   }
 
+  &__row {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    i {
+      font-size: 1.25rem;
+      color: $success;
+      font-weight: 600;
+    }
+
+    &--linethrough {
+      text-decoration: line-through;
+    }
+  }
+
   &__bottom {
     height: 200px;
     display: flex;
@@ -95,10 +111,6 @@
     flex-wrap: wrap;
     gap: 1rem;
   }
-
-  &--flex-end {
-    justify-content: flex-end;
-  }
 }
 
 //- Headline
@@ -113,5 +125,16 @@
     font-size: .75rem;
     text-align: right;
     margin-top: .5rem;
+  }
+
+  &--flex-start {
+    margin-right: auto !important;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  &--flex-end {
+    margin-left: auto !important;
   }
 }
