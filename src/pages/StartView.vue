@@ -15,6 +15,7 @@
         @is-finished="table.isLoading = false"
         @row-clicked="rowClicked"
         :is-hide-paging="true"
+        :class="{ 'vtl--added-padding': calculatedTotalExpense }"
       >
 
         <template v-slot:name="data">
@@ -32,30 +33,32 @@
 
       </TableLite>
   
-      <div class="vtl__bottom col col--flex">
-        <h2 class="sub-headline sub-headline--flex-start" v-if="paidExpensesLength">
-          Remaining expenses: {{ formatCurrency(Number(calculatedRemaingExpenses)) }}
-          <p> 
-            {{ paidExpensesDetails }} <b>({{ `${ formatCurrency(calculatedPaidExpenses) } of ${ formatCurrency(calculatedTotalExpense) }` }})</b>
-          </p>
-        </h2>
+      <div class="vtl__bottom">
+        <main class="vtl__bottom-content col col--flex">
+          <h2 class="sub-headline sub-headline--flex-start" v-if="paidExpensesLength">
+            Remaining expenses: {{ formatCurrency(Number(calculatedRemaingExpenses)) }}
+            <p> 
+              {{ paidExpensesDetails }} <b>({{ `${ formatCurrency(calculatedPaidExpenses) } of ${ formatCurrency(calculatedTotalExpense) }` }})</b>
+            </p>
+          </h2>
 
-        <h2 class="sub-headline sub-headline--flex-end">
-          Total expenses: {{ formatCurrency(Number(calculatedTotalExpense)) }}
-          <p v-if="addedIncome"> 
-            Remaining income: 
-            <span :style="{ color: `${ Number(addedIncome) < Number(calculatedTotalExpense) ? 
-              '#ef5350' : '#495057'}` }">
-              <b>
-                {{ formatCurrency(Number(addedIncome) - Number(calculatedTotalExpense)) }}
-              </b>
-            </span>
+          <h2 class="sub-headline sub-headline--flex-end">
+            Total expenses: {{ formatCurrency(Number(calculatedTotalExpense)) }}
+            <p v-if="addedIncome"> 
+              Remaining income: 
+              <span :style="{ color: `${ Number(addedIncome) < Number(calculatedTotalExpense) ? 
+                '#ef5350' : '#495057'}` }">
+                <b>
+                  {{ formatCurrency(Number(addedIncome) - Number(calculatedTotalExpense)) }}
+                </b>
+              </span>
 
-            <span>
-              (Income: <b>{{ `${ formatCurrency(Number(addedIncome)) }` }}</b>)
-            </span>
-          </p>
-        </h2>
+              <span>
+                (Income: <b>{{ `${ formatCurrency(Number(addedIncome)) }` }}</b>)
+              </span>
+            </p>
+          </h2>
+        </main>
       </div>
     </template>
 
@@ -511,6 +514,7 @@ const markAsPaid = () => {
       width: 100%;
       max-width: auto;
       display: flex;
+      z-index: 1;
       justify-content: flex-end;
 
       @media (min-width: 1024px) {

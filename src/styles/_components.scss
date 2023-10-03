@@ -66,6 +66,7 @@
 
 //- Table lite
 .vtl {
+
   &-card {
     background-color: $white !important;
     &-title {
@@ -94,10 +95,28 @@
   &__bottom {
     height: 200px;
     display: flex;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    width: 100%;
+    background-color: $white;
+    box-shadow: 0px -4px 15px 0px rgba($dark, .1);
+
+    &-content {
+      width: 100%;
+      max-width: 1600px;
+      margin: auto;
+      padding: 0 1rem;
+    }
     
     h2 {
       align-self: flex-start;
     }
+  }
+
+  &--added-padding {
+    padding-bottom: calc(200px + 1rem);
   }
 }
 
