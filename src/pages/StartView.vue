@@ -19,16 +19,10 @@
       >
 
         <template v-slot:name="data">
-          <div class="vtl__row" :class="{'vtl__row--linethrough': data.value.isPaid}">
-            {{ data.value.name }}
+          <div class="vtl__row">
+            <p :class="{'vtl__row--linethrough': data.value.isPaid}">{{ data.value.name }}</p>
+            <i class="light-icon-check" v-if="data.value.isPaid"></i>
           </div>
-        </template>
-
-        <template v-slot:paymentDue="data">
-            <div class="vtl__row">
-              {{ data.value.paymentDue }}
-              <i class="light-icon-check" v-if="data.value.isPaid"></i>
-            </div>
         </template>
 
       </TableLite>
