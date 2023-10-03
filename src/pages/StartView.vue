@@ -276,7 +276,7 @@ const expenseInitialValue = {
   paymentDue: null
 }
 const rowData = ref()
-const initialIncomeValue = { amount: null }
+const initialIncomeValue: { amount: null | number } = { amount: null }
 const initialColor = ref('#607C8A')
 const selectedOption = ref(null)
 const options = ref([
@@ -346,6 +346,9 @@ watch(() => expenseDialogIsVisible.value, (val: boolean) => {
 watch(() => incomeDialogVisible.value, (val: boolean) => {
   if ( !val ) 
     resetDialog()
+
+  if ( addedIncome.value )
+    income.amount = Number(addedIncome.value)
 })
 
 const rowsLength = computed(() => table.rows.length)
