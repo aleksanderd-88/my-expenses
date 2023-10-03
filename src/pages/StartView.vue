@@ -266,6 +266,7 @@ type RowType = {
   isPaid: boolean
   strCost: string
   paymentDue: string
+  paidAt: string
   createdAt: string 
 }
 
@@ -318,8 +319,8 @@ const table = reactive({
       sortable: true,
     },
     {
-      label: "Created at",
-      field: "createdAt",
+      label: "Paid at",
+      field: "paidAt",
       width: "5%",
       sortable: true,
     }
@@ -372,8 +373,8 @@ const rowClicked = (row: RowType) => {
   editMode.value = true
   rowData.value = row
   expenseDialogIsVisible.value = true
-  const parsedDate = Sugar.Date(new Date(row.paymentDue)).format('{yyyy}-{MM}-{dd}').raw
-  Object.assign(expense, { ...row, paymentDue: parsedDate })
+  const parsedPaymentDueDate = Sugar.Date(new Date(row.paymentDue)).format('{yyyy}-{MM}-{dd}').raw
+  Object.assign(expense, { ...row, paymentDue: parsedPaymentDueDate })
 };
 
 const doSearch = (offset: number, limit: number, order: string, sort: string) => {
@@ -384,6 +385,7 @@ const doSearch = (offset: number, limit: number, order: string, sort: string) =>
       r.no = index + 1
       r.createdAt = Sugar.Date(new Date(r.createdAt)).long().raw
       r.paymentDue = `${ Sugar.Date(new Date(r.paymentDue)).medium().raw }`
+      r.paidAt = r.paidAt ? `${ Sugar.Date(new Date(r.paidAt)).long().raw }` : ''
       r.strCost = formatCurrency(Number(r.cost))
       return r
     })
