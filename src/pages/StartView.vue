@@ -5,7 +5,6 @@
     <ExpenseTable
       :init-search="doSearch"
       @set-row="rowData = $event"
-      @rows-length="rowsLength = $event"
       v-else
     />
 
@@ -78,23 +77,18 @@
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvOverlayPanel  from 'lightvue/overlay-panel'
-import LvDialog from 'lightvue/dialog';
-import LvInput from 'lightvue/input';
-import { reactive, ref, computed, watch, onMounted } from 'vue'
-import LvColorpicker from 'lightvue/color-picker';
-import LvDropdown from 'lightvue/dropdown';
+import { ref, computed, onMounted } from 'vue'
 import API from '@/services/api'
-import { formatCurrency } from '@/utils/formatter'
 import ExpenseTable from '@/components/molecules/Expense/ExpenseTable.vue'
 import ExpenseDialog from '@/components/molecules/Expense/ExpenseDialog.vue';
 import IncomeDialog from '@/components/molecules/Income/IncomeDialog.vue'
+import { useExpenseStore } from '@/stores/expense'
 
 const op = ref()
 const editMode = ref(false)
 const doSearch = ref(false)
 const incomeDialogVisible = ref(false)
 const addedIncome = ref<null | string>(null)
-const rowsLength = ref<null | number>(null)
 
 onMounted(() => doSearch.value = true)
 
@@ -107,6 +101,9 @@ const getIncome = () => {
 }
 
 getIncome()
+useExpenseStore().doSearch(0, 10, 'id', 'asc')
+
+const rowsLength = computed(() => useExpenseStore().rowsLength)
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 const displayExpenseDialog = () => {
