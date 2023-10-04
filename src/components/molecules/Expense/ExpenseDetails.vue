@@ -30,35 +30,32 @@
 
 <script setup lang="ts">
 import { formatCurrency } from '@/utils/formatter'
-import { type PropType } from 'vue'
+import { type PropType, computed } from 'vue'
+import { useExpenseStore } from '@/stores/expense';
 
 defineProps({
   addedIncome: {
     type: String as PropType<null | string>,
     default: null
-  },
-  calculatedRemaingExpenses: {
-    type: Number,
-    default: null
-  },
-  calculatedTotalExpense: {
-    type: Number,
-    default: null
-  },
-  calculatedPaidExpenses: {
-    type: Number,
-    default: null
-  },
-  paidExpensesDetails: {
-    type: String,
-    default: null
-  },
-  paidExpensesLength: {
-    type: Number,
-    default: null
-  },
+  }
 })
 
+const table = useExpenseStore().table
+
+const calculatedTotalExpense = computed(() => {
+  return table.rows.reduce((sum, item) => sum += item.cost, 0)
+})
+
+const calculatedRemaingExpenses = computed(() => {
+  return table.rows.reduce((sum, item) => sum -= item.isPaid ? item.cost : 0, calculatedTotalExpense.value)
+})
+
+const calculatedPaidExpenses = computed(() => {
+  return table.rows.reduce((sum, item) => sum += item.isPaid ? item.cost : 0, 0)
+})
+
+const paidExpensesDetails = computed(() => `${ table.rows.filter(r => r.isPaid).length } expenses of ${ table.rows.length } paid`)
+const paidExpensesLength = computed(() => table.rows.filter(r => r.isPaid).length)
 
 </script>
 

@@ -1,10 +1,11 @@
 import { formatCurrency } from "@/utils/formatter";
 import { defineStore } from "pinia";
-import { ref, computed, reactive } from 'vue'
+import { ref, computed, reactive, watch } from 'vue'
 import API from '@/services/api'
 import Sugar from 'sugar-date'
 
-type RowType = { 
+type RowType = {
+  _id: string
   no: number
   name: string
   cost: number
@@ -16,7 +17,17 @@ type RowType = {
 }
 
 export const useExpenseStore = defineStore('expense', () => {
-  const data = ref()
+  const expenseInitialValue = {
+    name: null,
+    cost: null,
+    paymentDue: null
+  }
+
+  const data = reactive({ ...expenseInitialValue })
+  const rowData = ref<RowType | null>(null)
+  const editMode = ref(false)
+  const expenseDialogVisible = ref(false)
+
   const table = reactive({
     isLoading: false,
     columns: [
@@ -60,8 +71,14 @@ export const useExpenseStore = defineStore('expense', () => {
     },
   })
 
+  watch(() => expenseDialogVisible.value, (val: boolean) => {
+    if ( !val )
+      resetDialog()
+  })
+
   const expense = computed(() => data)
   const rowsLength = computed(() => table.rows.length)
+  const expenseIsPaid = computed(() => rowData.value?.isPaid)
 
   const doSearch = (offset: number, limit: number, order: string, sort: string) => {
     console.log(offset, limit, order, sort);
@@ -84,10 +101,76 @@ export const useExpenseStore = defineStore('expense', () => {
     .catch((err) => console.log(`Error: ${ err }`))
   };
 
+  const resetDialog = () => {
+    expenseDialogVisible.value = false
+    Object.assign(data, expenseInitialValue)
+  }
+  
+  const updateExpense = () => {
+    if ( !editMode.value || !rowData.value )
+      return
+  
+    const id = rowData.value?._id
+    return API.updateExpense(id, { data: data })
+    .then(() => resetDialog())
+    .catch(err => console.log(`Error: ${ err }`))
+  }
+  
+  const createExpense = () => {
+    if ( editMode.value )
+      updateExpense()
+  
+    if ( !expense.value || Object.values(expense.value).some(o => !o) ) 
+      return
+    
+    API.createExpense({ data: data })
+    .then(() => resetDialog())
+    .catch(err => console.log(`Error: ${ err }`))
+  }
+  
+  const deleteExpense = () => {
+    if ( !editMode.value || !rowData.value )
+      return
+  
+    const id = rowData.value?._id
+    return API.deleteExpense(id)
+      .then(() => resetDialog())
+      .catch(err => console.log(`Error: ${ err }`))
+  }
+  
+  const markAsPaid = () => {
+    if ( !editMode.value || !rowData.value )
+      return
+  
+    const id = rowData.value?._id
+    let paidStatus = JSON.parse(JSON.stringify(rowData.value?.isPaid))
+    return API.updateExpense(id, { data: { isPaid: (paidStatus = !paidStatus) } } )
+      .then(() => resetDialog())
+      .catch(err => console.log(`Error: ${ err }`))
+  }
+
+  const setRowData = (row: RowType) => {
+    rowData.value = row
+    editMode.value = true
+    expenseDialogVisible.value = true
+    const parsedPaymentDueDate = Sugar.Date(new Date(row.paymentDue)).format('{yyyy}-{MM}-{dd}').raw
+    Object.assign(data, { ...rowData.value, paymentDue: parsedPaymentDueDate })
+  }
+
   return {
     expense,
     table,
     doSearch,
-    rowsLength
+    rowsLength,
+    createExpense,
+    deleteExpense,
+    markAsPaid,
+    resetDialog,
+    data,
+    editMode,
+    expenseIsPaid,
+    expenseDialogVisible,
+    setRowData,
+    rowData
   }
 })

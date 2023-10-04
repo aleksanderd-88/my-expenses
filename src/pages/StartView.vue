@@ -2,11 +2,7 @@
   <div>
     <p class="start__caption caption center-align" v-if="!rowsLength">No expenses created yet ...</p>
 
-    <ExpenseTable
-      :init-search="doSearch"
-      @set-row="rowData = $event"
-      v-else
-    />
+    <ExpenseTable v-else />
 
     <div class="start__actions">
       <LvOverlayPanel 
@@ -57,14 +53,7 @@
       />
     </div>
 
-    <ExpenseDialog
-      :expense-dialog-is-visible="expenseDialogIsVisible"
-      :edit-mode="editMode"
-      :row-data="rowData"
-      @close="expenseDialogIsVisible = $event"
-      @do-search="doSearch = true"
-      @set-edit-mode="editMode = $event"
-    />
+    <ExpenseDialog />
 
     <!-- Incomde dialog -->
     <IncomeDialog
@@ -77,7 +66,7 @@
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvOverlayPanel  from 'lightvue/overlay-panel'
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed } from 'vue'
 import API from '@/services/api'
 import ExpenseTable from '@/components/molecules/Expense/ExpenseTable.vue'
 import ExpenseDialog from '@/components/molecules/Expense/ExpenseDialog.vue';
@@ -85,15 +74,8 @@ import IncomeDialog from '@/components/molecules/Income/IncomeDialog.vue'
 import { useExpenseStore } from '@/stores/expense'
 
 const op = ref()
-const editMode = ref(false)
-const doSearch = ref(false)
 const incomeDialogVisible = ref(false)
 const addedIncome = ref<null | string>(null)
-
-onMounted(() => doSearch.value = true)
-
-const rowData = ref()
-const expenseDialogIsVisible = ref(false)
 
 const getIncome = () => {
   return API.getIncome().then(({ data }: { data: { amount: number } }) => addedIncome.value = data.amount.toString())
@@ -104,12 +86,15 @@ getIncome()
 useExpenseStore().doSearch(0, 10, 'id', 'asc')
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
+const rowData = computed(() => useExpenseStore().rowData)
+const expenseDialogIsVisible = computed(() => useExpenseStore().expenseDialogVisible)
 
 const togglePanel = (event: Event) => op.value.toggle(event)
+
 const displayExpenseDialog = () => {
-  editMode.value = false
   togglePanel(op.value)
-  expenseDialogIsVisible.value = true
+  useExpenseStore().editMode = false
+  useExpenseStore().expenseDialogVisible = true
 }
 
 const displayIncomeDialog = () => {
