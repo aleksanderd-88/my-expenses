@@ -1,41 +1,52 @@
 import { defineStore } from "pinia";
-import { computed, reactive, ref, watch } from "vue";
+import { reactive, ref, watch } from "vue";
 import API from '@/services/api'
 
 export const useIncomeStore = defineStore('income', () => {
   const initialIncomeValue: { amount: null | number } = { amount: null }
-  const data = reactive({ ...initialIncomeValue })
+  const income = reactive({ ...initialIncomeValue })
   const incomeDialogVisible = ref(false)
+  const addedIncome = ref()
 
   watch(() => incomeDialogVisible.value, (val: boolean) => {
     if ( !val ) 
       resetDialog()
   
     if ( addedIncome.value )
-      data.amount = Number(addedIncome.value)
+      income.amount = Number(addedIncome.value)
   })
 
-  const addedIncome = computed(() => data.amount)
 
   const resetDialog = () => {
-    Object.assign(data, initialIncomeValue)
+    Object.assign(income, initialIncomeValue)
     incomeDialogVisible.value = false
   }
 
+  const getIncome = () => {
+    return API.getIncome()
+    .then(({ data }: { data: { amount: number | null } }) => addedIncome.value = data.amount)
+    .catch(err => console.log(`Error: ${ err }`))
+  }
+
   const createIncome = () => {
-    if ( !data || Object.values(data).some(o => !o) ) 
+    if ( !income || Object.values(income).some(o => !o) ) 
       return
   
-    API.updateIncome({ data })
-      .then(() => resetDialog())
+    API.updateIncome({ data: income })
+      .then(({ data }) => {
+        income.amount = data
+        resetDialog()
+        getIncome()
+      })
       .catch(err => console.log(`Error: ${ err }`))
   }
 
   return {
     addedIncome,
     incomeDialogVisible,
-    data,
     createIncome,
-    resetDialog
+    income,
+    resetDialog,
+    getIncome
   }
 })

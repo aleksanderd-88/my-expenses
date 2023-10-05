@@ -64,7 +64,6 @@
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvOverlayPanel  from 'lightvue/overlay-panel'
 import { ref, computed } from 'vue'
-import API from '@/services/api'
 import ExpenseTable from '@/components/molecules/Expense/ExpenseTable.vue'
 import ExpenseDialog from '@/components/molecules/Expense/ExpenseDialog.vue';
 import IncomeDialog from '@/components/molecules/Income/IncomeDialog.vue'
@@ -73,12 +72,7 @@ import { useIncomeStore } from '@/stores/income'
 
 const op = ref()
 
-const getIncome = () => {
-  return API.getIncome().then(({ data }: { data: { amount: number | null } }) => useIncomeStore().data = data)
-  .catch(err => console.log(`Error: ${ err }`))
-}
-
-getIncome()
+useIncomeStore().getIncome()
 useExpenseStore().doSearch(0, 10, 'id', 'asc')
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)

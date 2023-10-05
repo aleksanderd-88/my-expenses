@@ -52,6 +52,7 @@ const paidExpensesDetails = computed(() => `${ table.rows.filter(r => r.isPaid).
 const paidExpensesLength = computed(() => table.rows.filter(r => r.isPaid).length)
 
 const addedIncome = computed(() => useIncomeStore().addedIncome)
+console.log(addedIncome.value);
 
 </script>
 

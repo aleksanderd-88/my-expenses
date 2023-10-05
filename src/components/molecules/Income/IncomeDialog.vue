@@ -9,7 +9,7 @@
   >
     <LvInput 
       type="text"
-      v-model="useIncomeStore().data.amount"
+      v-model="useIncomeStore().income.amount"
       label="Enter monthly income (after taxes)"
       placeholder="E.g. 34,000 SEK"
       bottom-bar
