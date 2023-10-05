@@ -56,10 +56,7 @@
     <ExpenseDialog />
 
     <!-- Incomde dialog -->
-    <IncomeDialog
-      :added-income="addedIncome"
-      @do-search="doSearch = $event"
-    />
+    <IncomeDialog />
   </div>
 </template>
 
@@ -72,13 +69,12 @@ import ExpenseTable from '@/components/molecules/Expense/ExpenseTable.vue'
 import ExpenseDialog from '@/components/molecules/Expense/ExpenseDialog.vue';
 import IncomeDialog from '@/components/molecules/Income/IncomeDialog.vue'
 import { useExpenseStore } from '@/stores/expense'
+import { useIncomeStore } from '@/stores/income'
 
 const op = ref()
-const incomeDialogVisible = ref(false)
-const addedIncome = ref<null | string>(null)
 
 const getIncome = () => {
-  return API.getIncome().then(({ data }: { data: { amount: number } }) => addedIncome.value = data.amount.toString())
+  return API.getIncome().then(({ data }: { data: { amount: number | null } }) => useIncomeStore().data = data)
   .catch(err => console.log(`Error: ${ err }`))
 }
 
@@ -86,8 +82,6 @@ getIncome()
 useExpenseStore().doSearch(0, 10, 'id', 'asc')
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
-const rowData = computed(() => useExpenseStore().rowData)
-const expenseDialogIsVisible = computed(() => useExpenseStore().expenseDialogVisible)
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 
@@ -99,7 +93,7 @@ const displayExpenseDialog = () => {
 
 const displayIncomeDialog = () => {
   togglePanel(op.value)
-  incomeDialogVisible.value = true
+  useIncomeStore().incomeDialogVisible = true
 }
 </script>
 

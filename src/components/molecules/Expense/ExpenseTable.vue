@@ -22,9 +22,7 @@
       </template>
     </TableLite>
 
-    <ExpenseDetails
-      :added-income="addedIncome"
-    />
+    <ExpenseDetails />
   </div>
 </template>
 

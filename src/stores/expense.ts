@@ -102,6 +102,7 @@ export const useExpenseStore = defineStore('expense', () => {
   };
 
   const resetDialog = () => {
+    editMode.value = false
     expenseDialogVisible.value = false
     Object.assign(data, expenseInitialValue)
   }
@@ -109,22 +110,28 @@ export const useExpenseStore = defineStore('expense', () => {
   const updateExpense = () => {
     if ( !editMode.value || !rowData.value )
       return
-  
+    
     const id = rowData.value?._id
     return API.updateExpense(id, { data: data })
-    .then(() => resetDialog())
+    .then(() => {
+      resetDialog()
+      doSearch(0, 10, 'id', 'asc')
+    })
     .catch(err => console.log(`Error: ${ err }`))
   }
   
   const createExpense = () => {
     if ( editMode.value )
       updateExpense()
-  
+    
     if ( !expense.value || Object.values(expense.value).some(o => !o) ) 
       return
     
-    API.createExpense({ data: data })
-    .then(() => resetDialog())
+    API.createExpense({ data: expense.value })
+    .then(() => {
+      resetDialog()
+      doSearch(0, 10, 'id', 'asc')
+    })
     .catch(err => console.log(`Error: ${ err }`))
   }
   
@@ -134,7 +141,10 @@ export const useExpenseStore = defineStore('expense', () => {
   
     const id = rowData.value?._id
     return API.deleteExpense(id)
-      .then(() => resetDialog())
+      .then(() => {
+      resetDialog()
+      doSearch(0, 10, 'id', 'asc')
+    })
       .catch(err => console.log(`Error: ${ err }`))
   }
   
@@ -145,7 +155,10 @@ export const useExpenseStore = defineStore('expense', () => {
     const id = rowData.value?._id
     let paidStatus = JSON.parse(JSON.stringify(rowData.value?.isPaid))
     return API.updateExpense(id, { data: { isPaid: (paidStatus = !paidStatus) } } )
-      .then(() => resetDialog())
+      .then(() => {
+      resetDialog()
+      doSearch(0, 10, 'id', 'asc')
+    })
       .catch(err => console.log(`Error: ${ err }`))
   }
 
