@@ -3,11 +3,13 @@
     <main class="base-layout__content">
       <router-view />
     </main>
+    
+    <AppToast />
   </div>
 </template>
 
 <script setup lang="ts">
-
+import AppToast from '@/components/molecules/Toast/AppToast.vue'
 </script>
 
 <style scoped>
