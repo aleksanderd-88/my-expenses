@@ -124,10 +124,10 @@ export const useExpenseStore = defineStore('expense', () => {
     if ( editMode.value )
       updateExpense()
     
-    if ( !expense.value || Object.values(expense.value).some(o => !o) ) 
+    if ( !data || Object.values(data).some(o => !o) ) 
       return
     
-    API.createExpense({ data: expense.value })
+    API.createExpense({ data: data })
     .then(() => {
       resetDialog()
       doSearch(0, 10, 'id', 'asc')
