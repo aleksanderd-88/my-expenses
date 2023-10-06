@@ -67,6 +67,10 @@
 //- Table lite
 .vtl {
 
+  &-tbody-tr {
+    cursor: pointer !important;
+  }
+
   &-card {
     background-color: $white !important;
     &-title {
