@@ -4,7 +4,7 @@
 
     <ExpenseTable v-else />
 
-    <div class="start__actions">
+    <div class="start__actions" :class="modifiedClass">
       <LvOverlayPanel 
         ref="op" 
         class="start__panel"
@@ -76,6 +76,7 @@ useIncomeStore().getIncome()
 useExpenseStore().doSearch(0, 10, 'id', 'asc')
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
+const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 
@@ -102,7 +103,6 @@ const displayIncomeDialog = () => {
       position: fixed;
       bottom: 1rem;
       right: 1rem;
-      width: 100%;
       max-width: auto;
       display: flex;
       z-index: 1;
@@ -111,6 +111,10 @@ const displayIncomeDialog = () => {
       @media (min-width: 1024px) {
         right: 1.5rem;
         bottom: 1.5rem;
+      }
+
+      &--bottom-margin {
+        bottom: calc(90px + 1rem)
       }
     }
 

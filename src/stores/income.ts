@@ -1,6 +1,7 @@
 import { defineStore } from "pinia";
 import { reactive, ref, watch } from "vue";
 import API from '@/services/api'
+import { useToastStore } from "./toast";
 
 export const useIncomeStore = defineStore('income', () => {
   const initialIncomeValue: { amount: null | number } = { amount: null }
@@ -37,8 +38,12 @@ export const useIncomeStore = defineStore('income', () => {
         income.amount = data
         resetDialog()
         getIncome()
+        useToastStore().setToast(true, 'Income updated')
       })
-      .catch(err => console.log(`Error: ${ err }`))
+      .catch(err => {
+        console.log(`Error: ${ err }`)
+        useToastStore().setToast(true, err, true)
+      })
   }
 
   return {

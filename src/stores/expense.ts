@@ -3,6 +3,7 @@ import { defineStore } from "pinia";
 import { ref, computed, reactive, watch } from 'vue'
 import API from '@/services/api'
 import Sugar from 'sugar-date'
+import { useToastStore } from "./toast";
 
 type RowType = {
   _id: string
@@ -116,8 +117,12 @@ export const useExpenseStore = defineStore('expense', () => {
     .then(() => {
       resetDialog()
       doSearch(0, 10, 'id', 'asc')
+      useToastStore().setToast(true, 'Expense updated')
     })
-    .catch(err => console.log(`Error: ${ err }`))
+    .catch(err => {
+      console.log(`Error: ${ err }`)
+      useToastStore().setToast(true, err, true)
+    })
   }
   
   const createExpense = () => {
@@ -131,8 +136,12 @@ export const useExpenseStore = defineStore('expense', () => {
     .then(() => {
       resetDialog()
       doSearch(0, 10, 'id', 'asc')
+      useToastStore().setToast(true, 'Expense added')
     })
-    .catch(err => console.log(`Error: ${ err }`))
+    .catch(err => {
+      console.log(`Error: ${ err }`)
+      useToastStore().setToast(true, err, true)
+    })
   }
   
   const deleteExpense = () => {
@@ -144,8 +153,12 @@ export const useExpenseStore = defineStore('expense', () => {
       .then(() => {
       resetDialog()
       doSearch(0, 10, 'id', 'asc')
+      useToastStore().setToast(true, 'Expense deleted')
     })
-      .catch(err => console.log(`Error: ${ err }`))
+      .catch(err => {
+        console.log(`Error: ${ err }`)
+        useToastStore().setToast(true, err, true)
+      })
   }
   
   const markAsPaid = () => {
@@ -158,8 +171,16 @@ export const useExpenseStore = defineStore('expense', () => {
       .then(() => {
       resetDialog()
       doSearch(0, 10, 'id', 'asc')
+
+      let toastText = 'Expense un-marked as paid'
+      if ( paidStatus )
+        toastText = 'Expense marked as paid'
+      useToastStore().setToast(true, toastText)
     })
-      .catch(err => console.log(`Error: ${ err }`))
+      .catch(err => {
+        console.log(`Error: ${ err }`)
+        useToastStore().setToast(true, err, true)
+      })
   }
 
   const setRowData = (row: RowType) => {

@@ -1,10 +1,10 @@
 <template>
   <div class="vtl__bottom">
-    <main class="vtl__bottom-content col col--flex">
+    <main class="vtl__bottom-content col col--flex mt-0">
       <h2 class="sub-headline sub-headline--flex-start" v-if="paidExpensesLength">
         Remaining expenses: {{ formatCurrency(Number(calculatedRemaingExpenses)) }}
         <p> 
-          {{ paidExpensesDetails }} <b>({{ `${ formatCurrency(calculatedPaidExpenses) } of ${ formatCurrency(calculatedTotalExpense) }` }})</b>
+          <span>{{ paidExpensesDetails }}</span> <b>({{ `${ formatCurrency(calculatedPaidExpenses) } of ${ formatCurrency(calculatedTotalExpense) }` }})</b>
         </p>
       </h2>
 

@@ -35,7 +35,7 @@
       />
     </div>
 
-    <h2 class="sub-headline">Optional</h2>
+    <h2 class="sub-headline sub-headline--added-spacing">Optional</h2>
 
     <div class="col col--flex">
       <LvColorpicker 
