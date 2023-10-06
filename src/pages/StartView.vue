@@ -102,7 +102,6 @@ const displayIncomeDialog = () => {
       position: fixed;
       bottom: 1rem;
       right: 1rem;
-      width: 100%;
       max-width: auto;
       display: flex;
       z-index: 1;
