@@ -13,11 +13,11 @@ export const useToastStore = defineStore('toast', () => {
   const timerId = ref<NodeJS.Timeout>()
 
   const setToast = (visible: boolean, text = 'Dummy text', onError = false, duration = 5000) => {
+    clear()
     toast.value = { visible, text, onError, duration }
-    setTimeout(() => {
+    timerId.value = setTimeout(() => {
       toast.value.visible = false
-      clear()
-    }, toast.value.duration);
+    }, duration);
   }
 
   const closeToast = () => {

@@ -54,7 +54,10 @@ const modifiedClass = computed(() => {
 
     @media (min-width: 1024px) {
       width: auto;
-      left: 1rem;
+      bottom: unset;
+      left: unset;
+      top: 1rem;
+      right: 1rem;
       transform: translate(0, 5px);
     }
 
