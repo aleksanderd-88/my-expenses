@@ -1,9 +1,21 @@
 <template>
   <div class="start">
-    <p class="start__caption caption center-align" v-if="!rowsLength || !isCurrentMonth">No expenses created yet ...</p>
     
-    <ExpenseTable v-if="isCurrentMonth" />
-    <h1 class="start__headline">{{ currentMonth }}</h1>
+    <VueDatePicker 
+      v-model="month" 
+      month-picker
+      hide-input-icon
+      class="start__date-picker"
+    />
+
+    <p 
+      class="start__caption caption center-align" 
+      v-if="!rowsLength"
+    >
+      No expenses created yet ...
+    </p>
+
+    <ExpenseTable v-else />
 
     <div class="start__actions" :class="modifiedClass">
       <LvOverlayPanel 
@@ -74,18 +86,16 @@ import Sugar from 'sugar-date'
 
 const op = ref()
 
+const month = ref({
+  month: new Date().getMonth(),
+  year: new Date().getFullYear()
+});
+
 useIncomeStore().getIncome()
 useExpenseStore().doSearch(0, 10, 'id', 'asc')
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
-const currentMonth = computed(() => Sugar.Date(new Date()).endOfMonth().format('{Month} {yyyy}'))
-
-const isCurrentMonth = computed(() => {
-  return useExpenseStore().table.rows.some(r => {
-    return Sugar.Date(new Date(currentMonth.value)).isBefore(new Date(r.paymentDue)).raw
-  })
-})
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 
@@ -104,14 +114,10 @@ const displayIncomeDialog = () => {
 <style lang="scss" scoped>
   .start {
 
-    &__headline {
-      text-align: center;
-      position: absolute;
-      left: 50%;
-      top: 1rem;
-      transform: translateX(-50%);
+    &__date-picker {
+      margin-top: 1rem;
     }
-
+    
     &__caption {
       width: 100%;
       text-align: center;
