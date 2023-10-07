@@ -1,8 +1,8 @@
 <template>
   <div class="start">
-    <p class="start__caption caption center-align" v-if="!rowsLength">No expenses created yet ...</p>
+    <p class="start__caption caption center-align" v-if="!rowsLength || !isCurrentMonth">No expenses created yet ...</p>
     
-    <ExpenseTable v-else />
+    <ExpenseTable v-if="isCurrentMonth" />
     <h1 class="start__headline">{{ currentMonth }}</h1>
 
     <div class="start__actions" :class="modifiedClass">
@@ -80,6 +80,13 @@ useExpenseStore().doSearch(0, 10, 'id', 'asc')
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
 const currentMonth = computed(() => Sugar.Date(new Date()).endOfMonth().format('{Month} {yyyy}'))
+
+const isCurrentMonth = computed(() => {
+  return useExpenseStore().table.rows.some(r => {
+    return Sugar.Date(new Date(currentMonth.value)).isBefore(new Date(r.paymentDue)).raw
+  })
+})
+
 const togglePanel = (event: Event) => op.value.toggle(event)
 
 const displayExpenseDialog = () => {
