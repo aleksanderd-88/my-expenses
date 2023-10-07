@@ -16,6 +16,7 @@
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile"
   },
   "dependencies": {
+    "@vuepic/vue-datepicker": "^7.1.0",
     "axios": "^1.5.1",
     "light-icons": "^1.0.10",
     "lightvue": "^1.5.1",
