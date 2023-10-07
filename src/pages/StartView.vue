@@ -1,8 +1,9 @@
 <template>
-  <div>
+  <div class="start">
     <p class="start__caption caption center-align" v-if="!rowsLength">No expenses created yet ...</p>
-
+    
     <ExpenseTable v-else />
+    <h1 class="start__headline">{{ currentMonth }}</h1>
 
     <div class="start__actions" :class="modifiedClass">
       <LvOverlayPanel 
@@ -69,6 +70,7 @@ import ExpenseDialog from '@/components/molecules/Expense/ExpenseDialog.vue';
 import IncomeDialog from '@/components/molecules/Income/IncomeDialog.vue'
 import { useExpenseStore } from '@/stores/expense'
 import { useIncomeStore } from '@/stores/income'
+import Sugar from 'sugar-date'
 
 const op = ref()
 
@@ -77,7 +79,7 @@ useExpenseStore().doSearch(0, 10, 'id', 'asc')
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
-
+const currentMonth = computed(() => Sugar.Date(new Date()).endOfMonth().format('{Month} {yyyy}'))
 const togglePanel = (event: Event) => op.value.toggle(event)
 
 const displayExpenseDialog = () => {
@@ -94,6 +96,15 @@ const displayIncomeDialog = () => {
 
 <style lang="scss" scoped>
   .start {
+
+    &__headline {
+      text-align: center;
+      position: absolute;
+      left: 50%;
+      top: 1rem;
+      transform: translateX(-50%);
+    }
+
     &__caption {
       width: 100%;
       text-align: center;
