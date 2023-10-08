@@ -12,7 +12,7 @@
       class="start__caption caption center-align" 
       v-if="!rowsLength"
     >
-      No expenses created yet ...
+      No expenses found
     </p>
 
     <ExpenseTable v-else />
