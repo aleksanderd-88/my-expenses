@@ -178,9 +178,7 @@ export const useExpenseStore = defineStore('expense', () => {
       resetDialog()
       doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
 
-      let toastText = 'Expense un-marked as paid'
-      if ( paidStatus )
-        toastText = 'Expense marked as paid'
+      const toastText = 'Expense status has been changed'
       useToastStore().setToast(true, toastText)
     })
       .catch(err => {
