@@ -2,7 +2,7 @@
   <div class="start">
     
     <VueDatePicker 
-      v-model="month" 
+      v-model="useExpenseStore().expenseMonth" 
       month-picker
       hide-input-icon
       class="start__date-picker"
@@ -86,13 +86,8 @@ import Sugar from 'sugar-date'
 
 const op = ref()
 
-const month = ref({
-  month: new Date().getMonth(),
-  year: new Date().getFullYear()
-});
-
 useIncomeStore().getIncome()
-useExpenseStore().doSearch(0, 10, 'id', 'asc')
+useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')

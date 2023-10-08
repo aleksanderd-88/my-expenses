@@ -28,6 +28,11 @@ export const useExpenseStore = defineStore('expense', () => {
   const rowData = ref<RowType | null>(null)
   const editMode = ref(false)
   const expenseDialogVisible = ref(false)
+  const expenseMonth = ref({
+    month: new Date().getMonth(),
+    year: new Date().getFullYear()
+  })
+  const endOfMonth = computed(() => Sugar.Date(expenseMonth.value).endOfMonth().raw)
 
   const table = reactive({
     isLoading: false,
@@ -77,14 +82,15 @@ export const useExpenseStore = defineStore('expense', () => {
       resetDialog()
   })
 
+  
   const expense = computed(() => data)
   const rowsLength = computed(() => table.rows.length)
   const expenseIsPaid = computed(() => rowData.value?.isPaid)
-
-  const doSearch = (offset: number, limit: number, order: string, sort: string) => {
-    console.log(offset, limit, order, sort);
   
-    return API.listExpenses().then(({ data }) => {
+  const doSearch = (offset: number, limit: number, order: string, sort: string, date: Date) => {
+    console.log(offset, limit, order, sort);
+    
+    return API.listExpenses({ data: { date }}).then(({ data }) => {
       const rows = data.rows.map((r: RowType, index: number) => {
         r.no = index + 1
         r.createdAt = Sugar.Date(new Date(r.createdAt)).long().raw
@@ -101,7 +107,7 @@ export const useExpenseStore = defineStore('expense', () => {
     })
     .catch((err) => console.log(`Error: ${ err }`))
   };
-
+  
   const resetDialog = () => {
     editMode.value = false
     expenseDialogVisible.value = false
@@ -116,7 +122,7 @@ export const useExpenseStore = defineStore('expense', () => {
     return API.updateExpense(id, { data: data })
     .then(() => {
       resetDialog()
-      doSearch(0, 10, 'id', 'asc')
+      doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
       useToastStore().setToast(true, 'Expense updated')
     })
     .catch(err => {
@@ -135,7 +141,7 @@ export const useExpenseStore = defineStore('expense', () => {
     API.createExpense({ data: data })
     .then(() => {
       resetDialog()
-      doSearch(0, 10, 'id', 'asc')
+      doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
       useToastStore().setToast(true, 'Expense added')
     })
     .catch(err => {
@@ -152,7 +158,7 @@ export const useExpenseStore = defineStore('expense', () => {
     return API.deleteExpense(id)
       .then(() => {
       resetDialog()
-      doSearch(0, 10, 'id', 'asc')
+      doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
       useToastStore().setToast(true, 'Expense deleted')
     })
       .catch(err => {
@@ -170,7 +176,7 @@ export const useExpenseStore = defineStore('expense', () => {
     return API.updateExpense(id, { data: { isPaid: (paidStatus = !paidStatus) } } )
       .then(() => {
       resetDialog()
-      doSearch(0, 10, 'id', 'asc')
+      doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
 
       let toastText = 'Expense un-marked as paid'
       if ( paidStatus )
@@ -191,6 +197,8 @@ export const useExpenseStore = defineStore('expense', () => {
     Object.assign(data, { ...rowData.value, paymentDue: parsedPaymentDueDate })
   }
 
+  watch(() => expenseMonth.value, () => doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value)), { deep: true })
+
   return {
     expense,
     table,
@@ -205,6 +213,7 @@ export const useExpenseStore = defineStore('expense', () => {
     expenseIsPaid,
     expenseDialogVisible,
     setRowData,
-    rowData
+    rowData,
+    expenseMonth
   }
 })

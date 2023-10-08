@@ -7,7 +7,7 @@ const client = axios.create({
 })
 
 type ParameterType = {
-  data: Record<string, unknown>
+  data: Record<string, unknown> | Date
 }
 
 export default {
@@ -15,8 +15,8 @@ export default {
   createExpense(params: ParameterType): Promise<AxiosResponse> {
     return client.post('/expenses/create', params)
   },
-  listExpenses(): Promise<AxiosResponse> {
-    return client.patch('/expenses/list')
+  listExpenses(params: ParameterType): Promise<AxiosResponse> {
+    return client.patch('/expenses/list', params)
   },
   updateExpense(id: string, params: ParameterType): Promise<AxiosResponse> {
     return client.patch(`/expenses/${ id }/update`, params)
