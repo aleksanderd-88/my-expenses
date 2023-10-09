@@ -25,7 +25,10 @@ export const useIncomeStore = defineStore('income', () => {
 
   const getIncome = () => {
     return API.getIncome()
-    .then(({ data }: { data: { amount: number | null } }) => addedIncome.value = data.amount)
+    .then(({ data }: { data: { amount: number | null } }) => {
+      income.amount = data.amount
+      addedIncome.value = data.amount // TODO: Fix this redundant assignment
+    })
     .catch(err => console.log(`Error: ${ err }`))
   }
 
@@ -34,8 +37,7 @@ export const useIncomeStore = defineStore('income', () => {
       return
   
     API.updateIncome({ data: income })
-      .then(({ data }) => {
-        income.amount = data
+      .then(() => {
         resetDialog()
         getIncome()
         useToastStore().setToast(true, 'Income updated')
