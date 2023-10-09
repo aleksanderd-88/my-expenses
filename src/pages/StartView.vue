@@ -1,9 +1,21 @@
 <template>
   <div class="start">
-    <p class="start__caption caption center-align" v-if="!rowsLength">No expenses created yet ...</p>
     
+    <VueDatePicker 
+      v-model="useExpenseStore().expenseMonth" 
+      month-picker
+      hide-input-icon
+      class="start__date-picker"
+    />
+
+    <p 
+      class="start__caption caption center-align" 
+      v-if="!rowsLength"
+    >
+      No expenses found
+    </p>
+
     <ExpenseTable v-else />
-    <h1 class="start__headline">{{ currentMonth }}</h1>
 
     <div class="start__actions" :class="modifiedClass">
       <LvOverlayPanel 
@@ -75,11 +87,11 @@ import Sugar from 'sugar-date'
 const op = ref()
 
 useIncomeStore().getIncome()
-useExpenseStore().doSearch(0, 10, 'id', 'asc')
+useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
-const currentMonth = computed(() => Sugar.Date(new Date()).endOfMonth().format('{Month} {yyyy}'))
+
 const togglePanel = (event: Event) => op.value.toggle(event)
 
 const displayExpenseDialog = () => {
@@ -97,14 +109,10 @@ const displayIncomeDialog = () => {
 <style lang="scss" scoped>
   .start {
 
-    &__headline {
-      text-align: center;
-      position: absolute;
-      left: 50%;
-      top: 1rem;
-      transform: translateX(-50%);
+    &__date-picker {
+      margin-top: 1rem;
     }
-
+    
     &__caption {
       width: 100%;
       text-align: center;
