@@ -35,6 +35,19 @@
       />
     </div>
 
+    <div class="col col--flex">
+      <BaseButton 
+        icon="thumb-up" 
+        class="lv-button--ml-10"
+        @click="useExpenseStore().markAsPaid()"
+        success
+        :style="{ marginLeft: 'auto !important' }"
+        v-if="useExpenseStore().editMode"
+      >
+        {{ useExpenseStore().expenseIsPaid ? 'Un-mark as paid' : 'Mark as paid' }}
+      </BaseButton>
+    </div>
+
     <h2 class="sub-headline sub-headline--added-spacing">Optional</h2>
 
     <div class="col col--flex">
@@ -57,20 +70,10 @@
 
     <template #footer>
       <BaseButton 
-        icon="thumb-up" 
-        class="lv-button--ml-10"
-        @click="useExpenseStore().markAsPaid()"
-        success
-        v-if="useExpenseStore().editMode"
-      >
-        {{ useExpenseStore().expenseIsPaid ? 'Un-mark as paid' : 'Mark as paid' }}
-      </BaseButton>
-
-      <BaseButton 
         icon="trash" 
-        class="lv-button--ml-10"
         @click="useExpenseStore().deleteExpense()"
         danger
+        :style="{ marginRight: 'auto !important' }"
         v-if="useExpenseStore().editMode"
       >
         Delete
