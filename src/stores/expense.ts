@@ -138,7 +138,7 @@ export const useExpenseStore = defineStore('expense', () => {
       updateExpense()
 
     if ( copyPrevious.value )
-      copyPreviousMonth()
+      return copyPreviousMonth()
     
     if ( !data || Object.values(data).some(o => !o) ) 
       return
