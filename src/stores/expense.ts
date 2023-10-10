@@ -167,7 +167,7 @@ export const useExpenseStore = defineStore('expense', () => {
     .then(() => {
       resetDialog()
       doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
-      useToastStore().setToast(true, 'Expense added')
+      useToastStore().setToast(true, 'Previous month expenses added')
     })
     .catch(err => {
       console.log(`Error: ${ err }`)
