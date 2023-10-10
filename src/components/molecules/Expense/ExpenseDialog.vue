@@ -79,6 +79,21 @@
         Delete
       </BaseButton>
 
+      <LvCheckBox
+        type="checkbox"
+        name="copy-previous"
+        color="success"
+        thick
+        outline
+        rounded
+        smooth
+        v-model="useExpenseStore().copyPrevious"
+        :style="{ marginRight: 'auto !important' }"
+        v-if="!useExpenseStore().table.rows.length"
+      >
+      Copy previous month
+      </LvCheckBox>
+
       <BaseButton 
         icon="x" 
         class="lv-button--ml-10"
@@ -104,6 +119,7 @@ import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvColorpicker from 'lightvue/color-picker';
 import LvDropdown from 'lightvue/dropdown';
 import { useExpenseStore } from '@/stores/expense';
+import LvCheckBox from 'lightvue/checkbox'
 
 const initialColor = ref('#607C8A')
 const selectedOption = ref(null)
