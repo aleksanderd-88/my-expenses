@@ -110,7 +110,7 @@ const displayIncomeDialog = () => {
   .start {
 
     &__date-picker {
-      margin-top: 1rem;
+      padding-top: 1rem;
     }
     
     &__caption {
