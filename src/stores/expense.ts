@@ -111,6 +111,7 @@ export const useExpenseStore = defineStore('expense', () => {
   
   const resetDialog = () => {
     editMode.value = false
+    copyPrevious.value = false
     expenseDialogVisible.value = false
     Object.assign(data, expenseInitialValue)
   }
@@ -156,12 +157,10 @@ export const useExpenseStore = defineStore('expense', () => {
 
   const copyPreviousMonth = () => {
     const previousEndOfMonth = Sugar.Date().set({ year: expenseMonth.value.year, month: expenseMonth.value.month - 1 }).endOfMonth().raw
-    const currentExpenseDate = Sugar.Date().set({ year: expenseMonth.value.year, month: expenseMonth.value.month }).endOfMonth().raw
 
     const data = {
       copyPrevious: copyPrevious.value,
-      date: previousEndOfMonth,
-      currentExpenseDate
+      date: previousEndOfMonth
     }
 
     API.createExpense({ data })
@@ -172,9 +171,10 @@ export const useExpenseStore = defineStore('expense', () => {
     })
     .catch(err => {
       console.log(`Error: ${ err }`)
-      useToastStore().setToast(true, err, true)
+      const message = err.response.data ? err.response.data : err
+      useToastStore().setToast(true, message, true)
     })
-    .finally(() => copyPrevious.value = false)
+    .finally(() => resetDialog())
   }
   
   const deleteExpense = () => {
