@@ -83,6 +83,7 @@ export const useExpenseStore = defineStore('expense', () => {
   })
 
   
+  const copyPrevious = ref(false)
   const expense = computed(() => data)
   const rowsLength = computed(() => table.rows.length)
   const expenseIsPaid = computed(() => rowData.value?.isPaid)
@@ -110,6 +111,7 @@ export const useExpenseStore = defineStore('expense', () => {
   
   const resetDialog = () => {
     editMode.value = false
+    copyPrevious.value = false
     expenseDialogVisible.value = false
     Object.assign(data, expenseInitialValue)
   }
@@ -134,6 +136,9 @@ export const useExpenseStore = defineStore('expense', () => {
   const createExpense = () => {
     if ( editMode.value )
       updateExpense()
+
+    if ( copyPrevious.value )
+      return copyPreviousMonth()
     
     if ( !data || Object.values(data).some(o => !o) ) 
       return
@@ -148,6 +153,28 @@ export const useExpenseStore = defineStore('expense', () => {
       console.log(`Error: ${ err }`)
       useToastStore().setToast(true, err, true)
     })
+  }
+
+  const copyPreviousMonth = () => {
+    const previousEndOfMonth = Sugar.Date().set({ year: expenseMonth.value.year, month: expenseMonth.value.month - 1 }).endOfMonth().raw
+
+    const data = {
+      copyPrevious: copyPrevious.value,
+      date: previousEndOfMonth
+    }
+
+    API.createExpense({ data })
+    .then(() => {
+      resetDialog()
+      doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
+      useToastStore().setToast(true, 'Previous month expenses added')
+    })
+    .catch(err => {
+      console.log(`Error: ${ err }`)
+      const message = err.response.data ? err.response.data : err
+      useToastStore().setToast(true, message, true)
+    })
+    .finally(() => resetDialog())
   }
   
   const deleteExpense = () => {
@@ -212,6 +239,7 @@ export const useExpenseStore = defineStore('expense', () => {
     expenseDialogVisible,
     setRowData,
     rowData,
-    expenseMonth
+    expenseMonth,
+    copyPrevious
   }
 })
