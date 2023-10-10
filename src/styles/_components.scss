@@ -64,6 +64,17 @@
   flex: 1 !important;
 }
 
+//- Lightvue switch
+.d-toggle {
+  &__wrapper {
+    margin-right: auto !important;
+  }
+
+  &__label {
+    font-size: .8rem !important;
+  }
+}
+
 //- Table lite
 .vtl {
 

@@ -13,7 +13,8 @@
       label="Give your expense a name"
       placeholder="E.g. Telenor"
       bottom-bar
-      clearable 
+      clearable
+      :disabled="useExpenseStore().copyPrevious" 
     />
 
     <div class="col col--flex">
@@ -23,7 +24,8 @@
         label="Enter expense cost"
         placeholder="E.g. 600 SEK"
         bottom-bar
-        clearable 
+        clearable
+        :disabled="useExpenseStore().copyPrevious"  
       />
 
       <LvInput 
@@ -31,7 +33,8 @@
         v-model="expense.paymentDue"
         label="Enter due date"
         bottom-bar
-        clearable 
+        clearable
+        :disabled="useExpenseStore().copyPrevious"  
       />
     </div>
 
@@ -79,20 +82,12 @@
         Delete
       </BaseButton>
 
-      <LvCheckBox
-        type="checkbox"
-        name="copy-previous"
-        color="success"
-        thick
-        outline
-        rounded
-        smooth
-        v-model="useExpenseStore().copyPrevious"
-        :style="{ marginRight: 'auto !important' }"
+      <LvToggleSwitch 
+        v-model="useExpenseStore().copyPrevious" 
+        label="Copy previous month expenses"
+        class="d-toggle__wrapper"
         v-if="!useExpenseStore().table.rows.length"
-      >
-      Copy previous month
-      </LvCheckBox>
+      />
 
       <BaseButton 
         icon="x" 
@@ -119,7 +114,7 @@ import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvColorpicker from 'lightvue/color-picker';
 import LvDropdown from 'lightvue/dropdown';
 import { useExpenseStore } from '@/stores/expense';
-import LvCheckBox from 'lightvue/checkbox'
+import LvToggleSwitch from 'lightvue/toggle-switch'
 
 const initialColor = ref('#607C8A')
 const selectedOption = ref(null)
