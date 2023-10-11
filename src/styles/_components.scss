@@ -217,3 +217,18 @@
   background-color: #343a40 !important;
   color: $white !important;
 }
+
+//- Lightvue progress bar
+.lv-progressbar {
+  opacity: 0 !important;
+  visibility: hidden !important;
+
+  &__value {
+    background: $dark !important;
+  }
+
+  &--visible {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
