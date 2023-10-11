@@ -2,8 +2,7 @@
   <LvProgressBar 
     mode="indeterminate" 
     color="#bb2727" 
-    class="lv-progress" 
-    :class="{ 'lv-progress--visible ': isLoading }" 
+    :class="{ 'lv-progressbar--visible ': isLoading }" 
   />
 </template>
 
