@@ -240,6 +240,7 @@ export const useExpenseStore = defineStore('expense', () => {
     setRowData,
     rowData,
     expenseMonth,
-    copyPrevious
+    copyPrevious,
+    endOfMonth
   }
 })

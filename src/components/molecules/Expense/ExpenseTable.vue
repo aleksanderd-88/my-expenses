@@ -50,7 +50,7 @@ const calculatedTotalExpense = computed(() => {
 })
 const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
 
-const doSearch = () => useExpenseStore().doSearch(0, 10, 'id', 'asc')
+const doSearch = () => useExpenseStore().doSearch(0, 10, 'id', 'asc', new Date(useExpenseStore().endOfMonth))
 
 /**
  * Table search finished event
