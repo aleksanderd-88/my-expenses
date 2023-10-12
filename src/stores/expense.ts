@@ -5,7 +5,6 @@ import API from '@/services/api'
 import Sugar from 'sugar-date'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
-import { useCategoryStore } from "./category";
 
 type RowType = {
   _id: string
@@ -83,8 +82,6 @@ export const useExpenseStore = defineStore('expense', () => {
   watch(() => expenseDialogVisible.value, (val: boolean) => {
     if ( !val )
       return resetDialog()
-
-    useCategoryStore().listCategories()
   })
 
   

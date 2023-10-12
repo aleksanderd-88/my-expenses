@@ -58,13 +58,24 @@
           </li>
         </ul>
       </LvOverlayPanel>
-  
-      <BaseButton 
-        class="start__add-btn lv-button--center-content" 
-        icon="plus" 
-        deep-shadow
-        @click="togglePanel($event)"
-      />
+
+      <div class="start__action-btns">
+        <BaseButton 
+          class="start__add-btn lv-button--center-content" 
+          :icon="icon" 
+          deep-shadow
+          primary
+          @click="toggleTableLayout()"
+          v-if="useCategoryStore().categories.length"
+        />
+    
+        <BaseButton 
+          class="start__add-btn lv-button--center-content" 
+          icon="plus" 
+          deep-shadow
+          @click="togglePanel($event)"
+        />
+      </div>
     </div>
 
     <ExpenseDialog />
@@ -87,6 +98,8 @@ import { useIncomeStore } from '@/stores/income'
 import Sugar from 'sugar-date'
 import CategoryDialog from '@/components/molecules/Category/CategoryDialog.vue';
 import { useCategoryStore } from '@/stores/category';
+import { useTableStore } from '@/stores/table';
+import { onBeforeRouteUpdate } from 'vue-router';
 
 const op = ref()
 
@@ -95,6 +108,7 @@ useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expe
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
+const icon = computed(() => useTableStore().mode.includes('list') ? 'list' : 'layout-list')
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 
@@ -113,6 +127,17 @@ const displayCategoryDialog = () => {
   togglePanel(op.value)
   useCategoryStore().categoryDialogVisible = true
 }
+
+const toggleTableLayout = () => {
+  useTableStore().setLayoutMode()
+}
+
+useCategoryStore().listCategories()
+
+onBeforeRouteUpdate(() => {
+  useCategoryStore().listCategories()
+  return true
+})
 </script>
 
 <style lang="scss" scoped>
@@ -156,13 +181,19 @@ const displayCategoryDialog = () => {
       right: 0 !important;
       left: unset !important;
       top: unset !important;
-      bottom: calc(100% + .5rem) !important;
+      bottom: calc(70px + .5rem) !important;
     }
 
     &__options {
       display: flex;
       flex-direction: column;
       gap: .5rem;
+    }
+
+    &__action-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
     }
 
     &__action-btn {
