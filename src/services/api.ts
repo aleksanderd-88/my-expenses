@@ -7,7 +7,7 @@ const client = axios.create({
 })
 
 type ParameterType = {
-  data: Record<string, unknown> | Date
+  data: Record<string, unknown> | Date | string
 }
 
 export default {
@@ -31,5 +31,13 @@ export default {
   },
   getIncome(): Promise<AxiosResponse> {
     return client.get('/income/get')
-  }
+  },
+
+  //- Category
+  createCategory(params: ParameterType): Promise<AxiosResponse> {
+    return client.post('/categories/create', params)
+  },
+  listCategories(): Promise<AxiosResponse> {
+    return client.get('/categories/list')
+  },
 }

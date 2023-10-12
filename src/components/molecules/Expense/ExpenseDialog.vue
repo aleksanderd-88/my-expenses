@@ -62,12 +62,14 @@
       />
 
       <lv-dropdown 
-        v-model="selectedOption" 
-        :options="options" 
-        placeholder="Select bank account" 
+        v-model="useExpenseStore().data.categoryId" 
+        :options="categories" 
+        placeholder="Select category" 
         optionLabel="label"
-        label="Choose bank account"
-        clearable 
+        label="Select category"
+        option-value="_id"
+        options-label="label"
+        clearable
       />
     </div>
 
@@ -109,21 +111,17 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvColorpicker from 'lightvue/color-picker';
 import LvDropdown from 'lightvue/dropdown';
 import { useExpenseStore } from '@/stores/expense';
 import LvToggleSwitch from 'lightvue/toggle-switch'
+import { useCategoryStore } from '@/stores/category'
 
 const initialColor = ref('#607C8A')
-const selectedOption = ref(null)
-const options = ref([
-  { id: 1, label: 'Bank account 1' },
-  { id: 2, label: 'Bank account 2' },
-  { id: 3, label: 'Bank account 3' },
-  { id: 4, label: 'Bank account 4' }
-])
+
+const categories = computed(() => useCategoryStore().categories)
 
 const expense = useExpenseStore().data
 

@@ -5,6 +5,7 @@ import API from '@/services/api'
 import Sugar from 'sugar-date'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
+import { useCategoryStore } from "./category";
 
 type RowType = {
   _id: string
@@ -22,7 +23,8 @@ export const useExpenseStore = defineStore('expense', () => {
   const expenseInitialValue = {
     name: null,
     cost: null,
-    paymentDue: null
+    paymentDue: null,
+    categoryId: null
   }
 
   const data = reactive({ ...expenseInitialValue })
@@ -80,7 +82,9 @@ export const useExpenseStore = defineStore('expense', () => {
 
   watch(() => expenseDialogVisible.value, (val: boolean) => {
     if ( !val )
-      resetDialog()
+      return resetDialog()
+
+    useCategoryStore().listCategories()
   })
 
   

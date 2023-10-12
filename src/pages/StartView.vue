@@ -51,6 +51,7 @@
               icon="file-check"
               icon-left
               class="start__action-btn"
+              @click="displayCategoryDialog()"
             >
               Create category
             </BaseButton>
@@ -68,8 +69,9 @@
 
     <ExpenseDialog />
 
-    <!-- Incomde dialog -->
     <IncomeDialog />
+
+    <CategoryDialog />
   </div>
 </template>
 
@@ -83,6 +85,8 @@ import IncomeDialog from '@/components/molecules/Income/IncomeDialog.vue'
 import { useExpenseStore } from '@/stores/expense'
 import { useIncomeStore } from '@/stores/income'
 import Sugar from 'sugar-date'
+import CategoryDialog from '@/components/molecules/Category/CategoryDialog.vue';
+import { useCategoryStore } from '@/stores/category';
 
 const op = ref()
 
@@ -103,6 +107,11 @@ const displayExpenseDialog = () => {
 const displayIncomeDialog = () => {
   togglePanel(op.value)
   useIncomeStore().incomeDialogVisible = true
+}
+
+const displayCategoryDialog = () => {
+  togglePanel(op.value)
+  useCategoryStore().categoryDialogVisible = true
 }
 </script>
 
