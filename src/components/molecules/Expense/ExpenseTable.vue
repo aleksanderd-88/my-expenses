@@ -79,7 +79,10 @@ const calculatedTotalExpense = computed(() => {
 })
 
 const filterRows = (id: string) => {
-  return table.rows?.filter(r => r.categoryId === id) || table.rows
+  return table.rows?.filter(r => r.categoryId === id).map((r: RowType, index: number) => {
+    r.no = index + 1
+    return r
+  })
 }
 
 const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
