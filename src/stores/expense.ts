@@ -15,7 +15,8 @@ type RowType = {
   strCost: string
   paymentDue: string
   paidAt: string
-  createdAt: string 
+  createdAt: string
+  categoryId: string
 }
 
 export const useExpenseStore = defineStore('expense', () => {
