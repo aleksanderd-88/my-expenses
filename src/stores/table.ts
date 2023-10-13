@@ -11,7 +11,7 @@ export const useTableStore = defineStore('table', () => {
   const setLayoutMode = () => {
     isCategoryMode.value = !isCategoryMode.value
     mode.value = isCategoryMode.value ? 'category' : 'list'
-    useToastStore().setToast(true, `Layout has been change to ${ mode.value } mode`)
+    useToastStore().setToast(true, `Now displaying ${ mode.value } view`)
   }
   
   return {
