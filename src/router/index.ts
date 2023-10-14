@@ -10,20 +10,28 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/log-in',
-      name: 'login',
-      component: () => import('@/pages/User/UserLogin.vue')
+      path: '/',
+      name: 'start',
+      component: () => import('@/pages/User/StartView.vue'),
+      redirect: { name: 'login' },
+      children: [
+        {
+          path: '/log-in',
+          name: 'login',
+          component: () => import('@/pages/User/UserLogin.vue')
+        },
+        {
+          path: '/sign-up',
+          name: 'signup',
+          component: () => import('@/pages/User/UserSignup.vue')
+        }
+      ]
     },
     {
       path: '/',
-      name: 'start',
+      name: 'expenses',
       component: StartView,
       meta: { requiresAuth: true }
-    },
-    {
-      path: '/sign-up',
-      name: 'signup',
-      component: () => import('@/pages/User/UserSignup.vue')
     }
   ]
 })
