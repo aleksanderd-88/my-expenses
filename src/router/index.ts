@@ -10,7 +10,7 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/',
+      path: '/log-in',
       name: 'login',
       component: () => import('@/pages/User/UserLogin.vue')
     },
@@ -21,7 +21,7 @@ const router = createRouter({
       meta: { requiresAuth: true }
     },
     {
-      path: '/signup',
+      path: '/sign-up',
       name: 'signup',
       component: () => import('@/pages/User/UserSignup.vue')
     }

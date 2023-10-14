@@ -6,12 +6,13 @@
       <LvInput
         type="text"
         v-model="input.name"
-        label="Your full name"
+        label="Enter your full name"
         placeholder="E.g. John Doe"
         bottom-bar
         clearable 
       />
     </div>
+
     <div class="form__row">
       <LvInput
         type="text"
@@ -22,6 +23,7 @@
         clearable 
       />
     </div>
+
     <div class="form__row">
       <LvInput
         type="text"
@@ -32,20 +34,43 @@
         clearable 
       />
     </div>
+
     <div class="form__row">
       <LvInput
         type="text"
         v-model="input.verifiedPassword"
-        label="Please confirm password"
+        label="Confirm password"
         placeholder="Verify password"
         bottom-bar
         clearable 
       />
     </div>
+
+    <div class="form__row form__row--flex">
+      <BaseButton 
+        class="lv-button--ml-10 lv-button--center-content"
+        :style="{ 
+          marginLeft: 'unset !important', 
+          width: '100%'
+        }"
+        primary
+        @click.stop
+      >
+        Sign up
+      </BaseButton>
+    </div>
+
+    <div class="form__row">
+      <p class="form__navigation-link">
+        Already have an account? 
+        <router-link :to="{ name: 'login' }">Log in here!</router-link>
+      </p>
+    </div>
   </form>
 </template>
 
 <script setup lang="ts">
+import BaseButton from '@/components/atoms/BaseButton.vue';
 import { reactive } from 'vue';
 
   defineProps({

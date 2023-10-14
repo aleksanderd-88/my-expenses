@@ -12,20 +12,43 @@
         clearable 
       />
     </div>
+
     <div class="form__row">
       <LvInput
         type="text"
         v-model="input.password"
         label="Enter a password"
-        placeholder="Choose a strong password"
+        placeholder="Enter your password"
         bottom-bar
         clearable 
       />
+    </div>
+
+    <div class="form__row form__row--flex">
+      <BaseButton 
+        class="lv-button--ml-10 lv-button--center-content"
+        :style="{ 
+          marginLeft: 'unset !important', 
+          width: '100%'
+        }"
+        primary
+        @click.stop
+      >
+        Log in
+      </BaseButton>
+    </div>
+
+    <div class="form__row">
+      <p class="form__navigation-link">
+        Don't have an account? 
+        <router-link :to="{ name: 'signup' }">Sign up here!</router-link>
+      </p>
     </div>
   </form>
 </template>
 
 <script setup lang="ts">
+import BaseButton from '@/components/atoms/BaseButton.vue'
 import { reactive } from 'vue';
 
   defineProps({
