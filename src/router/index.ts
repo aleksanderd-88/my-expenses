@@ -16,12 +16,12 @@ const router = createRouter({
       redirect: { name: 'login' },
       children: [
         {
-          path: '/log-in',
+          path: '/user/log-in',
           name: 'login',
           component: () => import('@/pages/User/UserLogin.vue')
         },
         {
-          path: '/sign-up',
+          path: '/user/sign-up',
           name: 'signup',
           component: () => import('@/pages/User/UserSignup.vue')
         }
