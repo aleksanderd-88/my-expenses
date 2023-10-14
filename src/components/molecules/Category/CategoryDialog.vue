@@ -24,7 +24,11 @@
       Remove category
     </BaseButton>
 
-    <p class="mt-2 color-dark" :style="{ fontWeight: '500' }">
+    <p 
+      class="mt-2 color-dark" 
+      :style="{ fontWeight: '500' }"
+      v-if="useCategoryStore().categories.length"
+      >
       Categories
       <br />
       <span :style="{ fontSize: '.8rem', fontWeight: 'initial' }">(Click on category to edit)</span>
