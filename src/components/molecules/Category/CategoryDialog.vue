@@ -15,6 +15,33 @@
       bottom-bar
       clearable 
     />
+    <BaseButton 
+      danger 
+      :style="{ marginTop: '.5rem !important' }"
+      icon="trash"
+      v-if="useCategoryStore().edit"
+      @click="useCategoryStore().deleteCategory(useCategoryStore().category._id)">
+      Remove category
+    </BaseButton>
+
+    <p class="mt-2 color-dark" :style="{ fontWeight: '500' }">
+      Categories
+      <br />
+      <span :style="{ fontSize: '.8rem', fontWeight: 'initial' }">(Click on category to edit)</span>
+    </p>
+
+    <div class="col col--flex">
+      <LvBadge 
+        color="info" 
+        v-for="item in useCategoryStore().categories" 
+        :key="item._id"
+        :style="{ cursor: 'pointer !important' }"
+        @click="onBadgeClick(item)"
+        title="Click to change label"
+      >
+        {{ item.label }}
+      </LvBadge>
+    </div>
 
     <template #footer>
       <BaseButton 
@@ -39,7 +66,14 @@
 <script setup lang="ts">
 import { useCategoryStore } from '@/stores/category'
 import BaseButton from '@/components/atoms/BaseButton.vue'
+import LvBadge from 'lightvue/badge'
 
+const onBadgeClick = (category: { _id: string,  label: string }) => {
+  console.log(category);
+  useCategoryStore().edit = true
+  useCategoryStore().label = category.label
+  useCategoryStore().category = category
+}
 </script>
 
 <style scoped>

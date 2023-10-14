@@ -53,7 +53,7 @@
               class="start__action-btn"
               @click="displayCategoryDialog()"
             >
-              Create category
+              {{ useCategoryStore().categories.length ? 'Add/edit category' : 'Add category' }}
             </BaseButton>
           </li>
         </ul>

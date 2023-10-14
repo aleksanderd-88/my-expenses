@@ -40,4 +40,10 @@ export default {
   listCategories(): Promise<AxiosResponse> {
     return client.get('/categories/list')
   },
+  updateCategory(id: string, params: ParameterType): Promise<AxiosResponse> {
+    return client.patch(`/categories/${ id }/update`, params)
+  },
+  deleteCategory(id: string): Promise<AxiosResponse> {
+    return client.delete(`/categories/${ id }/delete`)
+  },
 }

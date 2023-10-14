@@ -32,6 +32,10 @@ const props = defineProps({
   icon: {
     type: String,
     default: null
+  },
+  transparent: {
+    type: Boolean,
+    default: false
   }
 })
 
@@ -43,6 +47,8 @@ const modifiedClass = computed(() => {
     className += ' base-btn--bg-success'
   if ( props.primary )
     className += ' base-btn--bg-primary'
+  if ( props.transparent )
+    className += ' base-btn--transparent'
 
   return className
 })
@@ -72,6 +78,12 @@ const modifiedClass = computed(() => {
     
     &--bg-primary {
       background-color: $primary !important;
+    }
+
+    &--transparent {
+      padding: .5rem 0 !important;
+      color: $dark !important;
+      background-color: transparent !important;
     }
   }
 </style>
