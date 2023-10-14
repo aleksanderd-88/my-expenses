@@ -69,7 +69,6 @@ import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvBadge from 'lightvue/badge'
 
 const onBadgeClick = (category: { _id: string,  label: string }) => {
-  console.log(category);
   useCategoryStore().edit = true
   useCategoryStore().label = category.label
   useCategoryStore().category = category
