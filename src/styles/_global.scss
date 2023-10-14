@@ -9,3 +9,13 @@ $white: #e8eaf6;
 $red: #ef5350;
 $success: #81c784;
 $primary: #42a5f5;
+
+// Margins
+
+.mt-2 { margin-top: 2rem; }
+
+p {
+  &.color-dark {
+    color: $dark;
+  }
+}

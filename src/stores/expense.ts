@@ -15,14 +15,16 @@ type RowType = {
   strCost: string
   paymentDue: string
   paidAt: string
-  createdAt: string 
+  createdAt: string
+  categoryId: string
 }
 
 export const useExpenseStore = defineStore('expense', () => {
   const expenseInitialValue = {
     name: null,
     cost: null,
-    paymentDue: null
+    paymentDue: null,
+    categoryId: null
   }
 
   const data = reactive({ ...expenseInitialValue })
@@ -80,7 +82,7 @@ export const useExpenseStore = defineStore('expense', () => {
 
   watch(() => expenseDialogVisible.value, (val: boolean) => {
     if ( !val )
-      resetDialog()
+      return resetDialog()
   })
 
   
