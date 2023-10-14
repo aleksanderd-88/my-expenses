@@ -1,8 +1,9 @@
 import { defineStore } from "pinia";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import API from '@/services/api'
 import { useLoadingStore } from "./loader";
 import { useToastStore } from "./toast";
+import { useExpenseStore } from "./expense";
 
 type CategoryPropType = {
   _id: string
@@ -95,6 +96,8 @@ export const useCategoryStore = defineStore('category', () => {
       return edit.value = false
   }, { deep: true })
 
+  const expensesWithCategories = computed(() => useExpenseStore().table.rows.filter(r => r.categoryId).length)
+
   return {
     categories,
     createCategory,
@@ -104,6 +107,7 @@ export const useCategoryStore = defineStore('category', () => {
     category,
     edit,
     label,
-    deleteCategory
+    deleteCategory,
+    expensesWithCategories
   }
 })

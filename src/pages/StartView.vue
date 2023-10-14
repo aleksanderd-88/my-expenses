@@ -66,7 +66,7 @@
           deep-shadow
           primary
           @click="toggleTableLayout()"
-          v-if="useCategoryStore().categories.length"
+          v-if="useCategoryStore().expensesWithCategories"
         />
     
         <BaseButton 
