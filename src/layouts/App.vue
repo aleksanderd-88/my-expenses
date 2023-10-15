@@ -2,6 +2,10 @@
   <div class="base-layout">
     <AppLoader />
     
+    <TheAppBar />
+    
+    <TheAppMenu />
+
     <main class="base-layout__content">
       <router-view />
     </main>
@@ -13,6 +17,8 @@
 <script setup lang="ts">
 import AppLoader from '@/components/atoms/AppLoader.vue';
 import AppToast from '@/components/molecules/Toast/AppToast.vue'
+import TheAppBar from '@/components/organisms/TheAppBar.vue'
+import TheAppMenu from '@/components/organisms/TheAppMenu.vue';
 </script>
 
 <style scoped>

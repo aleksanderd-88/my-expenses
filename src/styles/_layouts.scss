@@ -16,3 +16,30 @@
     color: $white !important;
   }
 }
+
+.single-page-layout {
+  width: 100%;
+  height: 100vh;
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  background-color: #fff;
+
+  &__text-content {
+    margin-bottom: 4rem;
+    text-align: center;
+
+    img {
+      margin: auto;
+    }
+  }
+
+  &__content {
+    width: 100%;
+    max-width: auto;
+    margin: auto;
+    padding: 0 1rem;
+    background-color: #fff;
+  }
+}

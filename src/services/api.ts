@@ -1,4 +1,7 @@
+import { useToastStore } from '@/stores/toast'
+import { useUserStore } from '@/stores/user'
 import axios, { type AxiosResponse } from 'axios'
+import { useRouter } from 'vue-router'
 
 const client = axios.create({
   baseURL: `${ import.meta.env.VITE_API_URL }/api/v1`,
@@ -9,6 +12,34 @@ const client = axios.create({
 type ParameterType = {
   data: Record<string, unknown> | Date | string
 }
+
+client.interceptors.request.use(req => {
+  if ( useUserStore().currentUser?.token )
+    req.headers.Authorization  = useUserStore().currentUser?.token
+  return req
+}, err => {
+  console.log(err);
+  if ( [401, 403].includes(err.response?.status) ) {
+    useUserStore().clearUser()
+    useToastStore().setToast(true, err.response.data, true)
+    useRouter().replace({ name: 'login' })
+  }
+
+  return Promise.reject(err)
+})
+
+client.interceptors.response.use(res => {
+  return res
+}, err => {
+  console.log(err);
+  if ( [401, 403].includes(err.response?.status) ) {
+    useUserStore().clearUser()
+    useToastStore().setToast(true, err.response.data, true)
+    useRouter().replace({ name: 'login' })
+  }
+
+  return Promise.reject(err)
+})
 
 export default {
   //- Expenses
@@ -45,5 +76,16 @@ export default {
   },
   deleteCategory(id: string): Promise<AxiosResponse> {
     return client.delete(`/categories/${ id }/delete`)
+  },
+
+  //- User
+  createUser(params: ParameterType): Promise<AxiosResponse> {
+    return client.post('/users/create', params)
+  },
+  authUser(params: ParameterType): Promise<AxiosResponse> {
+    return client.post('/users/auth', params)
+  },
+  getUser(id: string): Promise<AxiosResponse> {
+    return client.get(`/users/${ id }/get`)
   },
 }

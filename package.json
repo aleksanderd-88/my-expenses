@@ -16,10 +16,12 @@
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.199",
     "@vuepic/vue-datepicker": "^7.1.0",
     "axios": "^1.5.1",
     "light-icons": "^1.0.10",
     "lightvue": "^1.5.1",
+    "lodash": "^4.17.21",
     "pinia": "^2.1.6",
     "sugar-date": "^2.0.6",
     "vue": "^3.3.4",

@@ -100,6 +100,7 @@ import CategoryDialog from '@/components/molecules/Category/CategoryDialog.vue';
 import { useCategoryStore } from '@/stores/category';
 import { useTableStore } from '@/stores/table';
 import { onBeforeRouteUpdate } from 'vue-router';
+import { useUserStore } from '@/stores/user';
 
 const op = ref()
 
@@ -133,9 +134,11 @@ const toggleTableLayout = () => {
 }
 
 useCategoryStore().listCategories()
+useUserStore().getUser(useUserStore().currentUser?._id as string)
 
 onBeforeRouteUpdate(() => {
   useCategoryStore().listCategories()
+  useUserStore().getUser(useUserStore().currentUser?._id as string)
   return true
 })
 </script>
