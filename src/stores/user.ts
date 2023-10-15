@@ -5,6 +5,7 @@ import { useLoadingStore } from "./loader";
 import { useToastStore } from "./toast";
 
 type UserPropType = {
+  _id: string
   name?: string | null
   email: string | null
   password: string | null
@@ -12,15 +13,28 @@ type UserPropType = {
   token?: string | null
 }
 
-type UserResponseType = Omit<UserPropType, 'verifiedPassword'>
+type UserResponseType = Omit<UserPropType, 'verifiedPassword'> | null
 
 export const useUserStore = defineStore('user', () => {
-  const user = ref({} as UserResponseType)
+  const user = ref<UserResponseType | null>(null)
 
   const createUser = (params: UserPropType) => {
     useLoadingStore().setLoading(true)
     
     return API.createUser({ data: params })
+    .then(({ data }: { data: UserPropType }) => setUser(data))
+    .catch((err) => {
+      console.log(`Error: ${ err }`)
+      const message = err.response.data ? err.response.data : err
+      useToastStore().setToast(true, message, true)
+    })
+    .finally(() => useLoadingStore().setLoading(false))
+  }
+
+  const getUser = (id: string) => {
+    useLoadingStore().setLoading(true)
+    
+    return API.getUser(id)
     .then(({ data }: { data: UserPropType }) => setUser(data))
     .catch((err) => {
       console.log(`Error: ${ err }`)
@@ -44,8 +58,18 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const setUser = (data: UserResponseType) => {
+    if ( !data ) {
+      console.log(data);
+      return clearUser()
+    }
+
     user.value = data
     localStorage.setItem('__user__', JSON.stringify(user.value))
+  }
+
+  const clearUser = () => {
+    user.value = null
+    localStorage.removeItem('__user__')
   }
 
   const currentUser = computed(() => user.value)
@@ -54,6 +78,8 @@ export const useUserStore = defineStore('user', () => {
     createUser,
     currentUser,
     authUser,
-    setUser
+    setUser,
+    getUser,
+    clearUser
   }
 })
