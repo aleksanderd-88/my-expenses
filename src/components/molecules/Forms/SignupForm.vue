@@ -24,29 +24,29 @@
       />
     </div>
 
-    <div class="form__row">
+    <div class="form__row form__row--flex">
       <LvInput
         type="password"
         v-model="input.password"
         label="Enter a password"
         placeholder="Choose a strong password"
+        class="form__text-field"
+        bottom-bar
+        clearable 
+      />
+
+      <LvInput
+        type="password"
+        v-model="input.verifiedPassword"
+        label="Confirm password"
+        placeholder="Verify password"
+        class="form__text-field"
         bottom-bar
         clearable 
       />
     </div>
 
     <div class="form__row">
-      <LvInput
-        type="password"
-        v-model="input.verifiedPassword"
-        label="Confirm password"
-        placeholder="Verify password"
-        bottom-bar
-        clearable 
-      />
-    </div>
-
-    <div class="form__row form__row--flex">
       <BaseButton
         type="submit"
         class="lv-button--ml-10 lv-button--center-content"
