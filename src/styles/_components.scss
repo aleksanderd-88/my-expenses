@@ -246,6 +246,10 @@
     opacity: 1 !important;
     visibility: visible !important;
   }
+
+  &--indeterminate {
+    height: .25em !important;
+  }
 }
 
 //- Form
