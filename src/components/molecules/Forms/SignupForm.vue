@@ -15,7 +15,7 @@
 
     <div class="form__row">
       <LvInput
-        type="text"
+        type="email"
         v-model="input.email"
         label="Enter your email"
         placeholder="E.g. john.doe@example.com"
@@ -26,7 +26,7 @@
 
     <div class="form__row">
       <LvInput
-        type="text"
+        type="password"
         v-model="input.password"
         label="Enter a password"
         placeholder="Choose a strong password"
@@ -37,7 +37,7 @@
 
     <div class="form__row">
       <LvInput
-        type="text"
+        type="password"
         v-model="input.verifiedPassword"
         label="Confirm password"
         placeholder="Verify password"
@@ -47,14 +47,14 @@
     </div>
 
     <div class="form__row form__row--flex">
-      <BaseButton 
+      <BaseButton
+        type="submit"
         class="lv-button--ml-10 lv-button--center-content"
         :style="{ 
           marginLeft: 'unset !important', 
           width: '100%'
         }"
         primary
-        @click.stop
       >
         Sign up
       </BaseButton>

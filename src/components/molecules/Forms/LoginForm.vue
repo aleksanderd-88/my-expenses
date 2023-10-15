@@ -4,7 +4,7 @@
   
     <div class="form__row">
       <LvInput
-        type="text"
+        type="email"
         v-model="input.email"
         label="Enter your email"
         placeholder="E.g. john.doe@example.com"
@@ -15,7 +15,7 @@
 
     <div class="form__row">
       <LvInput
-        type="text"
+        type="password"
         v-model="input.password"
         label="Enter a password"
         placeholder="Enter your password"
@@ -25,7 +25,8 @@
     </div>
 
     <div class="form__row form__row--flex">
-      <BaseButton 
+      <BaseButton
+        type="submit"
         class="lv-button--ml-10 lv-button--center-content"
         :style="{ 
           marginLeft: 'unset !important', 
