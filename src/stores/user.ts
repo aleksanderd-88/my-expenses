@@ -1,8 +1,10 @@
 import { defineStore } from "pinia";
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import API from '@/services/api'
 import { useLoadingStore } from "./loader";
 import { useToastStore } from "./toast";
+import { useAppMenu } from "./menu";
+import router from "@/router";
 
 type UserPropType = {
   _id: string
@@ -73,6 +75,13 @@ export const useUserStore = defineStore('user', () => {
   }
 
   const currentUser = computed(() => user.value)
+
+  watch(() => currentUser.value, val => {
+    if ( !val ) {
+      useAppMenu().setMenuVisibility(false)
+      return router.replace({ name: 'login' })
+    }
+  })
 
   return {
     createUser,

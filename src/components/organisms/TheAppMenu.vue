@@ -29,22 +29,11 @@ import BaseButton from '@/components/atoms/BaseButton.vue';
 import { useAppMenu } from '@/stores/menu';
 import { useUserStore } from '@/stores/user'
 import { computed } from 'vue';
-import { useRouter } from 'vue-router';
 import { isLoggedIn } from '@/utils/isLoggedIn';
-
-const router = useRouter()
 
 const modifiedClass = computed(() => useAppMenu().isVisible && 'app-menu--visible')
 
-const logout = () => {
-  useUserStore().clearUser()
-  router.replace({ name: 'login' })
-
-  //- Delay closing menu
-  setTimeout(() => {
-    useAppMenu().setMenuVisibility(false)
-  }, 1000);
-}
+const logout = () => useUserStore().clearUser()
 </script>
 
 <style lang="scss" scoped>
