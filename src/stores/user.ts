@@ -5,6 +5,7 @@ import { useLoadingStore } from "./loader";
 import { useToastStore } from "./toast";
 import { useAppMenu } from "./menu";
 import router from "@/router";
+import { useExpenseStore } from "./expense";
 
 type UserPropType = {
   _id: string
@@ -72,12 +73,14 @@ export const useUserStore = defineStore('user', () => {
   const clearUser = () => {
     user.value = null
     localStorage.removeItem('__user__')
+    useExpenseStore().clearAll()
   }
 
   const currentUser = computed(() => user.value)
 
   watch(() => currentUser.value, val => {
     if ( !val ) {
+      clearUser()
       useAppMenu().setMenuVisibility(false)
       return router.replace({ name: 'login' })
     }

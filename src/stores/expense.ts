@@ -6,7 +6,6 @@ import Sugar from 'sugar-date'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
 import omit from 'lodash/omit'
-import { useUserStore } from "./user";
 
 type RowType = {
   _id: string
@@ -255,11 +254,6 @@ export const useExpenseStore = defineStore('expense', () => {
 
   watch(() => expenseMonth.value, () => doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value)), { deep: true })
 
-  watch(() => useUserStore().currentUser, val => {
-    if ( !val )
-      return clearAll()
-  })
-
   return {
     expense,
     table,
@@ -277,6 +271,7 @@ export const useExpenseStore = defineStore('expense', () => {
     rowData,
     expenseMonth,
     copyPrevious,
-    endOfMonth
+    endOfMonth,
+    clearAll
   }
 })
