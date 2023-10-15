@@ -8,7 +8,7 @@ import router from "@/router";
 import { useExpenseStore } from "./expense";
 
 type UserPropType = {
-  _id: string
+  _id?: string
   name?: string | null
   email: string | null
   password: string | null
