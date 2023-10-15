@@ -46,4 +46,12 @@ export default {
   deleteCategory(id: string): Promise<AxiosResponse> {
     return client.delete(`/categories/${ id }/delete`)
   },
+
+  //- User
+  createUser(params: ParameterType): Promise<AxiosResponse> {
+    return client.post('/users/create', params)
+  },
+  authUser(params: ParameterType): Promise<AxiosResponse> {
+    return client.post('/users/auth', params)
+  },
 }
