@@ -1,5 +1,5 @@
 <template>
-  <div class="app-menu" :class="modifiedClass">
+  <div class="app-menu" :class="modifiedClass" v-if="isLoggedIn()">
     <BaseButton
       icon="x"
       transparent
@@ -15,6 +15,7 @@
       <BaseButton 
         class="app-menu__logout-btn lv-button--center-content"
         icon="logout"
+        primary
         @click="logout()"
       >
         Log out
@@ -29,6 +30,7 @@ import { useAppMenu } from '@/stores/menu';
 import { useUserStore } from '@/stores/user'
 import { computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { isLoggedIn } from '@/utils/isLoggedIn';
 
 const router = useRouter()
 
@@ -37,7 +39,11 @@ const modifiedClass = computed(() => useAppMenu().isVisible && 'app-menu--visibl
 const logout = () => {
   useUserStore().clearUser()
   router.replace({ name: 'login' })
-  useAppMenu().setMenuVisibility(false)
+
+  //- Delay closing menu
+  setTimeout(() => {
+    useAppMenu().setMenuVisibility(false)
+  }, 1000);
 }
 </script>
 
@@ -76,7 +82,7 @@ const logout = () => {
       margin: auto;
       width: 100%;
       padding: 0 1rem;
-      max-width: 400px;
+      max-width: 300px;
       text-align: center;
     }
 
