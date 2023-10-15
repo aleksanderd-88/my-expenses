@@ -72,6 +72,8 @@
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue';
 import { reactive } from 'vue';
+import { useUserStore } from '@/stores/user';
+import { useRouter } from 'vue-router';
 
   defineProps({
     title: {
@@ -87,6 +89,8 @@ import { reactive } from 'vue';
     verifiedPassword: null
   }
 
+  const router = useRouter()
+
   const input = reactive({ ...initialValue })
 
   const handleSubmit = () => {
@@ -94,7 +98,9 @@ import { reactive } from 'vue';
     if ( notValid )
       return
 
-    console.log(input);
+    return useUserStore()
+    .createUser(input)
+    .then(() => router.replace({ name: 'expenses' }))
   }
 </script>
 

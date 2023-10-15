@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import StartView from '@/pages/StartView.vue'
-import { loggedIn } from '@/utils/loggedIn'
+import { useUserStore } from '@/stores/user'
 
 const setPageTitle = (title = 'Start') => {
   document.title = `MyExpenses | ${ title }`
@@ -37,8 +37,26 @@ const router = createRouter({
 })
 
 router.beforeEach((to) => {
-  if ( to.meta.requiresAuth && !loggedIn() )
-    return { name: 'login' }
+  const user = JSON.parse(localStorage.getItem('__user__') as string)
+
+  //- First check - Always set user data if already logged in
+  if ( user ) {
+    useUserStore().setUser(user) 
+  }
+  
+  //- Prohibit user from navigating to unprotected route(s) when logged in
+  if ( !to.meta.requiresAuth && user ) {
+    useUserStore().setUser(user)
+    return { name: 'expenses' }
+  }
+
+  //- Prevent navigating to protected route if user is not set
+  if ( to.meta.requiresAuth && !user ) {
+    return false
+  }
+
+  //- Continue with navigation to unprotected route(s)
+  return true
 })
 
 router.afterEach(() => {

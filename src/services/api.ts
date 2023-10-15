@@ -1,3 +1,4 @@
+import { useUserStore } from '@/stores/user'
 import axios, { type AxiosResponse } from 'axios'
 
 const client = axios.create({
@@ -9,6 +10,12 @@ const client = axios.create({
 type ParameterType = {
   data: Record<string, unknown> | Date | string
 }
+
+client.interceptors.request.use(req => {
+  if ( useUserStore().currentUser.token )
+    req.headers.Authorization  = useUserStore().currentUser.token
+  return req
+})
 
 export default {
   //- Expenses
