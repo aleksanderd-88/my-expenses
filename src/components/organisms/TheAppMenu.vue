@@ -3,7 +3,7 @@
     <BaseButton
       icon="x"
       transparent
-      class="app-menu__close-btn"
+      class="app-menu__close-btn lv-button--icon-large"
       @click="useAppMenu().setMenuVisibility(false)"
     />
 
