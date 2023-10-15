@@ -5,6 +5,7 @@ import API from '@/services/api'
 import Sugar from 'sugar-date'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
+import omit from 'lodash/omit'
 
 type RowType = {
   _id: string
@@ -19,8 +20,15 @@ type RowType = {
   categoryId: string
 }
 
+type ExpensePropType = {
+  name: string 
+  cost: string
+  paymentDue: string
+  categoryId?: string
+}
+
 export const useExpenseStore = defineStore('expense', () => {
-  const expenseInitialValue = {
+  const expenseInitialValue: Partial<ExpensePropType> = {
     name: null,
     cost: null,
     paymentDue: null,
@@ -144,13 +152,14 @@ export const useExpenseStore = defineStore('expense', () => {
   }
   
   const createExpense = () => {
+
     if ( editMode.value )
       updateExpense()
 
     if ( copyPrevious.value )
       return copyPreviousMonth()
     
-    if ( !data || Object.values(data).some(o => !o) ) 
+    if ( !data || Object.values(omit(data, ['categoryId'])).some(o => !o) )
       return
     
     useLoadingStore().setLoading(true)
