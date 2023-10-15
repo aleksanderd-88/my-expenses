@@ -46,6 +46,28 @@
           </div>
         </template>
       </TableLite>
+
+      <TableLite
+        title="Other expenses"
+        :is-slot-mode="true"
+        :is-loading="table.isLoading"
+        :columns="table.columns"
+        :rows="filteredRowsWithoutCategory"
+        :total="filteredRowsWithoutCategory.length"
+        :sortable="table.sortable"
+        @do-search="doSearch()"
+        @is-finished="table.isLoading = false"
+        @row-clicked="rowClicked"
+        :is-hide-paging="true"
+        :class="{ 'vtl--added-padding': calculatedTotalExpense }"
+      >
+        <template v-slot:name="data">
+          <div class="vtl__row">
+            <p :class="{'vtl__row--linethrough': data.value.isPaid}">{{ data.value.name }}</p>
+            <i class="light-icon-check" v-if="data.value.isPaid"></i>
+          </div>
+        </template>
+      </TableLite>
     </template>
 
     <ExpenseDetails />
@@ -84,6 +106,8 @@ const filterRows = (id: string) => {
     return r
   })
 }
+
+const filteredRowsWithoutCategory = computed(() =>table.rows.filter(r => !r.categoryId))
 
 const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
 
