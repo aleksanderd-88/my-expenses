@@ -6,6 +6,7 @@
           <BaseButton
             icon="menu"
             transparent
+            @click="useAppMenu().setMenuVisibility(true)"
           >
           </BaseButton>
         </div>
@@ -16,15 +17,7 @@
 
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue'
-import { useUserStore } from '@/stores/user'
-import { useRouter } from 'vue-router';
-
-const router = useRouter()
-
-const logout = () => {
-  useUserStore().clearUser()
-  router.replace({ name: 'login' })
-}
+import { useAppMenu } from '@/stores/menu';
 </script>
 
 <style lang="scss" scoped>
