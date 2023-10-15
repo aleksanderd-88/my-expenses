@@ -11,8 +11,12 @@ $success: #81c784;
 $primary: #42a5f5;
 
 // Margins
-
 .mt-2 { margin-top: 2rem; }
+
+// Paddings
+.pa-1 {
+  padding: 1rem !important;
+}
 
 p {
   &.color-dark {

@@ -10,6 +10,10 @@
     display: flex !important;
     align-items: center !important;
     gap: .5rem !important;
+
+    .light-icon-menu {
+      font-size: 2rem !important;
+    }
   }
 
   &--center-content {
@@ -222,6 +226,11 @@
 .lv-progressbar {
   opacity: 0 !important;
   visibility: hidden !important;
+  position: fixed !important;
+  top: 0 !important;
+  right: 0 !important;
+  width: 100% !important;
+  z-index: 10000;
 
   &__value {
     background: $dark !important;
