@@ -20,15 +20,8 @@ type RowType = {
   categoryId: string
 }
 
-type ExpensePropType = {
-  name: string 
-  cost: string
-  paymentDue: string
-  categoryId?: string
-}
-
 export const useExpenseStore = defineStore('expense', () => {
-  const expenseInitialValue: Partial<ExpensePropType> = {
+  const expenseInitialValue = {
     name: null,
     cost: null,
     paymentDue: null,
