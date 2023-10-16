@@ -107,7 +107,10 @@ const filterRows = (id: string) => {
   })
 }
 
-const filteredRowsWithoutCategory = computed(() =>table.rows.filter(r => !r.categoryId))
+const filteredRowsWithoutCategory = computed(() => table.rows.filter(r => !r.categoryId).map((r: RowType, index: number) => {
+  r.no = index + 1
+  return r
+}))
 
 const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
 
