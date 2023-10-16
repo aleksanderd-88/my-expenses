@@ -230,8 +230,6 @@
 
 //- Lightvue progress bar
 .lv-progressbar {
-  opacity: 0 !important;
-  visibility: hidden !important;
   position: fixed !important;
   top: 0 !important;
   right: 0 !important;
@@ -240,11 +238,6 @@
 
   &__value {
     background: $dark !important;
-  }
-
-  &--visible {
-    opacity: 1 !important;
-    visibility: visible !important;
   }
 
   &--indeterminate {
