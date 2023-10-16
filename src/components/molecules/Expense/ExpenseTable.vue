@@ -77,7 +77,7 @@
 <script setup lang="ts">
 import ExpenseDetails from '@/components/molecules/Expense/ExpenseDetails.vue'
 import { useExpenseStore } from '@/stores/expense'
-import { computed } from 'vue'
+import { computed, watch } from 'vue'
 import { useTableStore } from '@/stores/table';
 import { useCategoryStore } from '@/stores/category';
 
@@ -115,6 +115,15 @@ const filteredRowsWithoutCategory = computed(() => table.rows.filter(r => !r.cat
 const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
 
 const doSearch = () => useExpenseStore().doSearch(0, 10, 'id', 'asc', new Date(useExpenseStore().endOfMonth))
+
+watch(() => useTableStore().mode.includes('list'), val => {
+  if ( val ) {
+    table.rows = table.rows.map((r: RowType, index: number) => {
+      r.no = index + 1
+      return r
+    })
+  }
+})
 
 /**
  * Table search finished event
