@@ -64,6 +64,7 @@ export const useCategoryStore = defineStore('category', () => {
       category.value.label = ''
       label.value = ''
       listCategories()
+      useExpenseStore().doSearch(0, 10, 'id', 'asc', new Date(useExpenseStore().endOfMonth))
     })
     .catch((err) => {
       console.log(`Error: ${ err }`)
