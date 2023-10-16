@@ -17,8 +17,8 @@ const isLoading = computed(() => useLoadingStore().isLoading)
 
 <style lang="scss" scoped>
   .wrapper {
-    background-color: rgba($dark, .1);
-    z-index: 999;
+    background-color: rgba($dark, .25);
+    z-index: 9999;
     position: fixed;
     top: 0;
     right: 0;
