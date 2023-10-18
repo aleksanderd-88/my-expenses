@@ -56,12 +56,15 @@ export const useIncomeStore = defineStore('income', () => {
     .finally(() => useLoadingStore().setLoading(false))
   }
 
+  const clearAll = () => Object.assign(income, initialIncomeValue)
+
   return {
     addedIncome,
     incomeDialogVisible,
     createIncome,
     income,
     resetDialog,
-    getIncome
+    getIncome,
+    clearAll
   }
 })

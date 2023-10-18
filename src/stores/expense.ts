@@ -6,6 +6,7 @@ import Sugar from 'sugar-date'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
 import omit from 'lodash/omit'
+import { useIncomeStore } from "./income";
 
 type RowType = {
   _id: string
@@ -250,6 +251,7 @@ export const useExpenseStore = defineStore('expense', () => {
   const clearAll = () => {
     table.rows = []
     table.totalRecordCount = 0
+    useIncomeStore().clearAll()
   }
 
   watch(() => expenseMonth.value, () => doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value)), { deep: true })
