@@ -13,8 +13,22 @@
       @row-clicked="rowClicked"
       :is-hide-paging="true"
       :class="{ 'vtl--added-padding': calculatedTotalExpense }"
-      v-if="useTableStore().mode.includes('list')"
+      v-if="isListMode"
     >
+      <template v-slot:no="data">
+        <div class="d-flex gap-1 align-center" @click.stop>
+          <LvCheckboxGroup 
+            :options="[data.value]"
+            v-model="checkedRows"
+            color="primary"
+            :optionLabel="data.value?.no.toString()"
+            rounded
+            @click.stop
+          />
+          <p>{{ data.value.no }}</p>
+        </div>
+      </template>
+
       <template v-slot:name="data">
         <div class="vtl__row">
           <p :class="{'vtl__row--linethrough': data.value.isPaid}">{{ data.value.name }}</p>
@@ -39,6 +53,20 @@
         :is-hide-paging="true"
         :class="{ 'vtl--added-padding': calculatedTotalExpense }"
       >
+        <template v-slot:no="data">
+          <div class="d-flex gap-1 align-center" @click.stop>
+            <LvCheckboxGroup 
+              :options="[data.value]"
+              v-model="checkedRows"
+              color="primary"
+              :optionLabel="data.value?.no.toString()"
+              rounded
+              @click.stop
+            />
+            <p>{{ data.value.no }}</p>
+          </div>
+        </template>
+        
         <template v-slot:name="data">
           <div class="vtl__row">
             <p :class="{'vtl__row--linethrough': data.value.isPaid}">{{ data.value.name }}</p>
@@ -61,6 +89,20 @@
         :is-hide-paging="true"
         :class="{ 'vtl--added-padding': calculatedTotalExpense }"
       >
+        <template v-slot:no="data">
+          <div class="d-flex gap-1 align-center" @click.stop>
+            <LvCheckboxGroup 
+              :options="[data.value]"
+              v-model="checkedRows"
+              color="primary"
+              :optionLabel="data.value?.no.toString()"
+              rounded
+              @click.stop
+            />
+            <p>{{ data.value.no }}</p>
+          </div>
+        </template>
+        
         <template v-slot:name="data">
           <div class="vtl__row">
             <p :class="{'vtl__row--linethrough': data.value.isPaid}">{{ data.value.name }}</p>
@@ -77,9 +119,10 @@
 <script setup lang="ts">
 import ExpenseDetails from '@/components/molecules/Expense/ExpenseDetails.vue'
 import { useExpenseStore } from '@/stores/expense'
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useTableStore } from '@/stores/table';
 import { useCategoryStore } from '@/stores/category';
+import LvCheckboxGroup  from 'lightvue/checkbox-group'
 
 type RowType = {
   _id: string
@@ -95,21 +138,29 @@ type RowType = {
 }
 
 const table = useExpenseStore().table
+const checkedRows = ref([])
+
+const isListMode = computed(() => useTableStore().mode.includes('list'))
 
 const calculatedTotalExpense = computed(() => {
+  console.log(1);
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
 })
 
 const filterRows = (id: string) => {
-  return table.rows?.filter(r => r.categoryId === id).map((r: RowType, index: number) => {
-    r.no = index + 1
-    return r
-  })
+  if ( !isListMode.value ) {
+    return table.rows?.filter(r => r.categoryId === id).map((r: RowType, index: number) => {
+      r.no = index + 1
+      return r
+    })
+  }
 }
 
 const filteredRowsWithoutCategory = computed(() => table.rows.filter(r => !r.categoryId).map((r: RowType, index: number) => {
-  r.no = index + 1
-  return r
+  if ( !isListMode.value ) {
+    r.no = index + 1
+    return r
+  }
 }))
 
 const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
