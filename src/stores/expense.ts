@@ -250,7 +250,7 @@ export const useExpenseStore = defineStore('expense', () => {
     .then(() => {
       doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
 
-      const toastText = 'Selected rows updated'
+      const toastText = 'Row(s) updated'
       useToastStore().setToast(true, toastText)
     })
     .catch(err => {
