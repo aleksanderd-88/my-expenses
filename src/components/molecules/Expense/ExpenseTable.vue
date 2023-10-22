@@ -143,7 +143,6 @@ const checkedRows = ref([])
 const isListMode = computed(() => useTableStore().mode.includes('list'))
 
 const calculatedTotalExpense = computed(() => {
-  console.log(1);
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
 })
 
