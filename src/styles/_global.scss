@@ -23,3 +23,17 @@ p {
     color: $dark;
   }
 }
+
+
+// Flex
+.d-flex {
+  display: flex;
+
+  &.align-center {
+    align-items: center;
+  }
+
+  &.gap-1 {
+    gap: 1rem;
+  }
+}
