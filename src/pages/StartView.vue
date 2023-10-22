@@ -15,7 +15,10 @@
       No expenses found
     </p>
 
-    <ExpenseTable v-else />
+    <ExpenseTable 
+      v-else 
+      @selected-rows="onSelectedRows($event)" 
+    />
 
     <div class="start__actions" :class="modifiedClass">
       <LvOverlayPanel 
@@ -62,11 +65,21 @@
       <div class="start__action-btns">
         <BaseButton 
           class="start__add-btn lv-button--center-content" 
+          icon="checkbox" 
+          deep-shadow
+          success
+          title="Update row(s)"
+          @click="updateSelected()"
+          :is-visible="multiSelectButtonVisible"
+        />
+
+        <BaseButton 
+          class="start__add-btn lv-button--center-content" 
           :icon="icon" 
           deep-shadow
           primary
           @click="toggleTableLayout()"
-          v-if="useCategoryStore().expensesWithCategories"
+          :is-visible="Boolean(useCategoryStore().expensesWithCategories)"
         />
     
         <BaseButton 
@@ -103,6 +116,8 @@ import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 
 const op = ref()
+const multiSelectButtonVisible = ref(false)
+const selectedRows = ref()
 
 useIncomeStore().getIncome()
 useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
@@ -141,6 +156,24 @@ onBeforeRouteUpdate(() => {
   useUserStore().getUser(useUserStore().currentUser?._id as string)
   return true
 })
+
+const onSelectedRows = (values: Record<string, unknown>[]) => {
+  multiSelectButtonVisible.value = false
+
+  if ( values.length ) {
+    selectedRows.value = values
+    multiSelectButtonVisible.value = true
+  }
+}
+
+const updateSelected = () => {
+  if ( !selectedRows.value.length ) 
+    return
+
+  return useExpenseStore().updateSelectedExpenses(selectedRows.value)
+  ?.then(() => multiSelectButtonVisible.value = false)
+  .catch(() => selectedRows.value = [])
+}
 </script>
 
 <style lang="scss" scoped>

@@ -13,7 +13,9 @@
       @row-clicked="rowClicked"
       :is-hide-paging="true"
       :class="{ 'vtl--added-padding': calculatedTotalExpense }"
-      v-if="useTableStore().mode.includes('list')"
+      has-checkbox
+      @return-checked-rows="onSelectedRows"
+      v-if="isListMode"
     >
       <template v-slot:name="data">
         <div class="vtl__row">
@@ -37,6 +39,7 @@
         @is-finished="table.isLoading = false"
         @row-clicked="rowClicked"
         :is-hide-paging="true"
+        @return-checked-rows="onSelectedRows"
         :class="{ 'vtl--added-padding': calculatedTotalExpense }"
       >
         <template v-slot:name="data">
@@ -59,6 +62,7 @@
         @is-finished="table.isLoading = false"
         @row-clicked="rowClicked"
         :is-hide-paging="true"
+        @return-checked-rows="onSelectedRows"
         :class="{ 'vtl--added-padding': calculatedTotalExpense }"
       >
         <template v-slot:name="data">
@@ -77,7 +81,7 @@
 <script setup lang="ts">
 import ExpenseDetails from '@/components/molecules/Expense/ExpenseDetails.vue'
 import { useExpenseStore } from '@/stores/expense'
-import { computed, watch } from 'vue'
+import { computed, watch, ref } from 'vue'
 import { useTableStore } from '@/stores/table';
 import { useCategoryStore } from '@/stores/category';
 
@@ -94,22 +98,33 @@ type RowType = {
   categoryId: string
 }
 
+const emit = defineEmits<{
+  (event: 'selectedRows', values: RowType[]): void
+}>()
+
 const table = useExpenseStore().table
+const checkedRows = ref([] as RowType[])
+
+const isListMode = computed(() => useTableStore().mode.includes('list'))
 
 const calculatedTotalExpense = computed(() => {
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
 })
 
 const filterRows = (id: string) => {
-  return table.rows?.filter(r => r.categoryId === id).map((r: RowType, index: number) => {
-    r.no = index + 1
-    return r
-  })
+  if ( !isListMode.value ) {
+    return table.rows?.filter(r => r.categoryId === id).map((r: RowType, index: number) => {
+      r.no = index + 1
+      return r
+    })
+  }
 }
 
 const filteredRowsWithoutCategory = computed(() => table.rows.filter(r => !r.categoryId).map((r: RowType, index: number) => {
-  r.no = index + 1
-  return r
+  if ( !isListMode.value ) {
+    r.no = index + 1
+    return r
+  }
 }))
 
 const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
@@ -124,6 +139,11 @@ watch(() => useTableStore().mode.includes('list'), val => {
     })
   }
 })
+
+const onSelectedRows = (key: number[]) => {
+  checkedRows.value = table.rows.filter((row: RowType, index: number) => key.includes(index + 1))
+  emit('selectedRows', checkedRows.value)
+}
 
 /**
  * Table search finished event

@@ -34,7 +34,6 @@ const modifiedClass = computed(() => {
     width: 95%;
     padding: .5rem .25rem .5rem 1rem;
     display: flex;
-    z-index: 1000;
     border-radius: 3px;
     gap: 1rem;
     align-items: center;
@@ -63,6 +62,7 @@ const modifiedClass = computed(() => {
 
     &--visible {
       opacity: 1;
+      z-index: 1000;
       visibility: visible;
       transform: translate(-50%, 0);
 
