@@ -39,7 +39,6 @@
         @is-finished="table.isLoading = false"
         @row-clicked="rowClicked"
         :is-hide-paging="true"
-        has-checkbox
         @return-checked-rows="onSelectedRows"
         :class="{ 'vtl--added-padding': calculatedTotalExpense }"
       >
@@ -63,7 +62,6 @@
         @is-finished="table.isLoading = false"
         @row-clicked="rowClicked"
         :is-hide-paging="true"
-        has-checkbox
         @return-checked-rows="onSelectedRows"
         :class="{ 'vtl--added-padding': calculatedTotalExpense }"
       >
