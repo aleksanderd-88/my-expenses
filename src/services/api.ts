@@ -10,7 +10,7 @@ const client = axios.create({
 })
 
 type ParameterType = {
-  data: Record<string, unknown> | Date | string
+  data: Record<string, unknown> | Date | string | Record<string, unknown>[]
 }
 
 client.interceptors.request.use(req => {
@@ -54,6 +54,9 @@ export default {
   },
   deleteExpense(id: string): Promise<AxiosResponse> {
     return client.delete(`/expenses/${ id }/delete`)
+  },
+  updateSelectedRows(params: ParameterType): Promise<AxiosResponse> {
+    return client.patch(`/expenses/update-selected`, params)
   },
 
   //- Income

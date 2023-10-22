@@ -240,6 +240,26 @@ export const useExpenseStore = defineStore('expense', () => {
     .finally(() => useLoadingStore().setLoading(false))
   }
 
+  const updateSelectedExpenses = (selectedRows: RowType[]) => {
+    if ( !selectedRows.length )
+      return
+  
+    useLoadingStore().setLoading(true)
+    
+    return API.updateSelectedRows({ data: selectedRows })
+    .then(() => {
+      doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
+
+      const toastText = 'Selected rows updated'
+      useToastStore().setToast(true, toastText)
+    })
+    .catch(err => {
+      console.log(`Error: ${ err }`)
+      useToastStore().setToast(true, err, true)
+    })
+    .finally(() => useLoadingStore().setLoading(false))
+  }
+
   const setRowData = (row: RowType) => {
     rowData.value = row
     editMode.value = true
@@ -274,6 +294,7 @@ export const useExpenseStore = defineStore('expense', () => {
     expenseMonth,
     copyPrevious,
     endOfMonth,
-    clearAll
+    clearAll,
+    updateSelectedExpenses
   }
 })

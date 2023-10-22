@@ -119,7 +119,7 @@
 <script setup lang="ts">
 import ExpenseDetails from '@/components/molecules/Expense/ExpenseDetails.vue'
 import { useExpenseStore } from '@/stores/expense'
-import { computed, watch, ref } from 'vue'
+import { computed, watch, ref, watchEffect } from 'vue'
 import { useTableStore } from '@/stores/table';
 import { useCategoryStore } from '@/stores/category';
 import LvCheckboxGroup  from 'lightvue/checkbox-group'
@@ -136,6 +136,10 @@ type RowType = {
   createdAt: string
   categoryId: string
 }
+
+const emit = defineEmits<{
+  (event: 'selectedRows', values: RowType[]): void
+}>()
 
 const table = useExpenseStore().table
 const checkedRows = ref([])
@@ -173,6 +177,10 @@ watch(() => useTableStore().mode.includes('list'), val => {
       return r
     })
   }
+})
+
+watchEffect(() => {
+  emit('selectedRows', checkedRows.value)
 })
 
 /**
