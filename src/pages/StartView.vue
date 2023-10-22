@@ -65,7 +65,7 @@
       <div class="start__action-btns">
         <BaseButton 
           class="start__add-btn lv-button--center-content" 
-          icon="selector" 
+          icon="checkbox" 
           deep-shadow
           success
           title="Update row(s)"
