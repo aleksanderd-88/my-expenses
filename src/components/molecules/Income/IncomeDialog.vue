@@ -11,7 +11,7 @@
     <template v-if="useIncomeStore().addNew">
       <LvInput 
         type="text"
-        v-model="useIncomeStore().income.name"
+        v-model="useIncomeStore().income.newName"
         label="Enter a full name"
         placeholder="Your full name"
         bottom-bar
@@ -20,8 +20,8 @@
 
       <div class="mt-2">
         <LvInput
-          type="text"
-          v-model="useIncomeStore().income.personIncome"
+          type="number"
+          v-model="useIncomeStore().income.newAmount"
           label="Enter monthly income (after taxes)"
           placeholder="E.g. 34,000 SEK"
           bottom-bar
@@ -32,7 +32,7 @@
 
     <LvInput
       v-else
-      type="text"
+      type="number"
       v-model="useIncomeStore().income.amount"
       label="Enter monthly income (after taxes)"
       placeholder="E.g. 34,000 SEK"

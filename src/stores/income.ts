@@ -7,9 +7,9 @@ import { useLoadingStore } from "./loader";
 export const useIncomeStore = defineStore('income', () => {
   const initialIncomeValue: { 
     amount: null | number, 
-    name?: string | null,
+    newName?: string | null,
     addNew?: boolean,
-    personIncome?: number | null
+    newAmount?: number | null
   } = { amount: null }
 
   const income = reactive({ ...initialIncomeValue })
