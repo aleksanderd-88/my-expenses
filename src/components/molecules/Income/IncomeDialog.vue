@@ -7,7 +7,31 @@
       maxWidth: '700px'
     }"
   >
-    <LvInput 
+
+    <template v-if="useIncomeStore().addNew">
+      <LvInput 
+        type="text"
+        v-model="useIncomeStore().income.name"
+        label="Enter a full name"
+        placeholder="Your full name"
+        bottom-bar
+        clearable
+      />
+
+      <div class="mt-2">
+        <LvInput
+          type="text"
+          v-model="useIncomeStore().income.personIncome"
+          label="Enter monthly income (after taxes)"
+          placeholder="E.g. 34,000 SEK"
+          bottom-bar
+          clearable 
+        />
+      </div>
+    </template>
+
+    <LvInput
+      v-else
       type="text"
       v-model="useIncomeStore().income.amount"
       label="Enter monthly income (after taxes)"
@@ -22,7 +46,7 @@
         class="lv-button--ml-10"
         :style="{ marginRight: 'auto !important', marginLeft: '0 !important' }"
         primary
-        @click="useIncomeStore().resetDialog()"
+        @click="useIncomeStore().addNew = true"
       >
         Add income
       </BaseButton>

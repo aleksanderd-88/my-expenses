@@ -5,10 +5,17 @@ import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
 
 export const useIncomeStore = defineStore('income', () => {
-  const initialIncomeValue: { amount: null | number } = { amount: null }
+  const initialIncomeValue: { 
+    amount: null | number, 
+    name?: string | null,
+    addNew?: boolean,
+    personIncome?: number | null
+  } = { amount: null }
+
   const income = reactive({ ...initialIncomeValue })
   const incomeDialogVisible = ref(false)
   const addedIncome = ref()
+  const addNew = ref(false)
 
   watch(() => incomeDialogVisible.value, (val: boolean) => {
     if ( !val ) 
@@ -22,6 +29,7 @@ export const useIncomeStore = defineStore('income', () => {
   const resetDialog = () => {
     Object.assign(income, initialIncomeValue)
     incomeDialogVisible.value = false
+    addNew.value = false
   }
 
   const getIncome = () => {
@@ -40,6 +48,10 @@ export const useIncomeStore = defineStore('income', () => {
   const createIncome = () => {
     if ( !income || Object.values(income).some(o => !o) ) 
       return
+
+    if ( addNew.value ) {
+      income.addNew = true
+    }
     
     useLoadingStore().setLoading(true)
 
@@ -65,6 +77,7 @@ export const useIncomeStore = defineStore('income', () => {
     income,
     resetDialog,
     getIncome,
-    clearAll
+    clearAll,
+    addNew
   }
 })
