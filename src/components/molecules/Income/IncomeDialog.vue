@@ -18,6 +18,16 @@
 
     <template #footer>
       <BaseButton 
+        icon="plus" 
+        class="lv-button--ml-10"
+        :style="{ marginRight: 'auto !important', marginLeft: '0 !important' }"
+        primary
+        @click="useIncomeStore().resetDialog()"
+      >
+        Add income
+      </BaseButton>
+
+      <BaseButton 
         icon="x" 
         class="lv-button--ml-10"
         @click="useIncomeStore().resetDialog()"
@@ -28,6 +38,7 @@
       <BaseButton 
         icon="check"
         class="lv-button--ml-10"
+        success
         @click="useIncomeStore().createIncome()"
       >
         Save

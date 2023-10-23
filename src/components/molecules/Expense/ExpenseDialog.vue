@@ -102,6 +102,7 @@
       <BaseButton 
         icon="check"
         class="lv-button--ml-10"
+        success
         @click="useExpenseStore().createExpense()"
       >
         Save
