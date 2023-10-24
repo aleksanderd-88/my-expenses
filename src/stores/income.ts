@@ -3,6 +3,7 @@ import { reactive, ref, watch } from "vue";
 import API from '@/services/api'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
+import pick from 'lodash/pick'
 
 type IncomeType = {
   amount: number
@@ -53,7 +54,8 @@ export const useIncomeStore = defineStore('income', () => {
   }
 
   const createIncome = () => {
-    if ( !income || Object.values(income).some(o => !o) ) 
+    const requiredFields = pick(income, ['amount'])
+    if ( !income || Object.values(requiredFields).some(o => !o) ) 
       return
 
     useLoadingStore().setLoading(true)
