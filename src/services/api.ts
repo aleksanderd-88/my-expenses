@@ -66,6 +66,12 @@ export default {
   getIncome(): Promise<AxiosResponse> {
     return client.get('/income/get')
   },
+  createIncome(params: ParameterType): Promise<AxiosResponse> {
+    return client.post('/income/create', params)
+  },
+  listIncome(): Promise<AxiosResponse> {
+    return client.patch('/income/list')
+  },
 
   //- Category
   createCategory(params: ParameterType): Promise<AxiosResponse> {
