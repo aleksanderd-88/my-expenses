@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive, ref, watch } from "vue";
+import { reactive, ref, watch, computed } from "vue";
 import API from '@/services/api'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
@@ -33,6 +33,7 @@ export const useIncomeStore = defineStore('income', () => {
       income.amount = Number(addedIncome.value)
   })
 
+  const calculatedTotalIncome = computed(() => incomeList.value.reduce((sum, item) => sum += item.name && item.amount, addedIncome.value))
 
   const resetDialog = () => {
     Object.assign(income, { ...initialIncomeValue })
@@ -55,7 +56,7 @@ export const useIncomeStore = defineStore('income', () => {
 
   const createIncome = () => {
     const requiredFields = pick(income, ['amount'])
-    if ( !income || Object.values(requiredFields).some(o => !o) ) 
+    if ( !income || Object.values(requiredFields).some(o => typeof o !== 'number') ) 
       return
 
     useLoadingStore().setLoading(true)
@@ -111,6 +112,7 @@ export const useIncomeStore = defineStore('income', () => {
     clearAll,
     addNew,
     listIncome,
-    incomeList
+    incomeList,
+    calculatedTotalIncome
   }
 })

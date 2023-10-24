@@ -37,7 +37,7 @@
     <LvInput
       v-else
       type="number"
-      v-model="useIncomeStore().income.amount"
+      v-model="amount"
       label="Enter monthly income (after taxes)"
       placeholder="E.g. 34,000 SEK"
       bottom-bar
@@ -80,6 +80,7 @@
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import { useIncomeStore } from '@/stores/income';
 import IncomeList from './IncomeList.vue';
+import { computed } from 'vue';
 
 const onCancel = () => {
   if ( useIncomeStore().addNew )
@@ -87,6 +88,13 @@ const onCancel = () => {
   
   useIncomeStore().resetDialog()
 }
+
+const amount = computed({
+  get: () => useIncomeStore().calculatedTotalIncome,
+  set: (value) => {
+    useIncomeStore().income.amount = value
+  }
+})
 </script>
 
 <style scoped>
