@@ -4,6 +4,13 @@ import API from '@/services/api'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
 
+type IncomeType = {
+  amount: number
+  userId: string
+  _id: string
+  name?: string
+}
+
 export const useIncomeStore = defineStore('income', () => {
   const initialIncomeValue: { 
     amount: null | number, 
@@ -16,6 +23,7 @@ export const useIncomeStore = defineStore('income', () => {
   const incomeDialogVisible = ref(false)
   const addedIncome = ref()
   const addNew = ref(false)
+  const incomeList = ref([] as IncomeType[])
 
   watch(() => incomeDialogVisible.value, (val: boolean) => {
     if ( !val ) 
@@ -49,11 +57,22 @@ export const useIncomeStore = defineStore('income', () => {
     if ( !income || Object.values(income).some(o => !o) ) 
       return
 
-    if ( addNew.value ) {
-      income.addNew = true
-    }
-    
     useLoadingStore().setLoading(true)
+
+    if ( addNew.value ) {
+      return API.createIncome({ data: { name: income.newName, amount: income.newAmount }})
+      .then(() => {
+        resetDialog()
+        getIncome()
+        listIncome()
+        useToastStore().setToast(true, 'New income added')
+      })
+      .catch(err => {
+        console.log(`Error: ${ err }`)
+        useToastStore().setToast(true, err, true)
+      })
+      .finally(() => useLoadingStore().setLoading(false))
+    }
 
     API.updateIncome({ data: income })
     .then(() => {
@@ -68,6 +87,17 @@ export const useIncomeStore = defineStore('income', () => {
     .finally(() => useLoadingStore().setLoading(false))
   }
 
+  const listIncome = () => {
+    useLoadingStore().setLoading(true)
+
+    return API.listIncome()
+    .then(({ data }: { data: IncomeType[] }) => {
+      incomeList.value = data
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+    .finally(() => useLoadingStore().setLoading(false))
+  }
+
   const clearAll = () => Object.assign(income, initialIncomeValue)
 
   return {
@@ -78,6 +108,7 @@ export const useIncomeStore = defineStore('income', () => {
     resetDialog,
     getIncome,
     clearAll,
-    addNew
+    addNew,
+    listIncome
   }
 })
