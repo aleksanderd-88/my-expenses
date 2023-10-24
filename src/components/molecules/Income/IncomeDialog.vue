@@ -47,6 +47,7 @@
         :style="{ marginRight: 'auto !important', marginLeft: '0 !important' }"
         primary
         @click="useIncomeStore().addNew = true"
+        :disabled="useIncomeStore().addNew"
       >
         Add income
       </BaseButton>

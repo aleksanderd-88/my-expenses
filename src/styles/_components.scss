@@ -33,6 +33,10 @@
     margin-left: 10px !important;
   }
 
+  &:disabled {
+    background-color: #ccc !important;
+  }
+
   //- Define `dark-mode` theme colors
   body.dark & {
     background-color: lighten($dark, 5%) !important;
