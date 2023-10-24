@@ -109,6 +109,7 @@ export const useIncomeStore = defineStore('income', () => {
     getIncome,
     clearAll,
     addNew,
-    listIncome
+    listIncome,
+    incomeList
   }
 })

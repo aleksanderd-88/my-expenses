@@ -7,6 +7,10 @@
       maxWidth: '700px'
     }"
   >
+    <template v-if="useIncomeStore().incomeList.length > 0">
+      <h2 class="caption" :style="{ fontSize: '1rem' }">Added income</h2>
+      <IncomeList :style="{ marginBottom: '2rem' }" />
+    </template>
 
     <template v-if="useIncomeStore().addNew">
       <LvInput 
@@ -75,6 +79,7 @@
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import { useIncomeStore } from '@/stores/income';
+import IncomeList from './IncomeList.vue';
 
 const onCancel = () => {
   if ( useIncomeStore().addNew )
