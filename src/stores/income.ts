@@ -15,9 +15,8 @@ export const useIncomeStore = defineStore('income', () => {
   const initialIncomeValue: { 
     amount: null | number, 
     newName?: string | null,
-    addNew?: boolean,
     newAmount?: number | null
-  } = { amount: null }
+  } = { amount: null, newName: null, newAmount: null }
 
   const income = reactive({ ...initialIncomeValue })
   const incomeDialogVisible = ref(false)
@@ -35,7 +34,7 @@ export const useIncomeStore = defineStore('income', () => {
 
 
   const resetDialog = () => {
-    Object.assign(income, initialIncomeValue)
+    Object.assign(income, { ...initialIncomeValue })
     incomeDialogVisible.value = false
     addNew.value = false
   }
