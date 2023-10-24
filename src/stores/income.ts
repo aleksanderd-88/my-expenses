@@ -33,7 +33,7 @@ export const useIncomeStore = defineStore('income', () => {
       income.amount = Number(addedIncome.value)
   })
 
-  const calculatedTotalIncome = computed(() => incomeList.value.reduce((sum, item) => sum += item.name && item.amount, addedIncome.value))
+  const calculatedTotalIncome = computed(() => incomeList.value.reduce((sum, item) => sum += item.amount, addedIncome.value))
 
   const resetDialog = () => {
     Object.assign(income, { ...initialIncomeValue })
@@ -48,15 +48,15 @@ export const useIncomeStore = defineStore('income', () => {
     return API.getIncome()
     .then(({ data }: { data: { amount: number | null } }) => {
       income.amount = data.amount
-      addedIncome.value = data.amount // TODO: Fix this redundant assignment
+      addedIncome.value = data.amount || 0 // TODO: Fix this redundant assignment
     })
     .catch(err => console.log(`Error: ${ err }`))
     .finally(() => useLoadingStore().setLoading(false))
   }
 
   const createIncome = () => {
-    const requiredFields = pick(income, ['amount'])
-    if ( !income || Object.values(requiredFields).some(o => typeof o !== 'number') ) 
+    const requiredFields = addNew.value ? pick(income, ['newAmount', 'newName']) : pick(income, ['amount'])
+    if ( !income || Object.values(requiredFields).some(o => !o || typeof o !== 'string') ) 
       return
 
     useLoadingStore().setLoading(true)
