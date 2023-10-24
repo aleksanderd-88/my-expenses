@@ -55,7 +55,7 @@
       <BaseButton 
         icon="x" 
         class="lv-button--ml-10"
-        @click="useIncomeStore().resetDialog()"
+        @click="onCancel()"
       >
         Cancel
       </BaseButton>
@@ -75,6 +75,13 @@
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import { useIncomeStore } from '@/stores/income';
+
+const onCancel = () => {
+  if ( useIncomeStore().addNew )
+    return useIncomeStore().addNew = false
+  
+  useIncomeStore().resetDialog()
+}
 </script>
 
 <style scoped>
