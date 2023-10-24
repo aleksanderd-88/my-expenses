@@ -5,7 +5,7 @@ import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
 import pick from 'lodash/pick'
 
-type IncomeType = {
+export type IncomeType = {
   amount: number
   userId: string
   _id: string
@@ -23,6 +23,7 @@ export const useIncomeStore = defineStore('income', () => {
   const incomeDialogVisible = ref(false)
   const addedIncome = ref()
   const addNew = ref(false)
+  const isEditMode = ref(false)
   const incomeList = ref([] as IncomeType[])
 
   watch(() => incomeDialogVisible.value, (val: boolean) => {
@@ -39,6 +40,7 @@ export const useIncomeStore = defineStore('income', () => {
     Object.assign(income, { ...initialIncomeValue })
     incomeDialogVisible.value = false
     addNew.value = false
+    isEditMode.value = false
   }
 
   const getIncome = () => {
@@ -56,12 +58,12 @@ export const useIncomeStore = defineStore('income', () => {
 
   const createIncome = () => {
     const requiredFields = addNew.value ? pick(income, ['newAmount', 'newName']) : pick(income, ['amount'])
-    if ( !income || Object.values(requiredFields).some(o => !o || typeof o !== 'string') ) 
+    if ( !income || Object.values(requiredFields).some(o => !o) ) 
       return
 
     useLoadingStore().setLoading(true)
 
-    if ( addNew.value ) {
+    if ( addNew.value && !isEditMode.value ) {
       return API.createIncome({ data: { name: income.newName, amount: income.newAmount }})
       .then(() => {
         resetDialog()
@@ -76,10 +78,16 @@ export const useIncomeStore = defineStore('income', () => {
       .finally(() => useLoadingStore().setLoading(false))
     }
 
+    if ( isEditMode.value ) {
+      // We need change field name to match database collection field name
+      Object.assign(income, { name: income.newName, amount: income.newAmount, editNew: isEditMode.value })
+    }
+    
     API.updateIncome({ data: income })
     .then(() => {
       resetDialog()
       getIncome()
+      listIncome()
       useToastStore().setToast(true, 'Income updated')
     })
     .catch(err => {
@@ -99,6 +107,19 @@ export const useIncomeStore = defineStore('income', () => {
     .catch(err => console.log(`Error: ${ err }`))
     .finally(() => useLoadingStore().setLoading(false))
   }
+  
+  const editIncome = (params: IncomeType) => {
+    addNew.value = true
+    // Set edit mode
+    isEditMode.value = true
+
+    //- Merge income data to display field values in modal
+    Object.assign(income, {
+      newName: params.name,
+      newAmount: params.amount,
+      _id: params._id
+    })
+  }
 
   const clearAll = () => Object.assign(income, initialIncomeValue)
 
@@ -113,6 +134,7 @@ export const useIncomeStore = defineStore('income', () => {
     addNew,
     listIncome,
     incomeList,
-    calculatedTotalIncome
+    calculatedTotalIncome,
+    editIncome
   }
 })

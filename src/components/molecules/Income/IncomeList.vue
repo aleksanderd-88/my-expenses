@@ -12,7 +12,8 @@
         transparent 
         icon="edit"
         :style="{ padding: '0 !important' }"
-        title="Edit income" 
+        title="Edit income"
+        @click.stop="edit(item)"
       />
     </li>
   </ul>
@@ -23,8 +24,13 @@ import BaseButton from '@/components/atoms/BaseButton.vue';
 import { useIncomeStore } from '@/stores/income';
 import { formatCurrency } from '@/utils/formatter';
 import { computed } from 'vue';
+import { type IncomeType } from '@/stores/income'
 
 const list = computed(() => useIncomeStore().incomeList)
+
+const edit = (income: IncomeType) => {
+  useIncomeStore().editIncome(income)
+}
 </script>
 
 <style lang="scss" scoped>
