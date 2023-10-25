@@ -16,8 +16,8 @@
       <LvInput 
         type="text"
         v-model="useIncomeStore().income.newName"
-        label="Enter a full name"
-        placeholder="Your full name"
+        label="Enter a name"
+        placeholder="E.g. John Doe"
         bottom-bar
         clearable
       />
@@ -26,7 +26,7 @@
         <LvInput
           type="number"
           v-model="useIncomeStore().income.newAmount"
-          label="Enter monthly income (after taxes)"
+          label="Enter net income"
           placeholder="E.g. 34,000 SEK"
           bottom-bar
           clearable 
@@ -38,7 +38,7 @@
       v-else
       type="number"
       v-model="amount"
-      label="Enter monthly income (after taxes)"
+      :label="label"
       placeholder="E.g. 34,000 SEK"
       bottom-bar
       clearable 
@@ -94,6 +94,19 @@ const amount = computed({
   set: (value) => {
     useIncomeStore().income.amount = value
   }
+})
+
+const label = computed(() => {
+  const income = useIncomeStore().income.amount
+  const incomeList = useIncomeStore().incomeList
+
+  if ( income )
+    return 'Update income'
+  
+  if ( incomeList.length > 0 )
+    return 'Update income (Including additional income)'
+
+  return 'Enter net income'
 })
 </script>
 
