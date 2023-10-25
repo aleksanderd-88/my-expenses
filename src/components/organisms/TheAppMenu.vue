@@ -28,12 +28,20 @@
 import BaseButton from '@/components/atoms/BaseButton.vue';
 import { useAppMenu } from '@/stores/menu';
 import { useUserStore } from '@/stores/user'
-import { computed } from 'vue';
+import { computed, watchEffect } from 'vue';
 import { isLoggedIn } from '@/utils/isLoggedIn';
+import { useRoute } from 'vue-router';
+
+const route = useRoute()
 
 const modifiedClass = computed(() => useAppMenu().isVisible && 'app-menu--visible')
-
 const logout = () => useUserStore().clearUser()
+
+watchEffect(() => {
+  if ( !route.meta.requiresAuth ) {
+    useAppMenu().setMenuVisibility(false)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
