@@ -120,6 +120,7 @@ const multiSelectButtonVisible = ref(false)
 const selectedRows = ref()
 
 useIncomeStore().getIncome()
+useIncomeStore().listIncome()
 useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)

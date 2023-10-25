@@ -7,13 +7,17 @@
       maxWidth: '700px'
     }"
   >
+    <template v-if="useIncomeStore().incomeList.length > 0">
+      <h2 class="caption" :style="{ fontSize: '1rem' }">Added income</h2>
+      <IncomeList :style="{ marginBottom: '2rem' }" />
+    </template>
 
     <template v-if="useIncomeStore().addNew">
       <LvInput 
         type="text"
         v-model="useIncomeStore().income.newName"
-        label="Enter a full name"
-        placeholder="Your full name"
+        label="Enter a name"
+        placeholder="E.g. John Doe"
         bottom-bar
         clearable
       />
@@ -22,7 +26,7 @@
         <LvInput
           type="number"
           v-model="useIncomeStore().income.newAmount"
-          label="Enter monthly income (after taxes)"
+          label="Enter net income"
           placeholder="E.g. 34,000 SEK"
           bottom-bar
           clearable 
@@ -33,8 +37,8 @@
     <LvInput
       v-else
       type="number"
-      v-model="useIncomeStore().income.amount"
-      label="Enter monthly income (after taxes)"
+      v-model="amount"
+      :label="label"
       placeholder="E.g. 34,000 SEK"
       bottom-bar
       clearable 
@@ -75,6 +79,8 @@
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import { useIncomeStore } from '@/stores/income';
+import IncomeList from './IncomeList.vue';
+import { computed } from 'vue';
 
 const onCancel = () => {
   if ( useIncomeStore().addNew )
@@ -82,6 +88,26 @@ const onCancel = () => {
   
   useIncomeStore().resetDialog()
 }
+
+const amount = computed({
+  get: () => useIncomeStore().calculatedTotalIncome,
+  set: (value) => {
+    useIncomeStore().income.amount = value
+  }
+})
+
+const label = computed(() => {
+  const income = useIncomeStore().income.amount
+  const incomeList = useIncomeStore().incomeList
+
+  if ( income )
+    return 'Update income'
+  
+  if ( incomeList.length > 0 )
+    return 'Update income (Including additional income)'
+
+  return 'Enter net income'
+})
 </script>
 
 <style scoped>

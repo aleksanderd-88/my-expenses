@@ -51,7 +51,7 @@ const calculatedPaidExpenses = computed(() => {
 const paidExpensesDetails = computed(() => `${ table.rows.filter(r => r.isPaid).length } expenses of ${ table.rows.length } paid`)
 const paidExpensesLength = computed(() => table.rows.filter(r => r.isPaid).length)
 
-const addedIncome = computed(() => useIncomeStore().addedIncome)
+const addedIncome = computed(() => useIncomeStore().calculatedTotalIncome)
 
 </script>
 
