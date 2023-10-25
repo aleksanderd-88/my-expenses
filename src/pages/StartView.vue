@@ -79,7 +79,7 @@
           success
           title="Update row(s)"
           @click="updateSelected()"
-          :is-visible="multiSelectButtonVisible"
+          :disabled="!multiSelectButtonVisible"
         />
 
         <BaseButton 
@@ -88,7 +88,7 @@
           deep-shadow
           primary
           @click="toggleTableLayout()"
-          :is-visible="Boolean(useCategoryStore().expensesWithCategories)"
+          :disabled="!Boolean(useCategoryStore().expensesWithCategories)"
         />
     
         <BaseButton 
