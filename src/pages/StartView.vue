@@ -10,9 +10,16 @@
 
     <p 
       class="start__caption caption center-align" 
-      v-if="!rowsLength"
+      v-if="!useExpenseStore().table.rows"
     >
-      {{ useLoadingStore().isLoading ? 'Loading ...' : 'No expenses found' }}
+      Loading ...
+    </p>
+    
+    <p 
+      class="start__caption caption center-align" 
+      v-else-if="!useExpenseStore().table.rows.length"
+    >
+      No expenses found
     </p>
     
     <ExpenseTable 
@@ -114,7 +121,6 @@ import { useCategoryStore } from '@/stores/category';
 import { useTableStore } from '@/stores/table';
 import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
-import { useLoadingStore } from '@/stores/loader';
 
 const op = ref()
 const multiSelectButtonVisible = ref(false)
