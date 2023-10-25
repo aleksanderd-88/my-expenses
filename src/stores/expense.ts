@@ -225,7 +225,7 @@ export const useExpenseStore = defineStore('expense', () => {
 
     useLoadingStore().setLoading(true)
     
-    return API.updateExpense(id, { data: { isPaid: (paidStatus = !paidStatus) } } )
+    return API.updateExpense(id, { data: { ...data, isPaid: (paidStatus = !paidStatus) } } )
       .then(() => {
       resetDialog()
       doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
