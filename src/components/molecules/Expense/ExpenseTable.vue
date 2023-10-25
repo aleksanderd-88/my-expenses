@@ -23,6 +23,28 @@
           <i class="light-icon-check" v-if="data.value.isPaid"></i>
         </div>
       </template>
+
+      <template v-slot:paymentDue="data">
+        <div class="vtl__row">
+          <p>{{ data.value.paymentDue }}</p>
+          <AppIndicator 
+            :title="title(mode(data.value.paymentDue))"
+            :mode="mode(data.value.paymentDue, data.value.isPaid)"
+            v-if="mode(data.value.paymentDue).length"
+          />
+        </div>
+      </template>
+
+      <template v-slot:paidAt="data">
+        <div class="vtl__row">
+          <p>{{ data.value.paidAt }}</p>
+          <AppIndicator 
+            success
+            title="Expense is paid"
+            v-if="data.value.paidAt" 
+          />
+        </div>
+      </template>
     </TableLite>
 
     <template v-else>
@@ -48,6 +70,28 @@
             <i class="light-icon-check" v-if="data.value.isPaid"></i>
           </div>
         </template>
+
+        <template v-slot:paymentDue="data">
+          <div class="vtl__row">
+            <p>{{ data.value.paymentDue }}</p>
+            <AppIndicator 
+              :title="title(mode(data.value.paymentDue))"
+              :mode="mode(data.value.paymentDue, data.value.isPaid)"
+              v-if="mode(data.value.paymentDue).length"
+            />
+          </div>
+        </template>
+
+        <template v-slot:paidAt="data">
+          <div class="vtl__row">
+            <p>{{ data.value.paidAt }}</p>
+            <AppIndicator 
+              success
+              title="Expense is paid"
+              v-if="data.value.paidAt" 
+            />
+          </div>
+        </template>
       </TableLite>
 
       <TableLite
@@ -71,6 +115,28 @@
             <i class="light-icon-check" v-if="data.value.isPaid"></i>
           </div>
         </template>
+
+        <template v-slot:paymentDue="data">
+          <div class="vtl__row">
+            <p>{{ data.value.paymentDue }}</p>
+            <AppIndicator 
+              :title="title(mode(data.value.paymentDue))"
+              :mode="mode(data.value.paymentDue, data.value.isPaid)"
+              v-if="mode(data.value.paymentDue).length"
+            />
+          </div>
+        </template>
+
+        <template v-slot:paidAt="data">
+          <div class="vtl__row">
+            <p>{{ data.value.paidAt }}</p>
+            <AppIndicator 
+              success
+              title="Expense is paid"
+              v-if="data.value.paidAt" 
+            />
+          </div>
+        </template>
       </TableLite>
     </template>
 
@@ -84,6 +150,8 @@ import { useExpenseStore } from '@/stores/expense'
 import { computed, watch, ref } from 'vue'
 import { useTableStore } from '@/stores/table';
 import { useCategoryStore } from '@/stores/category';
+import AppIndicator from '@/components/atoms/AppIndicator.vue';
+import Sugar from 'sugar-date'
 
 type RowType = {
   _id: string
@@ -126,6 +194,35 @@ const filteredRowsWithoutCategory = computed(() => table.rows.filter(r => !r.cat
     return r
   }
 }))
+
+const isDueDate = (date = new Date()) => {
+  return Boolean(Sugar.Date(new Date(date)).isToday().raw)
+}
+
+const isAfterDueDate = (date = new Date()) => {
+  return Boolean(Sugar.Date(new Date()).daysSince(new Date(date)).raw === 1)
+}
+
+const mode = (date = new Date(), isPaid?: boolean) => {
+  let ret = ''
+
+  if ( isDueDate(date) )
+    ret = 'warning'
+  if ( isAfterDueDate(date) )
+    ret = 'danger'
+  if ( isPaid )
+    ret = 'paid'
+
+  return ret
+}
+
+const title = (mode = '') => {
+  if ( mode.includes('warning') )
+    return 'Expense is due'
+  if ( mode.includes('danger') )
+    return 'Expense due date has expired'
+  return 'Expense is paid'
+}
 
 const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
 
