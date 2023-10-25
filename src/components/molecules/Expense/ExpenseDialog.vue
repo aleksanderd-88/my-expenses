@@ -19,7 +19,7 @@
 
     <div class="col col--flex">
       <LvInput 
-        type="text"
+        type="number"
         v-model="expense.cost"
         label="Enter expense cost"
         placeholder="E.g. 600 SEK"
