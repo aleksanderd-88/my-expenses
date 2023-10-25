@@ -8,19 +8,21 @@
       class="start__date-picker"
     />
 
-    <p 
-      class="start__caption caption center-align" 
-      v-if="!useExpenseStore().table.rows"
-    >
-      Loading ...
-    </p>
-    
-    <p 
-      class="start__caption caption center-align" 
-      v-else-if="!useExpenseStore().table.rows.length"
-    >
-      No expenses found
-    </p>
+    <template v-if="!useExpenseStore().table.totalRecordCount">
+      <p 
+        class="start__caption caption center-align" 
+        v-if="useLoadingStore().isLoading"
+      >
+        Loading ...
+      </p>
+
+      <p 
+        class="start__caption caption center-align" 
+        v-else
+      >
+        No expenses found
+      </p>
+    </template>
     
     <ExpenseTable 
       v-else 
@@ -121,6 +123,7 @@ import { useCategoryStore } from '@/stores/category';
 import { useTableStore } from '@/stores/table';
 import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { useLoadingStore } from '@/stores/loader';
 
 const op = ref()
 const multiSelectButtonVisible = ref(false)
