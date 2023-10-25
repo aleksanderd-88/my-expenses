@@ -120,7 +120,7 @@ export const useExpenseStore = defineStore('expense', () => {
     editMode.value = false
     copyPrevious.value = false
     expenseDialogVisible.value = false
-    Object.assign(data, expenseInitialValue)
+    Object.assign(data, { ...expenseInitialValue })
     useLoadingStore().setLoading(false)
   }
   
@@ -147,7 +147,7 @@ export const useExpenseStore = defineStore('expense', () => {
   
   const createExpense = () => {
     if ( editMode.value )
-      updateExpense()
+      return updateExpense()
 
     if ( copyPrevious.value )
       return copyPreviousMonth()
