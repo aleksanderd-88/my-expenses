@@ -28,7 +28,7 @@
         <div class="vtl__row">
           <p>{{ data.value.paymentDue }}</p>
           <AppIndicator 
-            :title="title(mode(data.value.paymentDue))"
+            :title="title(mode(data.value.paymentDue, data.value.isPaid))"
             :mode="mode(data.value.paymentDue, data.value.isPaid)"
             v-if="mode(data.value.paymentDue).length"
           />
@@ -75,7 +75,7 @@
           <div class="vtl__row">
             <p>{{ data.value.paymentDue }}</p>
             <AppIndicator 
-              :title="title(mode(data.value.paymentDue))"
+              :title="title(mode(data.value.paymentDue, data.value.isPaid))"
               :mode="mode(data.value.paymentDue, data.value.isPaid)"
               v-if="mode(data.value.paymentDue).length"
             />
@@ -120,7 +120,7 @@
           <div class="vtl__row">
             <p>{{ data.value.paymentDue }}</p>
             <AppIndicator 
-              :title="title(mode(data.value.paymentDue))"
+              :title="title(mode(data.value.paymentDue, data.value.isPaid))"
               :mode="mode(data.value.paymentDue, data.value.isPaid)"
               v-if="mode(data.value.paymentDue).length"
             />
@@ -217,11 +217,16 @@ const mode = (date = new Date(), isPaid?: boolean) => {
 }
 
 const title = (mode = '') => {
+  let ret = ''
+
   if ( mode.includes('warning') )
-    return 'Expense is due'
+    ret ='Expense is due'
   if ( mode.includes('danger') )
-    return 'Expense due date has expired'
-  return 'Expense is paid'
+    ret = 'Expense due date has expired'
+  if ( mode.includes('paid') )
+    ret = 'Expense is paid'
+
+  return ret
 }
 
 const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
