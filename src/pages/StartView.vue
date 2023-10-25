@@ -12,9 +12,9 @@
       class="start__caption caption center-align" 
       v-if="!rowsLength"
     >
-      No expenses found
+      {{ useLoadingStore().isLoading ? 'Loading ...' : 'No expenses found' }}
     </p>
-
+    
     <ExpenseTable 
       v-else 
       @selected-rows="onSelectedRows($event)" 
@@ -114,6 +114,7 @@ import { useCategoryStore } from '@/stores/category';
 import { useTableStore } from '@/stores/table';
 import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
+import { useLoadingStore } from '@/stores/loader';
 
 const op = ref()
 const multiSelectButtonVisible = ref(false)
