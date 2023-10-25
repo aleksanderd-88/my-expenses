@@ -200,7 +200,7 @@ const isDueDate = (date = new Date()) => {
 }
 
 const isAfterDueDate = (date = new Date()) => {
-  return Boolean(Sugar.Date(new Date()).daysSince(new Date(date)).raw === 1)
+  return Boolean(Sugar.Date(new Date(date)).addDays(1).isPast().raw)
 }
 
 const mode = (date = new Date(), isPaid?: boolean) => {
