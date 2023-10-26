@@ -42,7 +42,7 @@
       <BaseButton 
         icon="thumb-up" 
         class="lv-button--ml-10"
-        @click="useExpenseStore().markAsPaid()"
+        @click="onHandlePayment()"
         success
         :style="{ marginLeft: 'auto !important' }"
         v-if="useExpenseStore().editMode"
@@ -50,6 +50,11 @@
         {{ useExpenseStore().expenseIsPaid ? 'Un-mark as paid' : 'Mark as paid' }}
       </BaseButton>
     </div>
+
+    <ExpensePaymentDateDialog 
+      :is-visible="paymentDateDialogVisible" 
+      @close="paymentDateDialogVisible = false" 
+    />
 
     <h2 class="sub-headline sub-headline--added-spacing">Optional</h2>
 
@@ -119,12 +124,22 @@ import LvDropdown from 'lightvue/dropdown';
 import { useExpenseStore } from '@/stores/expense';
 import LvToggleSwitch from 'lightvue/toggle-switch'
 import { useCategoryStore } from '@/stores/category'
+import ExpensePaymentDateDialog from './ExpensePaymentDateDialog.vue';
 
 const initialColor = ref('#607C8A')
+const paymentDateDialogVisible = ref(false)
 
 const categories = computed(() => useCategoryStore().categories)
 
 const expense = useExpenseStore().data
+
+const onHandlePayment = () => {
+  if ( useExpenseStore().expenseIsPaid ) {
+    paymentDateDialogVisible.value = false
+    return useExpenseStore().onMarkPayment()
+  }
+  paymentDateDialogVisible.value = true
+}
 
 </script>
 

@@ -224,7 +224,7 @@ export const useExpenseStore = defineStore('expense', () => {
     .finally(() => useLoadingStore().setLoading(false))
   }
   
-  const markAsPaid = () => {
+  const onMarkPayment = () => {
     if ( !editMode.value || !rowData.value )
       return
   
@@ -238,7 +238,7 @@ export const useExpenseStore = defineStore('expense', () => {
       resetDialog()
       doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
 
-      const toastText = 'Expense status has been changed'
+      const toastText = 'Expense updated'
       useToastStore().setToast(true, toastText)
     })
     .catch(err => {
@@ -291,7 +291,7 @@ export const useExpenseStore = defineStore('expense', () => {
     rowsLength,
     createExpense,
     deleteExpense,
-    markAsPaid,
+    onMarkPayment,
     resetDialog,
     data,
     editMode,
