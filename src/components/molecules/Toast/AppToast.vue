@@ -28,6 +28,8 @@ const modifiedClass = computed(() => {
 
 <style lang="scss" scoped>
   .app-toast {
+    $root: &;
+
     position: fixed;
     bottom: 1rem;
     left: 50%;
@@ -48,6 +50,7 @@ const modifiedClass = computed(() => {
 
     &__close-btn {
       margin-left: auto;
+      display: none;
       background-color: transparent !important;
     }
 
@@ -65,6 +68,10 @@ const modifiedClass = computed(() => {
       z-index: 1000;
       visibility: visible;
       transform: translate(-50%, 0);
+
+      #{$root}__close-btn {
+        display: block;
+      }
 
       @media (min-width: 1024px) {
         transform: translate(0, 0);
