@@ -46,12 +46,22 @@
 
     <template #footer>
       <BaseButton 
+        icon="trash" 
+        class="lv-button--ml-10"
+        :style="{ marginRight: 'auto !important', marginLeft: '0 !important' }"
+        danger
+        @click="useIncomeStore().deleteIncome()"
+        v-if="useIncomeStore().addNew"
+      >
+        Delete
+      </BaseButton>
+      <BaseButton
+        v-else
         icon="plus" 
         class="lv-button--ml-10"
         :style="{ marginRight: 'auto !important', marginLeft: '0 !important' }"
         primary
         @click="useIncomeStore().addNew = true"
-        :disabled="useIncomeStore().addNew"
       >
         Add income
       </BaseButton>

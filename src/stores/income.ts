@@ -16,8 +16,9 @@ export const useIncomeStore = defineStore('income', () => {
   const initialIncomeValue: { 
     amount: null | number, 
     newName?: string | null,
-    newAmount?: number | null
-  } = { amount: null, newName: null, newAmount: null }
+    newAmount?: number | null,
+    _id: string | null
+  } = { amount: null, newName: null, newAmount: null, _id: null }
 
   const income = reactive({ ...initialIncomeValue })
   const incomeDialogVisible = ref(false)
@@ -120,6 +121,20 @@ export const useIncomeStore = defineStore('income', () => {
       _id: params._id
     })
   }
+  
+  const deleteIncome = () => {
+    useLoadingStore().setLoading(true)
+
+    return API.deleteIncome(income._id as string)
+    .then(() => {
+      resetDialog()
+      getIncome()
+      listIncome()
+      useToastStore().setToast(true, 'Income deleted')
+    })
+    .catch(err => console.log(`Error: ${ err }`))
+    .finally(() => useLoadingStore().setLoading(false))
+  }
 
   const clearAll = () => Object.assign(income, initialIncomeValue)
 
@@ -135,6 +150,7 @@ export const useIncomeStore = defineStore('income', () => {
     listIncome,
     incomeList,
     calculatedTotalIncome,
-    editIncome
+    editIncome,
+    deleteIncome
   }
 })

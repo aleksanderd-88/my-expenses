@@ -72,6 +72,9 @@ export default {
   listIncome(): Promise<AxiosResponse> {
     return client.patch('/income/list')
   },
+  deleteIncome(id: string): Promise<AxiosResponse> {
+    return client.delete(`/income/${ id }/delete`)
+  },
 
   //- Category
   createCategory(params: ParameterType): Promise<AxiosResponse> {
