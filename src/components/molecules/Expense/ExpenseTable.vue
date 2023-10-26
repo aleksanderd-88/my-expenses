@@ -26,23 +26,23 @@
 
       <template v-slot:paymentDue="data">
         <div class="vtl__row">
-          <p>{{ data.value.paymentDue }}</p>
           <AppIndicator 
             :title="title(mode(data.value.paymentDue, data.value.isPaid))"
             :mode="mode(data.value.paymentDue, data.value.isPaid)"
             v-if="mode(data.value.paymentDue).length"
           />
+          <p>{{ data.value.paymentDue }}</p>
         </div>
       </template>
 
       <template v-slot:paidAt="data">
         <div class="vtl__row">
-          <p>{{ data.value.paidAt }}</p>
           <AppIndicator 
             success
             title="Expense is paid"
             v-if="data.value.paidAt" 
           />
+          <p>{{ data.value.paidAt }}</p>
         </div>
       </template>
     </TableLite>
@@ -73,23 +73,23 @@
 
         <template v-slot:paymentDue="data">
           <div class="vtl__row">
-            <p>{{ data.value.paymentDue }}</p>
             <AppIndicator 
               :title="title(mode(data.value.paymentDue, data.value.isPaid))"
               :mode="mode(data.value.paymentDue, data.value.isPaid)"
               v-if="mode(data.value.paymentDue).length"
             />
+            <p>{{ data.value.paymentDue }}</p>
           </div>
         </template>
 
         <template v-slot:paidAt="data">
           <div class="vtl__row">
-            <p>{{ data.value.paidAt }}</p>
             <AppIndicator 
               success
               title="Expense is paid"
               v-if="data.value.paidAt" 
             />
+            <p>{{ data.value.paidAt }}</p>
           </div>
         </template>
       </TableLite>
@@ -118,23 +118,23 @@
 
         <template v-slot:paymentDue="data">
           <div class="vtl__row">
-            <p>{{ data.value.paymentDue }}</p>
             <AppIndicator 
               :title="title(mode(data.value.paymentDue, data.value.isPaid))"
               :mode="mode(data.value.paymentDue, data.value.isPaid)"
               v-if="mode(data.value.paymentDue).length"
             />
+            <p>{{ data.value.paymentDue }}</p>
           </div>
         </template>
 
         <template v-slot:paidAt="data">
           <div class="vtl__row">
-            <p>{{ data.value.paidAt }}</p>
             <AppIndicator 
               success
               title="Expense is paid"
               v-if="data.value.paidAt" 
             />
+            <p>{{ data.value.paidAt }}</p>
           </div>
         </template>
       </TableLite>
