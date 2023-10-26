@@ -23,9 +23,17 @@ type RowType = {
 
 export const useExpenseStore = defineStore('expense', () => {
   const expenseInitialValue = {
+    _id: null,
+    no: null,
     name: null,
     cost: null,
+    isPaid: null,
+    strCost: null,
     paymentDue: null,
+    paidAt: null,
+    createdAt: null,
+    updatedAt: null,
+    userId: null,
     categoryId: null
   }
 
