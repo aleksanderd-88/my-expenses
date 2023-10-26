@@ -8,24 +8,15 @@
       class="start__date-picker"
     />
 
-    <template v-if="!useExpenseStore().table.totalRecordCount">
-      <p 
-        class="start__caption caption center-align" 
-        v-if="useLoadingStore().isLoading"
-      >
-        Loading ...
-      </p>
+    <p 
+      class="start__caption caption center-align" 
+      v-if="useLoadingStore().isLoading"
+    >
+      Loading ...
+    </p>
 
-      <p 
-        class="start__caption caption center-align" 
-        v-else
-      >
-        No expenses found
-      </p>
-    </template>
-    
     <ExpenseTable 
-      v-else 
+      v-else-if="rowsLength"
       @selected-rows="onSelectedRows($event)" 
     />
 
