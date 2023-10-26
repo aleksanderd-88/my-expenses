@@ -117,7 +117,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvColorpicker from 'lightvue/color-picker';
 import LvDropdown from 'lightvue/dropdown';
@@ -140,6 +140,12 @@ const onHandlePayment = () => {
   }
   paymentDateDialogVisible.value = true
 }
+
+watch(() => useExpenseStore().expenseDialogVisible, val => {
+  if ( !val ) {
+    paymentDateDialogVisible.value = false
+  }
+})
 
 </script>
 
