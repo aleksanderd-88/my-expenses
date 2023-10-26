@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import StartView from '@/pages/StartView.vue'
 import { useUserStore } from '@/stores/user'
+import { useAppMenu } from '@/stores/menu'
 
 const setPageTitle = (title = 'Start') => {
   document.title = `MyExpenses | ${ title }`
@@ -52,6 +53,7 @@ router.beforeEach((to) => {
 
   //- Prevent navigating to protected route if user is not set
   if ( to.meta.requiresAuth && !user ) {
+    useAppMenu().setMenuVisibility(false)
     return false
   }
 
