@@ -110,7 +110,7 @@ export const useExpenseStore = defineStore('expense', () => {
         r.no = index + 1
         r.createdAt = Sugar.Date(new Date(r.createdAt)).long().raw
         r.paymentDue = `${ Sugar.Date(new Date(r.paymentDue)).medium().raw }`
-        r.paidAt = r.paidAt ? `${ Sugar.Date(new Date(r.paidAt)).long().raw }` : ''
+        r.paidAt = r.paidAt ? `${ Sugar.Date(new Date(r.paidAt)).medium().raw }` : ''
         r.strCost = formatCurrency(Number(r.cost))
         return r
       })
