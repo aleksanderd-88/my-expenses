@@ -32,7 +32,7 @@ const router = createRouter({
       path: '/',
       name: 'expenses',
       component: StartView,
-      meta: { requiresAuth: true }
+      meta: { requiresAuth: true, title: 'Expenses' }
     }
   ]
 })
@@ -61,8 +61,8 @@ router.beforeEach((to) => {
   return true
 })
 
-router.afterEach(() => {
-  setPageTitle()
+router.afterEach((to) => {
+  setPageTitle(to.meta.title?.toString())
 })
 
 export default router
