@@ -75,7 +75,6 @@
             <AppIndicator 
               :title="title(mode(data.value.paymentDue, data.value.isPaid))"
               :mode="mode(data.value.paymentDue, data.value.isPaid)"
-              v-if="mode(data.value.paymentDue).length"
             />
             <p>{{ data.value.paymentDue }}</p>
           </div>
@@ -120,7 +119,6 @@
             <AppIndicator 
               :title="title(mode(data.value.paymentDue, data.value.isPaid))"
               :mode="mode(data.value.paymentDue, data.value.isPaid)"
-              v-if="mode(data.value.paymentDue).length"
             />
             <p>{{ data.value.paymentDue }}</p>
           </div>
