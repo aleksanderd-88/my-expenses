@@ -11,7 +11,7 @@ import { computed } from 'vue';
   const props = defineProps({
     success: {
       type: Boolean,
-      default: true
+      default: false
     },
     warning: {
       type: Boolean,
