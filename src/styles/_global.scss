@@ -1,0 +1,40 @@
+// text styles
+.caption {
+  font-weight: 500;
+}
+
+// color variables
+$dark: #343a40;
+$white: #e8eaf6;
+$red: #ef5350;
+$warning: #ffa726;
+$success: #81c784;
+$primary: #42a5f5;
+
+// Margins
+.mt-2 { margin-top: 2rem; }
+
+// Paddings
+.pa-1 {
+  padding: 1rem !important;
+}
+
+p {
+  &.color-dark {
+    color: $dark;
+  }
+}
+
+
+// Flex
+.d-flex {
+  display: flex;
+
+  &.align-center {
+    align-items: center;
+  }
+
+  &.gap-1 {
+    gap: 1rem;
+  }
+}

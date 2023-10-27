@@ -1,13 +1,241 @@
 <template>
-  <div>
-    Start view
+  <div class="start">
+    
+    <VueDatePicker 
+      v-model="useExpenseStore().expenseMonth" 
+      month-picker
+      hide-input-icon
+      class="start__date-picker"
+    />
+
+    <p 
+      class="start__caption caption center-align" 
+      v-if="useLoadingStore().isLoading"
+    >
+      Loading ...
+    </p>
+
+    <ExpenseTable 
+      v-else-if="rowsLength"
+      @selected-rows="onSelectedRows($event)" 
+    />
+
+    <div class="start__actions" :class="modifiedClass">
+      <LvOverlayPanel 
+        ref="op" 
+        class="start__panel"
+        align-right
+      >
+        <ul class="start__options">
+          <li class="start__option">
+            <BaseButton 
+              icon="stack"
+              icon-left
+              class="start__action-btn"
+              @click="displayExpenseDialog()"
+            >
+              Add expenses
+            </BaseButton>
+          </li>
+
+          <li class="start__option">
+            <BaseButton 
+              icon="currency-euro"
+              icon-left
+              class="start__action-btn"
+              @click="displayIncomeDialog()"
+            >
+              Update income
+            </BaseButton>
+          </li>
+
+          <li class="start__option">
+            <BaseButton 
+              icon="file-check"
+              icon-left
+              class="start__action-btn"
+              @click="displayCategoryDialog()"
+            >
+              {{ useCategoryStore().categories.length ? 'Add/edit category' : 'Add category' }}
+            </BaseButton>
+          </li>
+        </ul>
+      </LvOverlayPanel>
+
+      <div class="start__action-btns">
+        <BaseButton 
+          class="start__add-btn lv-button--center-content" 
+          icon="checkbox" 
+          deep-shadow
+          success
+          title="Update row(s)"
+          @click="updateSelected()"
+          :disabled="!multiSelectButtonVisible"
+        />
+
+        <BaseButton 
+          class="start__add-btn lv-button--center-content" 
+          :icon="icon" 
+          deep-shadow
+          primary
+          @click="toggleTableLayout()"
+          :disabled="!Boolean(useCategoryStore().expensesWithCategories)"
+        />
+    
+        <BaseButton 
+          class="start__add-btn lv-button--center-content" 
+          icon="plus" 
+          deep-shadow
+          @click="togglePanel($event)"
+        />
+      </div>
+    </div>
+
+    <ExpenseDialog />
+
+    <IncomeDialog />
+
+    <CategoryDialog />
   </div>
 </template>
 
 <script setup lang="ts">
+import BaseButton from '@/components/atoms/BaseButton.vue'
+import LvOverlayPanel  from 'lightvue/overlay-panel'
+import { ref, computed } from 'vue'
+import ExpenseTable from '@/components/molecules/Expense/ExpenseTable.vue'
+import ExpenseDialog from '@/components/molecules/Expense/ExpenseDialog.vue';
+import IncomeDialog from '@/components/molecules/Income/IncomeDialog.vue'
+import { useExpenseStore } from '@/stores/expense'
+import { useIncomeStore } from '@/stores/income'
+import Sugar from 'sugar-date'
+import CategoryDialog from '@/components/molecules/Category/CategoryDialog.vue';
+import { useCategoryStore } from '@/stores/category';
+import { useTableStore } from '@/stores/table';
+import { onBeforeRouteUpdate } from 'vue-router';
+import { useUserStore } from '@/stores/user';
+import { useLoadingStore } from '@/stores/loader';
 
+const op = ref()
+const multiSelectButtonVisible = ref(false)
+const selectedRows = ref()
+
+useIncomeStore().getIncome()
+useIncomeStore().listIncome()
+useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
+
+const rowsLength = computed(() => useExpenseStore().rowsLength)
+const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
+const icon = computed(() => useTableStore().mode.includes('list') ? 'list' : 'layout-list')
+
+const togglePanel = (event: Event) => op.value.toggle(event)
+
+const displayExpenseDialog = () => {
+  togglePanel(op.value)
+  useExpenseStore().editMode = false
+  useExpenseStore().expenseDialogVisible = true
+}
+
+const displayIncomeDialog = () => {
+  togglePanel(op.value)
+  useIncomeStore().incomeDialogVisible = true
+}
+
+const displayCategoryDialog = () => {
+  togglePanel(op.value)
+  useCategoryStore().categoryDialogVisible = true
+}
+
+const toggleTableLayout = () => {
+  useTableStore().setLayoutMode()
+}
+
+useCategoryStore().listCategories()
+useUserStore().getUser(useUserStore().currentUser?._id as string)
+
+onBeforeRouteUpdate(() => {
+  useCategoryStore().listCategories()
+  useUserStore().getUser(useUserStore().currentUser?._id as string)
+  return true
+})
+
+const onSelectedRows = (values: Record<string, unknown>[]) => {
+  multiSelectButtonVisible.value = false
+
+  if ( values.length ) {
+    selectedRows.value = values
+    multiSelectButtonVisible.value = true
+  }
+}
+
+const updateSelected = () => {
+  if ( !selectedRows.value.length ) 
+    return
+
+  return useExpenseStore().updateSelectedExpenses(selectedRows.value)
+  ?.then(() => multiSelectButtonVisible.value = false)
+  .catch(() => selectedRows.value = [])
+}
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+  .start {
 
+    &__date-picker {
+      padding-top: 1rem;
+    }
+    
+    &__caption {
+      width: 100%;
+      text-align: center;
+    }
+
+    &__actions {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      max-width: auto;
+      display: flex;
+      z-index: 1;
+      justify-content: flex-end;
+
+      @media (min-width: 1024px) {
+        right: 1.5rem;
+        bottom: 1.5rem;
+      }
+
+      &--bottom-margin {
+        bottom: calc(90px + 1rem)
+      }
+    }
+
+    &__add-btn {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+    }
+
+    &__panel {
+      right: 0 !important;
+      left: unset !important;
+      top: unset !important;
+      bottom: calc(70px + .5rem) !important;
+    }
+
+    &__options {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem;
+    }
+
+    &__action-btns {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    &__action-btn {
+      width: 100%;
+    }
+  }
 </style>
