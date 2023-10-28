@@ -4,6 +4,7 @@ import API from '@/services/api'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
 import pick from 'lodash/pick'
+import get from "lodash/get";
 
 export type IncomeType = {
   amount: number
@@ -59,8 +60,8 @@ export const useIncomeStore = defineStore('income', () => {
 
     return API.getIncome()
     .then(({ data }: { data: { amount: number | null, _id: string | null } }) => {
-      income.amount = data.amount
-      income._id = data._id
+      income.amount = data.amount || null
+      income._id = data._id || null
       addedIncome.value = data.amount || 0 // TODO: Fix this redundant assignment
     })
     .catch(err => console.log(`Error: ${ err }`))
@@ -68,9 +69,9 @@ export const useIncomeStore = defineStore('income', () => {
   }
 
   const createIncome = () => {
-    const requiredFields = addNew.value ? pick(income, ['amount', 'name']) : pick(income, ['amount'])
-    if ( !income || Object.values(requiredFields).some(o => !o) ) 
-      return
+    if ( addNew.value )
+      if ( !get(income, 'name', null) ) 
+        return
 
     useLoadingStore().setLoading(true)
 
