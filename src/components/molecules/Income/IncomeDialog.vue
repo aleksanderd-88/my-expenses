@@ -12,7 +12,7 @@
       <IncomeList :style="{ marginBottom: '2rem' }" />
     </template>
 
-    <template v-if="useIncomeStore().addNew">
+    <template v-if="useIncomeStore().addNew || useIncomeStore().isEditMode">
       <LvInput 
         type="text"
         v-model="useIncomeStore().income.name"
@@ -51,7 +51,7 @@
         :style="{ marginRight: 'auto !important', marginLeft: '0 !important' }"
         danger
         @click="useIncomeStore().deleteIncome()"
-        v-if="useIncomeStore().addNew"
+        v-if="useIncomeStore().isEditMode"
       >
         Delete
       </BaseButton>
@@ -61,6 +61,7 @@
         class="lv-button--ml-10"
         :style="{ marginRight: 'auto !important', marginLeft: '0 !important' }"
         primary
+        :disabled="useIncomeStore().addNew"
         @click="useIncomeStore().addNew = true"
       >
         Add income
@@ -93,8 +94,11 @@ import IncomeList from './IncomeList.vue';
 import { computed } from 'vue';
 
 const onCancel = () => {
-  if ( useIncomeStore().addNew )
+  if ( useIncomeStore().addNew || useIncomeStore().isEditMode ) {
+    useIncomeStore().clearAll()
+    useIncomeStore().isEditMode = false
     return useIncomeStore().addNew = false
+  }
   
   useIncomeStore().resetDialog()
 }
@@ -102,15 +106,14 @@ const onCancel = () => {
 const amount = computed({
   get: () => useIncomeStore().calculatedTotalIncome,
   set: (value) => {
-    useIncomeStore().income.amount = value
+    useIncomeStore().income.amount = Number(value)
   }
 })
 
 const label = computed(() => {
-  const income = useIncomeStore().income.amount
   const incomeList = useIncomeStore().incomeList
 
-  if ( income )
+  if (  useIncomeStore().addedIncome )
     return 'Update income'
   
   if ( incomeList.length > 0 )

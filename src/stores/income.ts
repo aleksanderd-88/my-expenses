@@ -35,10 +35,12 @@ export const useIncomeStore = defineStore('income', () => {
   })
 
   watchEffect(() => {
+    console.log('here');
     // Set amount field to null if creating new income
-    if ( addNew.value && !isEditMode.value )
+    if ( addNew.value && !isEditMode.value ) {
       income.amount = null
       income._id = null
+    }
   })
 
   const calculatedTotalIncome = computed(() => incomeList.value.reduce((sum, item) => sum += item.amount, addedIncome.value))
@@ -121,17 +123,15 @@ export const useIncomeStore = defineStore('income', () => {
   }
   
   const editIncome = (params: IncomeType) => {
-    console.log(params);
-    addNew.value = true
+    if ( addNew.value )
+      addNew.value = false
+
     // Set edit mode
     isEditMode.value = true
 
     //- Merge income data to display field values in modal
-    Object.assign(income, {
-      name: params.name,
-      amount: params.amount,
-      _id: params._id
-    })
+    console.log({ ...pick(params, ['_id', 'name', 'amount']) });
+    Object.assign(income, { ...pick(params, ['_id', 'name', 'amount']) })
   }
   
   const deleteIncome = () => {
@@ -148,7 +148,7 @@ export const useIncomeStore = defineStore('income', () => {
     .finally(() => useLoadingStore().setLoading(false))
   }
 
-  const clearAll = () => Object.assign(income, initialIncomeValue)
+  const clearAll = () => Object.assign(income, { ...initialIncomeValue })
 
   return {
     addedIncome,
@@ -163,6 +163,7 @@ export const useIncomeStore = defineStore('income', () => {
     incomeList,
     calculatedTotalIncome,
     editIncome,
-    deleteIncome
+    deleteIncome,
+    isEditMode
   }
 })
