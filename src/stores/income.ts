@@ -29,13 +29,14 @@ export const useIncomeStore = defineStore('income', () => {
   watch(() => incomeDialogVisible.value, (val: boolean) => {
     if ( !val ) 
       resetDialog()
+    else
+      getIncome()
   
     if ( addedIncome.value )
       income.amount = Number(addedIncome.value)
   })
 
   watchEffect(() => {
-    console.log('here');
     // Set amount field to null if creating new income
     if ( addNew.value && !isEditMode.value ) {
       income.amount = null

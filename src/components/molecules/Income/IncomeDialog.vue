@@ -41,7 +41,6 @@
       :label="label"
       placeholder="E.g. 34,000 SEK"
       bottom-bar
-      clearable 
     />
 
     <template #footer>
