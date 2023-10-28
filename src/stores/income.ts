@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import { reactive, ref, watch, computed } from "vue";
+import { reactive, ref, watch, computed, watchEffect } from "vue";
 import API from '@/services/api'
 import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
@@ -15,10 +15,9 @@ export type IncomeType = {
 export const useIncomeStore = defineStore('income', () => {
   const initialIncomeValue: { 
     amount: null | number, 
-    newName?: string | null,
-    newAmount?: number | null,
+    name?: string | null,
     _id: string | null
-  } = { amount: null, newName: null, newAmount: null, _id: null }
+  } = { amount: null, name: null, _id: null }
 
   const income = reactive({ ...initialIncomeValue })
   const incomeDialogVisible = ref(false)
@@ -35,6 +34,13 @@ export const useIncomeStore = defineStore('income', () => {
       income.amount = Number(addedIncome.value)
   })
 
+  watchEffect(() => {
+    // Set amount field to null if creating new income
+    if ( addNew.value && !isEditMode.value )
+      income.amount = null
+      income._id = null
+  })
+
   const calculatedTotalIncome = computed(() => incomeList.value.reduce((sum, item) => sum += item.amount, addedIncome.value))
 
   const resetDialog = () => {
@@ -49,8 +55,9 @@ export const useIncomeStore = defineStore('income', () => {
     useLoadingStore().setLoading(true)
 
     return API.getIncome()
-    .then(({ data }: { data: { amount: number | null } }) => {
+    .then(({ data }: { data: { amount: number | null, _id: string | null } }) => {
       income.amount = data.amount
+      income._id = data._id
       addedIncome.value = data.amount || 0 // TODO: Fix this redundant assignment
     })
     .catch(err => console.log(`Error: ${ err }`))
@@ -58,14 +65,17 @@ export const useIncomeStore = defineStore('income', () => {
   }
 
   const createIncome = () => {
-    const requiredFields = addNew.value ? pick(income, ['newAmount', 'newName']) : pick(income, ['amount'])
+    const requiredFields = addNew.value ? pick(income, ['amount', 'name']) : pick(income, ['amount'])
     if ( !income || Object.values(requiredFields).some(o => !o) ) 
       return
 
     useLoadingStore().setLoading(true)
 
-    if ( addNew.value && !isEditMode.value ) {
-      return API.createIncome({ data: { name: income.newName, amount: income.newAmount }})
+    if ( income._id ) {
+      return updateIncome()
+    } 
+
+    return API.createIncome({ data: income })
       .then(() => {
         resetDialog()
         getIncome()
@@ -77,13 +87,14 @@ export const useIncomeStore = defineStore('income', () => {
         useToastStore().setToast(true, err, true)
       })
       .finally(() => useLoadingStore().setLoading(false))
-    }
 
-    if ( isEditMode.value ) {
-      // We need change field name to match database collection field name
-      Object.assign(income, { name: income.newName, amount: income.newAmount, editNew: isEditMode.value })
-    }
-    
+    // if ( isEditMode.value ) {
+    //   // We need change field name to match database collection field name
+    //   Object.assign(income, { ...income, editNew: isEditMode.value })
+    // }
+  }
+
+  const updateIncome = () => {
     API.updateIncome({ data: income })
     .then(() => {
       resetDialog()
@@ -110,14 +121,15 @@ export const useIncomeStore = defineStore('income', () => {
   }
   
   const editIncome = (params: IncomeType) => {
+    console.log(params);
     addNew.value = true
     // Set edit mode
     isEditMode.value = true
 
     //- Merge income data to display field values in modal
     Object.assign(income, {
-      newName: params.name,
-      newAmount: params.amount,
+      name: params.name,
+      amount: params.amount,
       _id: params._id
     })
   }

@@ -64,7 +64,7 @@ export default {
     return client.patch('/income/update', params)
   },
   getIncome(): Promise<AxiosResponse> {
-    return client.get('/income/get')
+    return client.get(`/income/get`)
   },
   createIncome(params: ParameterType): Promise<AxiosResponse> {
     return client.post('/income/create', params)
