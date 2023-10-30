@@ -268,6 +268,27 @@ export const useExpenseStore = defineStore('expense', () => {
     .finally(() => useLoadingStore().setLoading(false))
   }
 
+  const deleteSelectedExpenses = (selectedRows: Pick<RowType, '_id'>[]) => {
+    if ( !selectedRows.length )
+      return
+  
+    useLoadingStore().setLoading(true)
+    const rowIds = selectedRows.map(r => r._id)
+    
+    return API.deleteSelectedRows({ data: { ids: rowIds } })
+    .then(() => {
+      doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
+
+      const toastText = 'Row(s) deleted'
+      useToastStore().setToast(true, toastText)
+    })
+    .catch(err => {
+      console.log(`Error: ${ err }`)
+      useToastStore().setToast(true, err, true)
+    })
+    .finally(() => useLoadingStore().setLoading(false))
+  }
+
   const setRowData = (row: RowType) => {
     rowData.value = row
     editMode.value = true
@@ -303,6 +324,7 @@ export const useExpenseStore = defineStore('expense', () => {
     copyPrevious,
     endOfMonth,
     clearAll,
-    updateSelectedExpenses
+    updateSelectedExpenses,
+    deleteSelectedExpenses
   }
 })

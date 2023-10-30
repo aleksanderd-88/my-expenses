@@ -93,7 +93,8 @@
 
     <EditOptions
       :is-visible="editOptionsVisibility"
-      @close="editOptionsVisibility = $event"
+      :selected-rows="selectedRows"
+      @close="editOptionsVisibility = false"
     />
 
     <ExpenseDialog />
