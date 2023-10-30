@@ -65,11 +65,11 @@
       <div class="start__action-btns">
         <BaseButton 
           class="start__add-btn lv-button--center-content" 
-          icon="checkbox" 
+          icon="edit" 
           deep-shadow
           success
-          title="Update row(s)"
-          @click="updateSelected()"
+          title="Edit row(s)"
+          @click="editOptionsVisibility = true"
           :disabled="!multiSelectButtonVisible"
         />
 
@@ -90,6 +90,12 @@
         />
       </div>
     </div>
+
+    <EditOptions
+      :is-visible="editOptionsVisibility"
+      :selected-rows="selectedRows"
+      @close="editOptionsVisibility = false"
+    />
 
     <ExpenseDialog />
 
@@ -115,9 +121,11 @@ import { useTableStore } from '@/stores/table';
 import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import { useLoadingStore } from '@/stores/loader';
+import EditOptions from '@/components/molecules/EditOptions.vue';
 
 const op = ref()
 const multiSelectButtonVisible = ref(false)
+const editOptionsVisibility = ref(false)
 const selectedRows = ref()
 
 useIncomeStore().getIncome()
@@ -167,15 +175,15 @@ const onSelectedRows = (values: Record<string, unknown>[]) => {
     multiSelectButtonVisible.value = true
   }
 }
+//- TODO: Maybe remove this functionality?
+// const updateSelected = () => {
+//   if ( !selectedRows.value.length ) 
+//     return
 
-const updateSelected = () => {
-  if ( !selectedRows.value.length ) 
-    return
-
-  return useExpenseStore().updateSelectedExpenses(selectedRows.value)
-  ?.then(() => multiSelectButtonVisible.value = false)
-  .catch(() => selectedRows.value = [])
-}
+//   return useExpenseStore().updateSelectedExpenses(selectedRows.value)
+//   ?.then(() => multiSelectButtonVisible.value = false)
+//   .catch(() => selectedRows.value = [])
+// }
 </script>
 
 <style lang="scss" scoped>

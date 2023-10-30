@@ -58,6 +58,9 @@ export default {
   updateSelectedRows(params: ParameterType): Promise<AxiosResponse> {
     return client.patch(`/expenses/update-selected`, params)
   },
+  deleteSelectedRows(params: { data: { ids: string[] } }): Promise<AxiosResponse> {
+    return client.patch(`/expenses/delete-selected`, params)
+  },
 
   //- Income
   updateIncome(params: ParameterType): Promise<AxiosResponse> {
