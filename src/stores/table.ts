@@ -2,15 +2,13 @@ import { defineStore } from "pinia";
 import { ref } from 'vue'
 import { useToastStore } from "./toast";
 
-type modePropType = 'list' | 'category'
+export type ModeTypes = 'list' | 'category' | 'paid'
 
 export const useTableStore = defineStore('table', () => {
-  const mode = ref('list' as modePropType)
-  const isCategoryMode = ref(false)
-
-  const setLayoutMode = () => {
-    isCategoryMode.value = !isCategoryMode.value
-    mode.value = isCategoryMode.value ? 'category' : 'list'
+  const mode = ref('list')
+  
+  const setLayoutMode = (value: ModeTypes) => {
+    mode.value = value
     useToastStore().setToast(true, `Now displaying ${ mode.value } view`)
   }
   

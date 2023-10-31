@@ -17,6 +17,7 @@
             icon-left
             transparent
             class="filter-menu__filter-btn"
+            @click.stop="useTableStore().setLayoutMode(item.mode)"
           >
             {{ item.label }}
           </BaseButton>
@@ -32,13 +33,20 @@ import { computed, reactive, ref } from 'vue'
 import { useAppMenu } from '@/stores/menu'
 import { onClickOutside } from '@vueuse/core'
 import AppOverlay from './AppOverlay.vue';
+import { useTableStore, type ModeTypes } from '@/stores/table'
+
+type ItemPropType = {
+  label: string
+  icon: string
+  mode: ModeTypes
+}
 
 const menu = ref()
 
-const items = reactive([
-  { label: 'Category view', icon: 'layout-list', mode: 'category' },
+const items: ItemPropType[] = reactive([
   { label: 'List view', icon: 'list', mode: 'list' },
-  { label: 'Paid expenses view', icon: 'list-check', mode: 'paid' },
+  { label: 'Category view', icon: 'layout-list', mode: 'category' },
+  { label: 'Paid expenses view', icon: 'list-check', mode: 'paid' }
 ])
 
 const modifiedClass = computed(() => useAppMenu().filterMenuIsVisible && 'filter-menu--visible')
