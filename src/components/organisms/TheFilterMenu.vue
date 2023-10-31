@@ -1,27 +1,29 @@
 <template>
-  <div class="filter-menu" :class="modifiedClass" ref="menu">
-    <BaseButton
-      icon="x"
-      transparent
-      class="filter-menu__close-btn lv-button--icon-large"
-      @click.stop="closeFilterMenu()"
-    />
-        
-    <h1 class="filter-menu__headline">Filter views</h1>
-
-    <ul class="filter-menu__list">
-      <li class="filter-menu__item" v-for="item in items" :key="item.label">
-        <BaseButton
-          :icon="item.icon"
-          icon-left
-          transparent
-          class="filter-menu__filter-btn"
-        >
-          {{ item.label }}
-        </BaseButton>
-      </li>
-    </ul>
-  </div>
+  <AppOverlay :is-visible="useAppMenu().filterMenuIsVisible">
+    <div class="filter-menu" :class="modifiedClass" ref="menu">
+      <BaseButton
+        icon="x"
+        transparent
+        class="filter-menu__close-btn lv-button--icon-large"
+        @click.stop="closeFilterMenu()"
+      />
+          
+      <h1 class="filter-menu__headline">Filter views</h1>
+  
+      <ul class="filter-menu__list">
+        <li class="filter-menu__item" v-for="item in items" :key="item.label">
+          <BaseButton
+            :icon="item.icon"
+            icon-left
+            transparent
+            class="filter-menu__filter-btn"
+          >
+            {{ item.label }}
+          </BaseButton>
+        </li>
+      </ul>
+    </div>
+  </AppOverlay>
 </template>
 
 <script setup lang="ts">
@@ -29,6 +31,7 @@ import BaseButton from '@/components/atoms/BaseButton.vue';
 import { computed, reactive, ref } from 'vue'
 import { useAppMenu } from '@/stores/menu'
 import { onClickOutside } from '@vueuse/core'
+import AppOverlay from './AppOverlay.vue';
 
 const menu = ref()
 
@@ -53,13 +56,13 @@ const closeFilterMenu = () => useAppMenu().setFilterMenuVisibility(false)
     height: 100%;
     width: 100%;
     max-width: 300px;
-    z-index: 2;
+    z-index: 3;
     padding: 2rem 1rem;
     visibility: hidden;
     transform: translateX(-100%);
     background-color: $white;
     box-shadow: 3px 0px 15px -2px rgba(0,0,0,0.1);
-    transition: transform .25s, visibility .25s ease;
+    transition: visibility .25s, transform .25s ease;
 
     &__close-btn {
       position: absolute;
