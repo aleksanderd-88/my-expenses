@@ -72,6 +72,7 @@ const closeFilterMenu = () => useAppMenu().setFilterMenuVisibility(false)
 
     &__headline {
       font-size: 1.25rem;
+      font-weight: 500;
     }
 
     &__list {
