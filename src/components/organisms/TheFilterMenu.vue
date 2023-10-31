@@ -1,5 +1,5 @@
 <template>
-  <div class="filter-menu" :class="modifiedClass">
+  <div class="filter-menu" :class="modifiedClass" ref="menu">
     <BaseButton
       icon="x"
       transparent
@@ -26,8 +26,11 @@
 
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue';
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useAppMenu } from '@/stores/menu'
+import { onClickOutside } from '@vueuse/core'
+
+const menu = ref()
 
 const items = reactive([
   { label: 'Category view', icon: 'layout-list', mode: 'category' },
@@ -35,9 +38,10 @@ const items = reactive([
   { label: 'Paid expenses view', icon: 'list-check', mode: 'paid' },
 ])
 
-const closeFilterMenu = () => useAppMenu().setFilterMenuVisibility(false)
-
 const modifiedClass = computed(() => useAppMenu().filterMenuIsVisible && 'filter-menu--visible')
+
+onClickOutside(menu, () => useAppMenu().setFilterMenuVisibility(false))
+const closeFilterMenu = () => useAppMenu().setFilterMenuVisibility(false)
 
 </script>
 
