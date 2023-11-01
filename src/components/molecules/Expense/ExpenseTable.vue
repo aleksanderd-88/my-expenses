@@ -241,8 +241,10 @@ const filteredRowsWithoutCategory = computed(() => table.rows.filter(r => !r.cat
 }))
 
 const filterPaidRows = computed(() => table.rows.filter(r => r.paidAt).map((r: RowType, index: number) => {
-  r.no = index + 1
-  return r
+  if ( !isListMode.value ) {
+    r.no = index + 1
+    return r
+  }
 }))
 
 const isDueDate = (date = new Date()) => {
