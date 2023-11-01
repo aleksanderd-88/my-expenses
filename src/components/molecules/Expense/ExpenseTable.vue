@@ -51,8 +51,8 @@
       :is-slot-mode="true"
       :is-loading="table.isLoading"
       :columns="table.columns"
-      :rows="filterPaidRows"
-      :total="filterPaidRows.length"
+      :rows="filteredRows"
+      :total="filteredRows.length"
       :sortable="table.sortable"
       @do-search="doSearch()"
       @is-finished="table.isLoading = false"
@@ -61,7 +61,7 @@
       :class="{ 'vtl--added-padding': calculatedTotalExpense }"
       has-checkbox
       @return-checked-rows="onSelectedRows"
-      v-else-if="paidView"
+      v-else-if="paidView || useTableStore().mode.includes('unpaid')"
     >
       <template v-slot:name="data">
         <div class="vtl__row">
@@ -99,8 +99,8 @@
         :is-slot-mode="true"
         :is-loading="table.isLoading"
         :columns="table.columns"
-        :rows="filterRows(item._id)"
-        :total="filterRows.length"
+        :rows="filterCategoryRows(item._id)"
+        :total="filterCategoryRows.length"
         :sortable="table.sortable"
         @do-search="doSearch()"
         @is-finished="table.isLoading = false"
@@ -224,7 +224,7 @@ const calculatedTotalExpense = computed(() => {
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
 })
 
-const filterRows = (id: string) => {
+const filterCategoryRows = (id: string) => {
   if ( !isListMode.value ) {
     return table.rows?.filter(r => r.categoryId === id).map((r: RowType, index: number) => {
       r.no = index + 1
@@ -240,12 +240,18 @@ const filteredRowsWithoutCategory = computed(() => table.rows.filter(r => !r.cat
   }
 }))
 
-const filterPaidRows = computed(() => table.rows.filter(r => r.paidAt).map((r: RowType, index: number) => {
-  if ( !isListMode.value ) {
-    r.no = index + 1
-    return r
-  }
-}))
+const filteredRows = computed(() => {
+  let isPaid = true
+  if ( useTableStore().mode.includes('unpaid') ) 
+    isPaid = false
+
+  return table.rows.filter(r => r.isPaid === !!isPaid).map((r: RowType, index: number) => {
+    if ( !isListMode.value ) {
+      r.no = index + 1
+      return r
+    }
+  })
+})
 
 const isDueDate = (date = new Date()) => {
   return Boolean(Sugar.Date(new Date(date)).isToday().raw)
