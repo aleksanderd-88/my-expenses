@@ -9,7 +9,13 @@ export const useTableStore = defineStore('table', () => {
   
   const setLayoutMode = (value: ModeTypes) => {
     mode.value = value
-    useToastStore().setToast(true, `Now displaying ${ mode.value } view`)
+    const text = {
+      'list': 'All expenses',
+      'category': 'Category view',
+      'paid': 'Paid expenses',
+      'unpaid': 'Unpaid expenses'
+    }
+    useToastStore().setToast(true, `Now displaying ${ text[mode.value] }`)
   }
   
   return {
