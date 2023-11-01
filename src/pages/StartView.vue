@@ -75,10 +75,10 @@
 
         <BaseButton 
           class="start__add-btn lv-button--center-content" 
-          :icon="icon" 
+          icon="filter" 
           deep-shadow
           primary
-          @click="toggleTableLayout()"
+          @click="toggleFilterMenu()"
           :disabled="!Boolean(useCategoryStore().expensesWithCategories)"
         />
     
@@ -122,6 +122,7 @@ import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import { useLoadingStore } from '@/stores/loader';
 import EditOptions from '@/components/molecules/EditOptions.vue';
+import { useAppMenu } from '@/stores/menu';
 
 const op = ref()
 const multiSelectButtonVisible = ref(false)
@@ -134,7 +135,14 @@ useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expe
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
-const icon = computed(() => useTableStore().mode.includes('list') ? 'list' : 'layout-list')
+// const icon = computed(() => useTableStore().mode.includes('list') ? 'list' : 'layout-list')
+const toggleFilterMenu = () => {
+  const filterMenuIsVisible = useAppMenu().filterMenuIsVisible
+  let setOpen = false
+  if ( !filterMenuIsVisible )
+    setOpen = true
+  useAppMenu().setFilterMenuVisibility(setOpen)
+}
 
 const togglePanel = (event: Event) => op.value.toggle(event)
 
