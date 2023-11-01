@@ -1,7 +1,7 @@
 <template>
   <div>
     <TableLite
-      title="Expenses"
+      :title="tableTitle"
       :is-slot-mode="true"
       :is-loading="table.isLoading"
       :columns="table.columns"
@@ -47,7 +47,7 @@
     </TableLite>
 
     <TableLite
-      title="Expenses"
+      :title="tableTitle"
       :is-slot-mode="true"
       :is-loading="table.isLoading"
       :columns="table.columns"
@@ -222,6 +222,17 @@ const paidView = computed(() => tableView.value.includes('paid'))
 
 const calculatedTotalExpense = computed(() => {
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
+})
+
+const tableTitle = computed(() => {
+  let title = 'All expenses'
+  
+  if ( tableView.value.includes('paid') )
+    title = 'Paid expenses'
+  if ( tableView.value.includes('unpaid') )
+    title = 'Unpaid expenses'
+
+  return title
 })
 
 const filterCategoryRows = (id: string) => {
