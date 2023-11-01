@@ -9,7 +9,11 @@ export const useTableStore = defineStore('table', () => {
   
   const setLayoutMode = (value: ModeTypes) => {
     mode.value = value
-    const text = {
+
+    interface Map {
+      [key: string]: string
+    }
+    const text: Map = {
       'list': 'All expenses',
       'category': 'Category view',
       'paid': 'Paid expenses',
