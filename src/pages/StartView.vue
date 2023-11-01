@@ -117,7 +117,6 @@ import { useIncomeStore } from '@/stores/income'
 import Sugar from 'sugar-date'
 import CategoryDialog from '@/components/molecules/Category/CategoryDialog.vue';
 import { useCategoryStore } from '@/stores/category';
-import { useTableStore } from '@/stores/table';
 import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import { useLoadingStore } from '@/stores/loader';
@@ -135,7 +134,7 @@ useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expe
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
-// const icon = computed(() => useTableStore().mode.includes('list') ? 'list' : 'layout-list')
+
 const toggleFilterMenu = () => {
   const filterMenuIsVisible = useAppMenu().filterMenuIsVisible
   let setOpen = false
@@ -162,10 +161,6 @@ const displayCategoryDialog = () => {
   useCategoryStore().categoryDialogVisible = true
 }
 
-const toggleTableLayout = () => {
-  useTableStore().setLayoutMode()
-}
-
 useCategoryStore().listCategories()
 useUserStore().getUser(useUserStore().currentUser?._id as string)
 
@@ -183,15 +178,6 @@ const onSelectedRows = (values: Record<string, unknown>[]) => {
     multiSelectButtonVisible.value = true
   }
 }
-//- TODO: Maybe remove this functionality?
-// const updateSelected = () => {
-//   if ( !selectedRows.value.length ) 
-//     return
-
-//   return useExpenseStore().updateSelectedExpenses(selectedRows.value)
-//   ?.then(() => multiSelectButtonVisible.value = false)
-//   .catch(() => selectedRows.value = [])
-// }
 </script>
 
 <style lang="scss" scoped>
