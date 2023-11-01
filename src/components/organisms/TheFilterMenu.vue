@@ -46,7 +46,8 @@ const menu = ref()
 const items: ItemPropType[] = reactive([
   { label: 'List view', icon: 'list', mode: 'list' },
   { label: 'Category view', icon: 'layout-list', mode: 'category' },
-  { label: 'Paid expenses view', icon: 'list-check', mode: 'paid' }
+  { label: 'Paid expenses view', icon: 'list-check', mode: 'paid' },
+  { label: 'Un paid expenses view', icon: 'clipboard-x', mode: 'unpaid' }
 ])
 
 const modifiedClass = computed(() => useAppMenu().filterMenuIsVisible && 'filter-menu--visible')

@@ -2,7 +2,7 @@ import { defineStore } from "pinia";
 import { ref } from 'vue'
 import { useToastStore } from "./toast";
 
-export type ModeTypes = 'list' | 'category' | 'paid'
+export type ModeTypes = 'list' | 'category' | 'paid' | 'unpaid'
 
 export const useTableStore = defineStore('table', () => {
   const mode = ref('list')
