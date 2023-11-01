@@ -46,6 +46,52 @@
       </template>
     </TableLite>
 
+    <TableLite
+      title="Expenses"
+      :is-slot-mode="true"
+      :is-loading="table.isLoading"
+      :columns="table.columns"
+      :rows="filterPaidRows"
+      :total="filterPaidRows.length"
+      :sortable="table.sortable"
+      @do-search="doSearch()"
+      @is-finished="table.isLoading = false"
+      @row-clicked="rowClicked"
+      :is-hide-paging="true"
+      :class="{ 'vtl--added-padding': calculatedTotalExpense }"
+      has-checkbox
+      @return-checked-rows="onSelectedRows"
+      v-else-if="paidView"
+    >
+      <template v-slot:name="data">
+        <div class="vtl__row">
+          <p :class="{'vtl__row--linethrough': data.value.isPaid}">{{ data.value.name }}</p>
+          <i class="light-icon-check" v-if="data.value.isPaid"></i>
+        </div>
+      </template>
+
+      <template v-slot:paymentDue="data">
+        <div class="vtl__row">
+          <AppIndicator 
+            :title="title(mode(data.value.paymentDue, data.value.isPaid))"
+            :mode="mode(data.value.paymentDue, data.value.isPaid)"
+          />
+          <p>{{ data.value.paymentDue }}</p>
+        </div>
+      </template>
+
+      <template v-slot:paidAt="data">
+        <div class="vtl__row">
+          <AppIndicator 
+            success
+            title="Expense is paid"
+            v-if="data.value.paidAt" 
+          />
+          <p>{{ data.value.paidAt }}</p>
+        </div>
+      </template>
+    </TableLite>
+
     <template v-else>
       <TableLite
         v-for="(item, index) in useCategoryStore().categories" :key="index"
@@ -145,7 +191,7 @@
 import ExpenseDetails from '@/components/molecules/Expense/ExpenseDetails.vue'
 import { useExpenseStore } from '@/stores/expense'
 import { computed, watch, ref } from 'vue'
-import { useTableStore } from '@/stores/table';
+import { useTableStore, type ModeTypes } from '@/stores/table';
 import { useCategoryStore } from '@/stores/category';
 import AppIndicator from '@/components/atoms/AppIndicator.vue';
 import Sugar from 'sugar-date'
@@ -170,7 +216,9 @@ const emit = defineEmits<{
 const table = useExpenseStore().table
 const checkedRows = ref([] as RowType[])
 
-const isListMode = computed(() => useTableStore().mode.includes('list'))
+const tableView = computed(() => useTableStore().mode as ModeTypes)
+const isListMode = computed(() => tableView.value.includes('list'))
+const paidView = computed(() => tableView.value.includes('paid'))
 
 const calculatedTotalExpense = computed(() => {
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
@@ -190,6 +238,11 @@ const filteredRowsWithoutCategory = computed(() => table.rows.filter(r => !r.cat
     r.no = index + 1
     return r
   }
+}))
+
+const filterPaidRows = computed(() => table.rows.filter(r => r.paidAt).map((r: RowType, index: number) => {
+  r.no = index + 1
+  return r
 }))
 
 const isDueDate = (date = new Date()) => {
@@ -243,13 +296,6 @@ const onSelectedRows = (key: number[]) => {
   checkedRows.value = table.rows.filter((row: RowType, index: number) => key.includes(index + 1))
   emit('selectedRows', checkedRows.value)
 }
-
-/**
- * Table search finished event
- **/
-// const tableLoadingFinish = (elements) => {
-  //   table.isLoading = false;
-  // };
   
 </script>
 
