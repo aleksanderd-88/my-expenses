@@ -44,10 +44,10 @@ type ItemPropType = {
 const menu = ref()
 
 const items: ItemPropType[] = reactive([
-  { label: 'Set list view', icon: 'list', mode: 'list' },
-  { label: 'Set category view', icon: 'layout-list', mode: 'category' },
-  { label: 'Set paid expenses view', icon: 'list-check', mode: 'paid' },
-  { label: 'Set un paid expenses view', icon: 'clipboard-x', mode: 'unpaid' }
+  { label: 'All expenses', icon: 'list', mode: 'list' },
+  { label: 'Category view', icon: 'layout-list', mode: 'category' },
+  { label: 'Paid expenses', icon: 'list-check', mode: 'paid' },
+  { label: 'Unpaid expenses', icon: 'clipboard-x', mode: 'unpaid' }
 ])
 
 const modifiedClass = computed(() => useAppMenu().filterMenuIsVisible && 'filter-menu--visible')
