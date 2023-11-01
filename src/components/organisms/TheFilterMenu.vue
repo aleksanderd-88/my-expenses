@@ -17,6 +17,7 @@
             icon-left
             transparent
             class="filter-menu__filter-btn"
+            :class="{ 'filter-menu__filter-btn--active': active(item.mode) }"
             @click.stop="useTableStore().setLayoutMode(item.mode)"
           >
             {{ item.label }}
@@ -51,6 +52,7 @@ const items: ItemPropType[] = reactive([
 ])
 
 const modifiedClass = computed(() => useAppMenu().filterMenuIsVisible && 'filter-menu--visible')
+const active = (mode: string) => useTableStore().mode === mode
 
 onClickOutside(menu, () => useAppMenu().setFilterMenuVisibility(false))
 const closeFilterMenu = () => useAppMenu().setFilterMenuVisibility(false)
@@ -94,6 +96,11 @@ const closeFilterMenu = () => useAppMenu().setFilterMenuVisibility(false)
 
     &__filter-btn {
       width: 100% !important;
+
+      &--active {
+        background-color: #eee !important;
+        font-weight: 500 !important;
+      }
     }
 
     &--visible {
