@@ -3,7 +3,7 @@
     class="app-toast"
     :class="modifiedClass"
   >
-    <p class="app-toast__text">{{ text }}</p>
+    <p class="app-toast__text" v-html="text"></p>
     <BaseButton class="app-toast__close-btn" icon="x" @click="useToastStore().closeToast()"/>
   </div>
 </template>

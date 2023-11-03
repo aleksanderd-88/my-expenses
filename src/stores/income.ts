@@ -31,7 +31,7 @@ export const useIncomeStore = defineStore('income', () => {
     if ( !val ) 
       resetDialog()
     else
-      getIncome()
+      // getIncome() //TODO:: Maybe remove later
   
     if ( addedIncome.value )
       income.amount = Number(addedIncome.value)

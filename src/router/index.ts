@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import StartView from '@/pages/StartView.vue'
 import { useUserStore } from '@/stores/user'
 import { useAppMenu } from '@/stores/menu'
+import { useAppStore } from '@/stores/app'
 
 const setPageTitle = (title = 'Start') => {
   document.title = `MyExpenses | ${ title }`
@@ -31,8 +31,11 @@ const router = createRouter({
     {
       path: '/',
       name: 'expenses',
-      component: StartView,
-      meta: { requiresAuth: true, title: 'Expenses' }
+      component: () => import('@/pages/StartView.vue'),
+      meta: { requiresAuth: true, title: 'Expenses' },
+      beforeEnter() {
+        useAppStore().getAppInformation()
+      }
     }
   ]
 })

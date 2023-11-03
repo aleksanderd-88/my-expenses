@@ -1,0 +1,1 @@
+export const getVersion = () => APP_VERSION
