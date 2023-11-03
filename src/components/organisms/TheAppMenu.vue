@@ -1,6 +1,13 @@
 <template>
   <div class="app-menu" :class="modifiedClass" v-if="isLoggedIn()">
     <BaseButton
+      icon="info-circle"
+      class="app-menu__info-btn"
+      transparent
+      @click.stop="displayAppInformation()"
+    />
+
+    <BaseButton
       icon="x"
       transparent
       class="app-menu__close-btn lv-button--icon-large"
@@ -30,9 +37,15 @@ import { useAppMenu } from '@/stores/menu';
 import { useUserStore } from '@/stores/user'
 import { computed } from 'vue';
 import { isLoggedIn } from '@/utils/isLoggedIn';
+import { useAppStore } from '@/stores/app'
 
 const modifiedClass = computed(() => useAppMenu().isVisible && 'app-menu--visible')
 const logout = () => useUserStore().clearUser()
+
+const displayAppInformation = () => {
+  useAppStore().displayAppInformation()
+}
+
 </script>
 
 <style lang="scss" scoped>
@@ -50,6 +63,13 @@ const logout = () => useUserStore().clearUser()
     transform: scale(0);
     transform-origin: center;
     transition: opacity .25s, visibility .25s, transform .25s ease;
+
+    &__info-btn {
+      position: absolute;
+      left: 1rem;
+      top: 1rem;
+      padding: 0 !important;
+    }
 
     &__close-btn {
       position: absolute;

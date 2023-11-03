@@ -42,6 +42,14 @@ client.interceptors.response.use(res => {
 })
 
 export default {
+  //- Application information
+  getApiVersion(): Promise<AxiosResponse> {
+    return client.get('/version')
+  },
+  getLatestCommitSha(): Promise<AxiosResponse> {
+    return client.get('https://api.github.com/repos/aleksanderd-88/my-expenses/commits?per_page=1')
+  },
+
   //- Expenses
   createExpense(params: ParameterType): Promise<AxiosResponse> {
     return client.post('/expenses/create', params)
