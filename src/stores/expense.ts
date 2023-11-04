@@ -130,6 +130,7 @@ export const useExpenseStore = defineStore('expense', () => {
     copyPrevious.value = false
     expenseDialogVisible.value = false
     Object.assign(data, { ...expenseInitialValue })
+    rowData.value = null
     useLoadingStore().setLoading(false)
   }
   
@@ -226,13 +227,19 @@ export const useExpenseStore = defineStore('expense', () => {
   }
   
   const onMarkPayment = () => {
-    if ( !editMode.value || !rowData.value )
+    if ( Object.values(pick(expense.value, ['name', 'cost', 'paymentDue'])).some(e => !e) ) 
       return
+
+    useLoadingStore().setLoading(true)
+
+    if ( !rowData.value ) {
+      Object.assign(data, { ...expense.value, isPaid: true })
+      return createExpense()
+    }
   
     const id = rowData.value?._id
     let paidStatus = JSON.parse(JSON.stringify(rowData.value?.isPaid))
 
-    useLoadingStore().setLoading(true)
     
     return API.updateExpense(id, { data: { ...data, isPaid: (paidStatus = !paidStatus) } } )
       .then(() => {

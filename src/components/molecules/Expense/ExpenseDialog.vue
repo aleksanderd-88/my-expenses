@@ -45,7 +45,7 @@
         @click="onHandlePayment()"
         success
         :style="{ marginLeft: 'auto !important' }"
-        v-if="useExpenseStore().editMode"
+        :disabled="markAsPaidButtonDisabled"
       >
         {{ useExpenseStore().expenseIsPaid ? 'Un-mark as paid' : 'Mark as paid' }}
       </BaseButton>
@@ -125,13 +125,19 @@ import { useExpenseStore } from '@/stores/expense';
 import LvToggleSwitch from 'lightvue/toggle-switch'
 import { useCategoryStore } from '@/stores/category'
 import ExpensePaymentDateDialog from './ExpensePaymentDateDialog.vue';
+import pick from 'lodash/pick';
 
 const initialColor = ref('#607C8A')
 const paymentDateDialogVisible = ref(false)
+const expense = useExpenseStore().data
 
 const categories = computed(() => useCategoryStore().categories)
 
-const expense = useExpenseStore().data
+const markAsPaidButtonDisabled = computed(() => {
+  const requiredFields = pick(expense, ['name', 'cost', 'paymentDue'])
+  return Object.values(requiredFields).some(f => !f)
+})
+
 
 const onHandlePayment = () => {
   if ( useExpenseStore().expenseIsPaid ) {
