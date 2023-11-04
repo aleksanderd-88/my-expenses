@@ -7,6 +7,7 @@ import { useToastStore } from "./toast";
 import { useLoadingStore } from "./loader";
 import { useIncomeStore } from "./income";
 import pick from "lodash/pick";
+import { useUserStore } from "./user";
 
 type RowType = {
   _id: string
@@ -299,11 +300,19 @@ export const useExpenseStore = defineStore('expense', () => {
 
   const clearAll = () => {
     table.rows = []
+    Object.assign(expenseMonth.value, {
+      month: new Date().getMonth(),
+      year: new Date().getFullYear()
+    })
     table.totalRecordCount = 0
     useIncomeStore().clearAll()
   }
 
-  watch(() => expenseMonth.value, () => doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value)), { deep: true })
+  watch(() => expenseMonth.value, () => {
+    if ( useUserStore().currentUser ) { //- only list expenses when logged in
+      doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value)), { deep: true }
+    }
+  })
 
   return {
     expense,
