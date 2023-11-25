@@ -82,7 +82,7 @@ const onBadgeClick = (category: { _id: string,  label: string }) => {
 const cancel = () => {
   //- Exit `edit` state on cancel when enabled
   if ( useCategoryStore().edit )
-    return useCategoryStore().edit = false
+    return useCategoryStore().cancelEditMode()
 
   useCategoryStore().resetDialog()
 }
