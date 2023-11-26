@@ -30,7 +30,7 @@
 
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue';
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useAppMenu } from '@/stores/menu'
 import { onClickOutside } from '@vueuse/core'
 import AppOverlay from './AppOverlay.vue';
@@ -43,6 +43,12 @@ type ItemPropType = {
 }
 
 const menu = ref()
+
+//- Close filter menu everytime mode changes
+watch(() => useTableStore().mode, (val) => {
+  if ( val )
+    useAppMenu().setFilterMenuVisibility(false)
+})
 
 const items: ItemPropType[] = reactive([
   { label: 'All expenses', icon: 'list', mode: 'list' },

@@ -51,7 +51,7 @@
       <BaseButton 
         icon="x" 
         class="lv-button--ml-10"
-        @click="useCategoryStore().resetDialog()"
+        @click="cancel()"
       >
         Cancel
       </BaseButton>
@@ -77,6 +77,14 @@ const onBadgeClick = (category: { _id: string,  label: string }) => {
   useCategoryStore().edit = true
   useCategoryStore().label = category.label
   useCategoryStore().category = category
+}
+
+const cancel = () => {
+  //- Exit `edit` state on cancel when enabled
+  if ( useCategoryStore().edit )
+    return useCategoryStore().cancelEditMode()
+
+  useCategoryStore().resetDialog()
 }
 </script>
 

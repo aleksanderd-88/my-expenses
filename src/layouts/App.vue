@@ -6,10 +6,10 @@
     
     <TheAppMenu />
     
-    <TheFilterMenu />
-
+    
     <main class="base-layout__content">
       <router-view />
+      <TheFilterMenu />
     </main>
     
     <AppToast />

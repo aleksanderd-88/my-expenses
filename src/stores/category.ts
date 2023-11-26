@@ -88,14 +88,24 @@ export const useCategoryStore = defineStore('category', () => {
   }
 
   const resetDialog = () => {
-    label.value = ''
+    cancelEditMode()
     categoryDialogVisible.value = false
+  }
+
+  const cancelEditMode = () => {
+    label.value = ''
+    edit.value = false
   }
 
   watch(() => label.value, (label) => {
     if ( !label )
       return edit.value = false
   }, { deep: true })
+
+  watch(() => categoryDialogVisible.value, (value) => {
+    if ( !value ) 
+      resetDialog()
+  })
 
   const expensesWithCategories = computed(() => useExpenseStore().table.rows.filter(r => r.categoryId).length)
 
@@ -109,6 +119,7 @@ export const useCategoryStore = defineStore('category', () => {
     edit,
     label,
     deleteCategory,
-    expensesWithCategories
+    expensesWithCategories,
+    cancelEditMode
   }
 })

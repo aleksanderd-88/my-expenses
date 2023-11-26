@@ -185,6 +185,9 @@ const onSelectedRows = (values: Record<string, unknown>[]) => {
 
     &__date-picker {
       padding-top: 1rem;
+      position: sticky;
+      top: -10px;
+      z-index: 2;
     }
     
     &__caption {
