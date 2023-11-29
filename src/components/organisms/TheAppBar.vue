@@ -2,6 +2,8 @@
   <header v-if="isLoggedIn()">
     <nav class="app-bar">
       <main class="app-bar__content">
+        <UserDetails />
+
         <div class="app-bar__actions">
           <BaseButton
             icon="menu"
@@ -21,6 +23,7 @@
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import { useAppMenu } from '@/stores/menu';
 import { isLoggedIn } from '@/utils/isLoggedIn';
+import UserDetails from '@/components/molecules/User/UserDetails.vue'
 </script>
 
 <style lang="scss" scoped>
