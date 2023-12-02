@@ -116,7 +116,7 @@ const label = computed(() => {
     return 'Update income'
   
   if ( incomeList.length > 0 )
-    return 'Update income (Including additional income)'
+    return 'Update income (Including added income)'
 
   return 'Enter net income'
 })
