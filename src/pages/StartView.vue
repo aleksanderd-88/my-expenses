@@ -17,6 +17,7 @@
 
     <ExpenseTable 
       v-else-if="rowsLength"
+      :reset-selection="resetSelection"
       @selected-rows="onSelectedRows($event)" 
     />
 
@@ -108,7 +109,7 @@
 <script setup lang="ts">
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import LvOverlayPanel  from 'lightvue/overlay-panel'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import ExpenseTable from '@/components/molecules/Expense/ExpenseTable.vue'
 import ExpenseDialog from '@/components/molecules/Expense/ExpenseDialog.vue';
 import IncomeDialog from '@/components/molecules/Income/IncomeDialog.vue'
@@ -127,6 +128,14 @@ const op = ref()
 const multiSelectButtonVisible = ref(false)
 const editOptionsVisibility = ref(false)
 const selectedRows = ref()
+const resetSelection = ref(false)
+
+watch(() => editOptionsVisibility.value, value => {
+  if ( !value ) {
+    multiSelectButtonVisible.value = false
+    resetSelection.value = true
+  }
+})
 
 useIncomeStore().getIncome()
 useIncomeStore().listIncome()
