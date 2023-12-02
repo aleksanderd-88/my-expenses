@@ -209,6 +209,13 @@ type RowType = {
   categoryId: string
 }
 
+const props = defineProps({
+  resetSelection: {
+    type: Boolean,
+    default: false
+  }
+})
+
 const emit = defineEmits<{
   (event: 'selectedRows', values: RowType[]): void
 }>()
@@ -308,6 +315,12 @@ watch(() => useTableStore().mode.includes('list'), val => {
       r.no = index + 1
       return r
     })
+  }
+})
+
+watch(() => props.resetSelection, val => {
+  if ( val ) {
+    onSelectedRows([])
   }
 })
 
