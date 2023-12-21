@@ -8,7 +8,7 @@
         @click.stop="closeFilterMenu()"
       />
           
-      <h1 class="filter-menu__headline">Filter views</h1>
+      <h1 class="filter-menu__headline">Filter expenses</h1>
   
       <ul class="filter-menu__list">
         <li class="filter-menu__item" v-for="item in items" :key="item.label">

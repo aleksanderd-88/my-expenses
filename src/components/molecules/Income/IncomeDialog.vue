@@ -17,7 +17,7 @@
         type="text"
         v-model="useIncomeStore().income.name"
         label="Enter a name"
-        placeholder="E.g. John Doe"
+        placeholder="E.g. John Doe, Acne Inc."
         bottom-bar
         clearable
       />
