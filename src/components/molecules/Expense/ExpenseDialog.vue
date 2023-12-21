@@ -1,6 +1,6 @@
 <template>
   <LvDialog 
-    header="Add new expense" 
+    :header="dialogTitle" 
     v-model="useExpenseStore().expenseDialogVisible"
     :style="{ 
       width: '95%',
@@ -131,13 +131,27 @@ const initialColor = ref('#607C8A')
 const paymentDateDialogVisible = ref(false)
 const expense = useExpenseStore().data
 
-const categories = computed(() => useCategoryStore().categories)
+watch(() => useExpenseStore().expenseDialogVisible, val => {
+  if ( !val ) {
+    paymentDateDialogVisible.value = false
+  }
+})
 
 const markAsPaidButtonDisabled = computed(() => {
   const requiredFields = pick(expense, ['name', 'cost', 'paymentDue'])
   return Object.values(requiredFields).some(f => !f)
 })
 
+const categories = computed(() => useCategoryStore().categories)
+
+const dialogTitle = computed(() => {
+  if ( isEditMode.value ) 
+    return 'Handle/edit expense'
+
+  return 'Add new expense'
+})
+
+const isEditMode = computed(() => useExpenseStore().editMode)
 
 const onHandlePayment = () => {
   if ( useExpenseStore().expenseIsPaid ) {
@@ -146,12 +160,6 @@ const onHandlePayment = () => {
   }
   paymentDateDialogVisible.value = true
 }
-
-watch(() => useExpenseStore().expenseDialogVisible, val => {
-  if ( !val ) {
-    paymentDateDialogVisible.value = false
-  }
-})
 
 </script>
 
