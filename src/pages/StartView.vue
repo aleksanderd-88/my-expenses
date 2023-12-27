@@ -10,7 +10,7 @@
 
     <p 
       class="start__caption caption center-align" 
-      v-if="useLoadingStore().isLoading"
+      v-if="isLoading"
     >
       Loading ...
     </p>
@@ -143,6 +143,7 @@ useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expe
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
+const isLoading = computed(() => useLoadingStore().isLoading)
 
 const toggleFilterMenu = () => {
   const filterMenuIsVisible = useAppMenu().filterMenuIsVisible
