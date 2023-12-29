@@ -5,7 +5,7 @@
       :is-slot-mode="true"
       :is-loading="table.isLoading"
       :columns="table.columns"
-      :rows="table.rows"
+      :rows="filteredRows"
       :total="table.totalRecordCount"
       :sortable="table.sortable"
       @do-search="doSearch()"
@@ -15,7 +15,6 @@
       :class="{ 'vtl--added-padding': calculatedTotalExpense }"
       has-checkbox
       @return-checked-rows="onSelectedRows"
-      v-if="isListMode"
     >
       <template v-slot:name="data">
         <div class="vtl__row">
@@ -46,141 +45,13 @@
       </template>
     </TableLite>
 
-    <TableLite
-      :title="tableTitle"
-      :is-slot-mode="true"
-      :is-loading="table.isLoading"
-      :columns="table.columns"
-      :rows="filteredRows"
-      :total="filteredRows.length"
-      :sortable="table.sortable"
-      @do-search="doSearch()"
-      @is-finished="table.isLoading = false"
-      @row-clicked="rowClicked"
-      :is-hide-paging="true"
-      :class="{ 'vtl--added-padding': calculatedTotalExpense }"
-      :has-checkbox="!Boolean(paidView || useTableStore().mode.includes('unpaid')) ? true : false"
-      @return-checked-rows="onSelectedRows"
-      v-else-if="paidView || useTableStore().mode.includes('unpaid')"
-    >
-      <template v-slot:name="data">
-        <div class="vtl__row">
-          <p :class="{'vtl__row--linethrough': data.value.isPaid}">{{ data.value.name }}</p>
-          <i class="light-icon-check" v-if="data.value.isPaid"></i>
-        </div>
-      </template>
-
-      <template v-slot:paymentDue="data">
-        <div class="vtl__row">
-          <AppIndicator 
-            :title="title(mode(data.value.paymentDue, data.value.isPaid))"
-            :mode="mode(data.value.paymentDue, data.value.isPaid)"
-          />
-          <p>{{ data.value.paymentDue }}</p>
-        </div>
-      </template>
-
-      <template v-slot:paidAt="data">
-        <div class="vtl__row">
-          <AppIndicator 
-            success
-            title="Expense is paid"
-            v-if="data.value.paidAt" 
-          />
-          <p>{{ data.value.paidAt }}</p>
-        </div>
-      </template>
-    </TableLite>
-
-    <template v-else>
-      <TableLite
-        v-for="(item, index) in useCategoryStore().categories" :key="index"
-        :title="item.label"
-        :is-slot-mode="true"
-        :is-loading="table.isLoading"
-        :columns="table.columns"
-        :rows="filterCategoryRows(item._id)"
-        :total="filterCategoryRows.length"
-        :sortable="table.sortable"
-        @do-search="doSearch()"
-        @is-finished="table.isLoading = false"
-        @row-clicked="rowClicked"
-        :is-hide-paging="true"
-        @return-checked-rows="onSelectedRows"
-        :class="{ 'vtl--added-padding': calculatedTotalExpense }"
-      >
-        <template v-slot:name="data">
-          <div class="vtl__row">
-            <p :class="{'vtl__row--linethrough': data.value.isPaid}">{{ data.value.name }}</p>
-            <i class="light-icon-check" v-if="data.value.isPaid"></i>
-          </div>
-        </template>
-
-        <template v-slot:paymentDue="data">
-          <div class="vtl__row">
-            <AppIndicator 
-              :title="title(mode(data.value.paymentDue, data.value.isPaid))"
-              :mode="mode(data.value.paymentDue, data.value.isPaid)"
-            />
-            <p>{{ data.value.paymentDue }}</p>
-          </div>
-        </template>
-
-        <template v-slot:paidAt="data">
-          <div class="vtl__row">
-            <AppIndicator 
-              success
-              title="Expense is paid"
-              v-if="data.value.paidAt" 
-            />
-            <p>{{ data.value.paidAt }}</p>
-          </div>
-        </template>
-      </TableLite>
-
-      <TableLite
-        title="Other expenses"
-        :is-slot-mode="true"
-        :is-loading="table.isLoading"
-        :columns="table.columns"
-        :rows="filteredRowsWithoutCategory"
-        :total="filteredRowsWithoutCategory.length"
-        :sortable="table.sortable"
-        @do-search="doSearch()"
-        @is-finished="table.isLoading = false"
-        @row-clicked="rowClicked"
-        :is-hide-paging="true"
-        @return-checked-rows="onSelectedRows"
-        :class="{ 'vtl--added-padding': calculatedTotalExpense }"
-      >
-        <template v-slot:name="data">
-          <div class="vtl__row">
-            <p :class="{'vtl__row--linethrough': data.value.isPaid}">{{ data.value.name }}</p>
-            <i class="light-icon-check" v-if="data.value.isPaid"></i>
-          </div>
-        </template>
-
-        <template v-slot:paymentDue="data">
-          <div class="vtl__row">
-            <AppIndicator 
-              :title="title(mode(data.value.paymentDue, data.value.isPaid))"
-              :mode="mode(data.value.paymentDue, data.value.isPaid)"
-            />
-            <p>{{ data.value.paymentDue }}</p>
-          </div>
-        </template>
-
-        <template v-slot:paidAt="data">
-          <div class="vtl__row">
-            <AppIndicator 
-              success
-              title="Expense is paid"
-              v-if="data.value.paidAt" 
-            />
-            <p>{{ data.value.paidAt }}</p>
-          </div>
-        </template>
-      </TableLite>
+    <!-- Category view -->
+    <template v-if="tableView === 'category'">
+      <ExpenseTable 
+        v-for="item in useCategoryStore().categories" 
+        :key="item._id"
+        :category-id="item._id"
+      />
     </template>
 
     <ExpenseDetails />
@@ -223,9 +94,24 @@ const emit = defineEmits<{
 const table = useExpenseStore().table
 const checkedRows = ref([] as RowType[])
 
+watch(() => useTableStore().mode.includes('list'), val => {
+  if ( val ) {
+    table.rows = table.rows.map((r: RowType, index: number) => {
+      r.no = index + 1
+      return r
+    })
+  }
+})
+
+watch(() => props.resetSelection, val => {
+  if ( val ) {
+    onSelectedRows([])
+  }
+})
+
+
 const tableView = computed(() => useTableStore().mode as ModeTypes)
 const isListMode = computed(() => tableView.value.includes('list'))
-const paidView = computed(() => tableView.value.includes('paid'))
 
 const calculatedTotalExpense = computed(() => {
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
@@ -259,16 +145,28 @@ const filteredRowsWithoutCategory = computed(() => table.rows.filter(r => !r.cat
 }))
 
 const filteredRows = computed(() => {
-  let isPaid = true
-  if ( useTableStore().mode.includes('unpaid') ) 
-    isPaid = false
+  let condition = (item:RowType): boolean => !!item
 
-  return table.rows.filter(r => r.isPaid === !!isPaid).map((r: RowType, index: number) => {
-    if ( !isListMode.value ) {
-      r.no = index + 1
-      return r
-    }
+  switch (tableView.value) {
+    case 'paid':
+      condition = item => item.isPaid
+      break
+    case 'unpaid':
+      condition = item => Boolean(!item.isPaid || !item.paidAt)
+      break
+    default:
+      table.rows
+      break
+  }
+
+  const items = table.rows.filter(r => condition(r)).map((o, index) => {
+    //- Always set table row number in ascending order
+    o.no = index + 1
+    return o
   })
+
+  console.log('items', items);
+  return items
 })
 
 const isDueDate = (date = new Date()) => {
@@ -309,23 +207,8 @@ const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
 
 const doSearch = () => useExpenseStore().doSearch(0, 10, 'id', 'asc', new Date(useExpenseStore().endOfMonth))
 
-watch(() => useTableStore().mode.includes('list'), val => {
-  if ( val ) {
-    table.rows = table.rows.map((r: RowType, index: number) => {
-      r.no = index + 1
-      return r
-    })
-  }
-})
-
-watch(() => props.resetSelection, val => {
-  if ( val ) {
-    onSelectedRows([])
-  }
-})
-
 const onSelectedRows = (key: number[]) => {
-  checkedRows.value = table.rows.filter((row: RowType, index: number) => key.includes(index + 1))
+  checkedRows.value = filteredRows.value.filter((row: RowType, index: number) => key.includes(index + 1))
   emit('selectedRows', checkedRows.value)
 }
   
