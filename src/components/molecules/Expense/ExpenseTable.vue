@@ -153,7 +153,6 @@ const filteredRows = computed(() => {
     return o
   })
 
-  console.log('items', items);
   return items
 })
 
