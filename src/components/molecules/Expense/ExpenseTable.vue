@@ -59,7 +59,7 @@
       @row-clicked="rowClicked"
       :is-hide-paging="true"
       :class="{ 'vtl--added-padding': calculatedTotalExpense }"
-      has-checkbox
+      :has-checkbox="!Boolean(paidView || useTableStore().mode.includes('unpaid')) ? true : false"
       @return-checked-rows="onSelectedRows"
       v-else-if="paidView || useTableStore().mode.includes('unpaid')"
     >
