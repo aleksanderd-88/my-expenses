@@ -6,7 +6,7 @@
       :is-loading="table.isLoading"
       :columns="table.columns"
       :rows="filteredRows"
-      :total="table.totalRecordCount"
+      :total="totalRowCount"
       :sortable="table.sortable"
       @do-search="doSearch()"
       @is-finished="table.isLoading = false"
@@ -168,6 +168,8 @@ const filteredRows = computed(() => {
   console.log('items', items);
   return items
 })
+
+const totalRowCount = computed(() => filteredRows.value.length)
 
 const isDueDate = (date = new Date()) => {
   return Boolean(Sugar.Date(new Date(date)).isToday().raw)
