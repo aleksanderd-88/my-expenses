@@ -1,23 +1,11 @@
 <template>
   <div>
-    <!-- Category view -->
-    <template v-if="categoryMode">
-      <CategoryExpenses 
-        v-for="item in useCategoryStore().categories" 
-        :key="item._id"
-        :category-id="item._id"
-        :table-title="item.label"
-        @selected-rows="$emit('selectedRows', $event)"
-      />
-    </template>
-
     <TableLite
-      v-else
       :title="tableTitle"
       :is-slot-mode="true"
       :is-loading="table.isLoading"
       :columns="table.columns"
-      :rows="filteredRows"
+      :rows="filteredCategoryRows"
       :total="totalRowCount"
       :sortable="table.sortable"
       @do-search="doSearch()"
@@ -56,20 +44,14 @@
         </div>
       </template>
     </TableLite>
-
-    <ExpenseDetails />
   </div>
 </template>
 
 <script setup lang="ts">
-import ExpenseDetails from '@/components/molecules/Expense/ExpenseDetails.vue'
 import { useExpenseStore } from '@/stores/expense'
 import { computed, watch, ref } from 'vue'
-import { useTableStore, type ModeTypes } from '@/stores/table';
-import { useCategoryStore } from '@/stores/category';
 import AppIndicator from '@/components/atoms/AppIndicator.vue';
 import Sugar from 'sugar-date'
-import CategoryExpenses from '../Category/CategoryExpenses.vue';
 
 type RowType = {
   _id: string
@@ -88,6 +70,14 @@ const props = defineProps({
   resetSelection: {
     type: Boolean,
     default: false
+  },
+  tableTitle: {
+    type: String,
+    default: 'Other expenses'
+  },
+  categoryId: {
+    type: String,
+    default: null
   }
 })
 
@@ -98,66 +88,24 @@ const emit = defineEmits<{
 const table = useExpenseStore().table
 const checkedRows = ref([] as RowType[])
 
-watch(() => useTableStore().mode.includes('list'), val => {
-  if ( val ) {
-    table.rows = table.rows.map((r: RowType, index: number) => {
-      r.no = index + 1
-      return r
-    })
-  }
-})
-
 watch(() => props.resetSelection, val => {
   if ( val ) {
     onSelectedRows([])
   }
 })
 
-
-const tableView = computed(() => useTableStore().mode as ModeTypes)
-const categoryMode = computed(() => tableView.value === 'category')
-
 const calculatedTotalExpense = computed(() => {
   return table.rows.reduce((sum, item) => sum += item.cost, 0)
 })
 
-const tableTitle = computed(() => {
-  let title = 'All expenses'
-  
-  if ( tableView.value.includes('paid') )
-    title = 'Paid expenses'
-  if ( tableView.value.includes('unpaid') )
-    title = 'Unpaid expenses'
-
-  return title
-})
-
-const filteredRows = computed(() => {
-  let condition = (item:RowType): boolean => !!item
-
-  switch (tableView.value) {
-    case 'paid':
-      condition = item => item.isPaid
-      break
-    case 'unpaid':
-      condition = item => Boolean(!item.isPaid || !item.paidAt)
-      break
-    default:
-      table.rows
-      break
-  }
-
-  const items = table.rows.filter(r => condition(r)).map((o, index) => {
-    //- Always set table row number in ascending order
-    o.no = index + 1
-    return o
+const filteredCategoryRows = computed(() => {
+  return table.rows?.filter(r => r.categoryId === props.categoryId).map((r: RowType, index: number) => {
+    r.no = index + 1
+    return r
   })
-
-  console.log('items', items);
-  return items
 })
 
-const totalRowCount = computed(() => filteredRows.value.length)
+const totalRowCount = computed(() => filteredCategoryRows.value.length)
 
 const isDueDate = (date = new Date()) => {
   return Boolean(Sugar.Date(new Date(date)).isToday().raw)
@@ -198,7 +146,7 @@ const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
 const doSearch = () => useExpenseStore().doSearch(0, 10, 'id', 'asc', new Date(useExpenseStore().endOfMonth))
 
 const onSelectedRows = (key: number[]) => {
-  checkedRows.value = filteredRows.value.filter((row: RowType, index: number) => key.includes(index + 1))
+  checkedRows.value = filteredCategoryRows.value.filter((row: RowType, index: number) => key.includes(index + 1))
   emit('selectedRows', checkedRows.value)
 }
   
