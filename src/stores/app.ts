@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { computed, reactive } from "vue";
 import API from '@/services/api'
 import { useToastStore } from '@/stores/toast';
-import { useLoadingStore } from "./loader";
 import { getVersion } from "@/utils/application";
 
 type InfoType = {

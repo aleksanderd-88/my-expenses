@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { reactive, ref, watch, computed, watchEffect } from "vue";
 import API from '@/services/api'
 import { useToastStore } from "./toast";
-import { useLoadingStore } from "./loader";
 import pick from 'lodash/pick'
 import get from "lodash/get";
 

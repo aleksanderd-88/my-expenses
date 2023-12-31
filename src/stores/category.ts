@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import API from '@/services/api'
-import { useLoadingStore } from "./loader";
 import { useToastStore } from "./toast";
 import { useExpenseStore } from "./expense";
 

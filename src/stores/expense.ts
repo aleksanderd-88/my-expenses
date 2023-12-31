@@ -4,7 +4,6 @@ import { ref, computed, reactive, watch } from 'vue'
 import API from '@/services/api'
 import Sugar from 'sugar-date'
 import { useToastStore } from "./toast";
-import { useLoadingStore } from "./loader";
 import { useIncomeStore } from "./income";
 import pick from "lodash/pick";
 import { useUserStore } from "./user";
