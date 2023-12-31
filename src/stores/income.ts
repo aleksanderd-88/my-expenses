@@ -2,7 +2,6 @@ import { defineStore } from "pinia";
 import { reactive, ref, watch, computed, watchEffect } from "vue";
 import API from '@/services/api'
 import { useToastStore } from "./toast";
-import { useLoadingStore } from "./loader";
 import pick from 'lodash/pick'
 import get from "lodash/get";
 
@@ -56,8 +55,6 @@ export const useIncomeStore = defineStore('income', () => {
 
   const getIncome = () => {
 
-    useLoadingStore().setLoading(true)
-
     return API.getIncome()
     .then(({ data }: { data: { amount: number | null, _id: string | null } }) => {
       income.amount = data.amount || null
@@ -65,15 +62,12 @@ export const useIncomeStore = defineStore('income', () => {
       addedIncome.value = data.amount || 0 // TODO: Fix this redundant assignment
     })
     .catch(err => console.log(`Error: ${ err }`))
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const createIncome = () => {
     if ( addNew.value )
       if ( !get(income, 'name', null) ) 
         return
-
-    useLoadingStore().setLoading(true)
 
     if ( income._id ) {
       return updateIncome()
@@ -90,7 +84,6 @@ export const useIncomeStore = defineStore('income', () => {
         console.log(`Error: ${ err }`)
         useToastStore().setToast(true, err, true)
       })
-      .finally(() => useLoadingStore().setLoading(false))
 
     // if ( isEditMode.value ) {
     //   // We need change field name to match database collection field name
@@ -110,18 +103,14 @@ export const useIncomeStore = defineStore('income', () => {
       console.log(`Error: ${ err }`)
       useToastStore().setToast(true, err, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const listIncome = () => {
-    useLoadingStore().setLoading(true)
-
     return API.listIncome()
     .then(({ data }: { data: IncomeType[] }) => {
       incomeList.value = data
     })
     .catch(err => console.log(`Error: ${ err }`))
-    .finally(() => useLoadingStore().setLoading(false))
   }
   
   const editIncome = (params: IncomeType) => {
@@ -137,8 +126,6 @@ export const useIncomeStore = defineStore('income', () => {
   }
   
   const deleteIncome = () => {
-    useLoadingStore().setLoading(true)
-
     return API.deleteIncome(income._id as string)
     .then(() => {
       resetDialog()
@@ -147,7 +134,6 @@ export const useIncomeStore = defineStore('income', () => {
       useToastStore().setToast(true, 'Income deleted')
     })
     .catch(err => console.log(`Error: ${ err }`))
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const clearAll = () => Object.assign(income, { ...initialIncomeValue })

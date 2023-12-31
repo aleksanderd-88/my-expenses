@@ -1,7 +1,6 @@
 import { defineStore } from "pinia";
 import { computed, ref, watch } from "vue";
 import API from '@/services/api'
-import { useLoadingStore } from "./loader";
 import { useToastStore } from "./toast";
 import { useExpenseStore } from "./expense";
 
@@ -18,8 +17,6 @@ export const useCategoryStore = defineStore('category', () => {
   const edit = ref(false)
 
   const createCategory = () => {
-    useLoadingStore().setLoading(true)
-
     if ( edit.value )
       return updateCategory(category.value)
 
@@ -34,7 +31,6 @@ export const useCategoryStore = defineStore('category', () => {
       const message = err.response.data ? err.response.data : err
       useToastStore().setToast(true, message, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const updateCategory = (params: CategoryPropType) => {
@@ -51,13 +47,9 @@ export const useCategoryStore = defineStore('category', () => {
       const message = err.response.data ? err.response.data : err
       useToastStore().setToast(true, message, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const deleteCategory = (id: string) => {
-    
-    useLoadingStore().setLoading(true)
-
     return API.deleteCategory(id)
     .then(() => {
       useToastStore().setToast(true, 'Category deleted')
@@ -71,12 +63,9 @@ export const useCategoryStore = defineStore('category', () => {
       const message = err.response.data ? err.response.data : err
       useToastStore().setToast(true, message, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const listCategories = () => {
-    useLoadingStore().setLoading(true)
-
     return API.listCategories()
     .then(({ data }) => categories.value = data)
     .catch((err) => {
@@ -84,7 +73,6 @@ export const useCategoryStore = defineStore('category', () => {
       const message = err.response.data ? err.response.data : err
       useToastStore().setToast(true, message, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const resetDialog = () => {

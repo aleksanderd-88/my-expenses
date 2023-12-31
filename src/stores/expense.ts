@@ -4,7 +4,6 @@ import { ref, computed, reactive, watch } from 'vue'
 import API from '@/services/api'
 import Sugar from 'sugar-date'
 import { useToastStore } from "./toast";
-import { useLoadingStore } from "./loader";
 import { useIncomeStore } from "./income";
 import pick from "lodash/pick";
 import { useUserStore } from "./user";
@@ -104,7 +103,6 @@ export const useExpenseStore = defineStore('expense', () => {
   
   const doSearch = (offset: number, limit: number, order: string, sort: string, date: Date) => {
     console.log(offset, limit, order, sort, date);
-    useLoadingStore().setLoading(true)
 
     return API.listExpenses({ data: { date }}).then(({ data }) => {
       const rows = data.rows.map((r: RowType, index: number) => {
@@ -122,7 +120,6 @@ export const useExpenseStore = defineStore('expense', () => {
       table.sortable.sort = sort;
     })
     .catch((err) => console.log(`Error: ${ err }`))
-    .finally(() => useLoadingStore().setLoading(false))
   };
   
   const resetDialog = () => {
@@ -131,7 +128,6 @@ export const useExpenseStore = defineStore('expense', () => {
     expenseDialogVisible.value = false
     Object.assign(data, { ...expenseInitialValue })
     rowData.value = null
-    useLoadingStore().setLoading(false)
   }
   
   const updateExpense = () => {
@@ -139,8 +135,6 @@ export const useExpenseStore = defineStore('expense', () => {
       return
     
     const id = rowData.value?._id
-
-    useLoadingStore().setLoading(true)
 
     return API.updateExpense(id, { data: data })
     .then(() => {
@@ -152,7 +146,6 @@ export const useExpenseStore = defineStore('expense', () => {
       console.log(`Error: ${ err }`)
       useToastStore().setToast(true, err, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
   
   const createExpense = () => {
@@ -166,8 +159,6 @@ export const useExpenseStore = defineStore('expense', () => {
     if ( !data || Object.values(requiredFields).some(o => !o) )
       return
     
-    useLoadingStore().setLoading(true)
-
     API.createExpense({ data: data })
     .then(() => {
       resetDialog()
@@ -178,7 +169,6 @@ export const useExpenseStore = defineStore('expense', () => {
       console.log(`Error: ${ err }`)
       useToastStore().setToast(true, err, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const copyPreviousMonth = () => {
@@ -188,8 +178,6 @@ export const useExpenseStore = defineStore('expense', () => {
       copyPrevious: copyPrevious.value,
       date: previousEndOfMonth
     }
-
-    useLoadingStore().setLoading(true)
 
     API.createExpense({ data })
     .then(() => {
@@ -211,8 +199,6 @@ export const useExpenseStore = defineStore('expense', () => {
   
     const id = rowData.value?._id
 
-    useLoadingStore().setLoading(true)
-
     return API.deleteExpense(id)
       .then(() => {
       resetDialog()
@@ -223,14 +209,11 @@ export const useExpenseStore = defineStore('expense', () => {
       console.log(`Error: ${ err }`)
       useToastStore().setToast(true, err, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
   
   const onMarkPayment = () => {
     if ( Object.values(pick(expense.value, ['name', 'cost', 'paymentDue'])).some(e => !e) ) 
       return
-
-    useLoadingStore().setLoading(true)
 
     if ( !rowData.value ) {
       Object.assign(data, { ...expense.value, isPaid: true })
@@ -253,15 +236,12 @@ export const useExpenseStore = defineStore('expense', () => {
       console.log(`Error: ${ err }`)
       useToastStore().setToast(true, err, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const updateSelectedExpenses = (selectedRows: RowType[]) => {
     if ( !selectedRows.length )
       return
   
-    useLoadingStore().setLoading(true)
-    
     return API.updateSelectedRows({ data: selectedRows })
     .then(() => {
       doSearch(0, 10, 'id', 'asc', new Date(endOfMonth.value))
@@ -273,14 +253,12 @@ export const useExpenseStore = defineStore('expense', () => {
       console.log(`Error: ${ err }`)
       useToastStore().setToast(true, err, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const deleteSelectedExpenses = (selectedRows: Pick<RowType, '_id'>[]) => {
     if ( !selectedRows.length )
       return
   
-    useLoadingStore().setLoading(true)
     const rowIds = selectedRows.map(r => r._id)
     
     return API.deleteSelectedRows({ data: { ids: rowIds } })
@@ -294,7 +272,6 @@ export const useExpenseStore = defineStore('expense', () => {
       console.log(`Error: ${ err }`)
       useToastStore().setToast(true, err, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const setRowData = (row: RowType) => {

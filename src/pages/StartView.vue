@@ -8,15 +8,8 @@
       class="start__date-picker"
     />
 
-    <p 
-      class="start__caption caption center-align" 
-      v-if="isLoading"
-    >
-      Loading ...
-    </p>
-
     <ExpenseTable 
-      v-else-if="rowsLength"
+      v-if="rowsLength"
       :reset-selection="resetSelection"
       @selected-rows="onSelectedRows($event)" 
     />
@@ -120,7 +113,6 @@ import CategoryDialog from '@/components/molecules/Category/CategoryDialog.vue';
 import { useCategoryStore } from '@/stores/category';
 import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
-import { useLoadingStore } from '@/stores/loader';
 import EditOptions from '@/components/molecules/EditOptions.vue';
 import { useAppMenu } from '@/stores/menu';
 
@@ -143,7 +135,6 @@ useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expe
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
-const isLoading = computed(() => useLoadingStore().isLoading)
 
 const toggleFilterMenu = () => {
   const filterMenuIsVisible = useAppMenu().filterMenuIsVisible
