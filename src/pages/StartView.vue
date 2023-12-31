@@ -8,15 +8,8 @@
       class="start__date-picker"
     />
 
-    <p 
-      class="start__caption caption center-align" 
-      v-if="isLoading"
-    >
-      Loading ...
-    </p>
-
     <ExpenseTable 
-      v-else-if="rowsLength"
+      v-if="rowsLength"
       :reset-selection="resetSelection"
       @selected-rows="onSelectedRows($event)" 
     />

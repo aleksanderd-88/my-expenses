@@ -2,6 +2,7 @@ import { useToastStore } from '@/stores/toast'
 import { useUserStore } from '@/stores/user'
 import axios, { type AxiosResponse } from 'axios'
 import { useRouter } from 'vue-router'
+import { useLoadingStore } from '@/stores/loader'
 
 const client = axios.create({
   baseURL: `${ import.meta.env.VITE_API_URL }/api/v1`,
@@ -14,11 +15,15 @@ type ParameterType = {
 }
 
 client.interceptors.request.use(req => {
+
+  useLoadingStore().setLoading(true)
   if ( useUserStore().currentUser?.token )
     req.headers.Authorization  = useUserStore().currentUser?.token
   return req
 }, err => {
   console.log(err);
+  useLoadingStore().setLoading(false)
+
   if ( [401, 403].includes(err.response?.status) ) {
     useUserStore().clearUser()
     useToastStore().setToast(true, err.response.data, true)
@@ -29,9 +34,12 @@ client.interceptors.request.use(req => {
 })
 
 client.interceptors.response.use(res => {
+  useLoadingStore().setLoading(false)
   return res
 }, err => {
   console.log(err);
+  useLoadingStore().setLoading(false)
+  
   if ( [401, 403].includes(err.response?.status) ) {
     useUserStore().clearUser()
     useToastStore().setToast(true, err.response.data, true)
