@@ -26,8 +26,6 @@ export const useAppStore = defineStore('app', () => {
   }
 
   const getApiVersion = () => {
-    useLoadingStore().setLoading(true)
-
     return API.getApiVersion()
     .then(({ data }) => information.api = data.version)
     .catch(err => {
@@ -35,19 +33,15 @@ export const useAppStore = defineStore('app', () => {
       const message = err.response.data ? err.response.data : err
       useToastStore().setToast(true, message, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const getLatestCommit = () => {
-    useLoadingStore().setLoading(true)
-    
     return API.getLatestCommitSha()
     .then(({ data }) => information.git = data[0].sha.substring(0, 7))
     .catch(err => {
       console.log(`Error: ${ err }`)
       useToastStore().setToast(true, err, true)
     })
-    .finally(() => useLoadingStore().setLoading(false))
   }
 
   const displayAppInformation = () => {
