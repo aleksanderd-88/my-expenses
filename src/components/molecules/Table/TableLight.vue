@@ -7,13 +7,13 @@
     :rows="rows"
     :total="totalRowCount"
     :sortable="sortable"
-    @do-search="$emit('do-search')"
-    @is-finished="$emit('is-finished', $event)"
-    @row-clicked="$emit('row-clicked', $event)"
+    @do-search="doSearch()"
+    @is-finished="table.isLoading"
+    @row-clicked="rowClicked"
     :is-hide-paging="true"
     :class="{ 'vtl--added-padding': calculatedTotalExpense }"
     has-checkbox
-    @return-checked-rows="$emit('return-checked-rows')"
+    @return-checked-rows="onSelectedRows"
   >
     <template v-slot:name="data">
       <div class="vtl__row">
@@ -48,9 +48,12 @@
 
 <script setup lang="ts">
 import AppIndicator from '@/components/atoms/AppIndicator.vue';
+import { useExpenseStore } from '@/stores/expense';
 import Sugar from 'sugar-date'
+import { computed, ref, watch, type PropType } from 'vue';
+import { type RowType } from '@/stores/expense';
 
-  defineProps({
+  const props = defineProps({
     tableTitle: {
       type: String,
       default: ''
@@ -64,20 +67,12 @@ import Sugar from 'sugar-date'
       default: () => ([])
     },
     rows: {
-      type: Array,
+      type: Array as PropType<RowType[]>,
       default: () => ([])
-    },
-    totalRowCount: {
-      type: Number,
-      default: 0
     },
     sortable: {
       type: Object,
       default: null
-    },
-    calculatedTotalExpense: {
-      type: Number,
-      default: 0
     },
     appIndicatorTitle: {
       type: String,
@@ -86,42 +81,76 @@ import Sugar from 'sugar-date'
     appIndicatorMode: {
       type: String,
       default: ''
+    },
+    resetSelection: {
+      type: Boolean,
+      default: false
+    },
+  })
+
+
+  const emit = defineEmits<{
+    (event: 'selected-rows', values: RowType[]): void
+  }>()
+
+
+  const table = useExpenseStore().table
+  const checkedRows = ref([] as RowType[])
+
+  watch(() => props.resetSelection, val => {
+    if ( val ) {
+      onSelectedRows([])
     }
   })
 
+  const totalRowCount = computed(() => props.rows.length)
+
+  const calculatedTotalExpense = computed(() => {
+    return table.rows.reduce((sum, item) => sum += item.cost, 0)
+  })
+
   const isDueDate = (date = new Date()) => {
-  return Boolean(Sugar.Date(new Date(date)).isToday().raw)
-}
+    return Boolean(Sugar.Date(new Date(date)).isToday().raw)
+  }
 
-const isAfterDueDate = (date = new Date()) => {
-  return Boolean(Sugar.Date(new Date(date)).addDays(1).isPast().raw)
-}
+  const isAfterDueDate = (date = new Date()) => {
+    return Boolean(Sugar.Date(new Date(date)).addDays(1).isPast().raw)
+  }
 
-const mode = (date = new Date(), isPaid?: boolean) => {
-  let ret = ''
+  const mode = (date = new Date(), isPaid?: boolean) => {
+    let ret = ''
 
-  if ( isDueDate(date) )
-    ret = 'warning'
-  if ( isAfterDueDate(date) )
-    ret = 'danger'
-  if ( isPaid )
-    ret = 'paid'
+    if ( isDueDate(date) )
+      ret = 'warning'
+    if ( isAfterDueDate(date) )
+      ret = 'danger'
+    if ( isPaid )
+      ret = 'paid'
 
-  return ret
-}
+    return ret
+  }
 
-const title = (mode = '') => {
-  let ret = ''
+  const title = (mode = '') => {
+    let ret = ''
 
-  if ( mode.includes('warning') )
-    ret ='Expense is due'
-  if ( mode.includes('danger') )
-    ret = 'Expense due date has expired'
-  if ( mode.includes('paid') )
-    ret = 'Expense is paid'
+    if ( mode.includes('warning') )
+      ret ='Expense is due'
+    if ( mode.includes('danger') )
+      ret = 'Expense due date has expired'
+    if ( mode.includes('paid') )
+      ret = 'Expense is paid'
 
-  return ret
-}
+    return ret
+  }
+
+  const onSelectedRows = (key: number[]) => {
+    checkedRows.value = props.rows.filter((r, index) => key.includes(index + 1))
+    emit('selected-rows', checkedRows.value)
+  }
+
+  const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
+
+  const doSearch = () => useExpenseStore().doSearch(0, 10, 'id', 'asc', new Date(useExpenseStore().endOfMonth))
 </script>
 
 <style scoped>
