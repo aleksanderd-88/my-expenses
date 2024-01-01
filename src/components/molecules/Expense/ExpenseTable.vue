@@ -17,12 +17,8 @@
       :is-loading="table.isLoading"
       :columns="table.columns"
       :rows="filteredRows"
-      :total-row-count="totalRowCount"
       :sortable="table.sortable"
-      @do-search="doSearch()"
-      @row-clicked="rowClicked($event)"
-      @return-checked-rows="onSelectedRows($event)"
-      :calculated-total-expense="calculatedTotalExpense"
+      @selected-rows="$emit('selectedRows', $event)"
     />
 
     <ExpenseDetails />
@@ -32,11 +28,11 @@
 <script setup lang="ts">
 import ExpenseDetails from '@/components/molecules/Expense/ExpenseDetails.vue'
 import { useExpenseStore } from '@/stores/expense'
-import { computed, watch, ref } from 'vue'
+import { computed, watch } from 'vue'
 import { useTableStore, type ModeTypes } from '@/stores/table';
 import { useCategoryStore } from '@/stores/category';
 import CategoryExpenses from '@/components/molecules/Category/CategoryExpenses.vue';
-import TableLight from '../Table/TableLight.vue';
+import TableLight from '@/components/molecules/Table/TableLight.vue';
 
 type RowType = {
   _id: string
@@ -51,19 +47,7 @@ type RowType = {
   categoryId: string
 }
 
-const props = defineProps({
-  resetSelection: {
-    type: Boolean,
-    default: false
-  }
-})
-
-const emit = defineEmits<{
-  (event: 'selectedRows', values: RowType[]): void
-}>()
-
 const table = useExpenseStore().table
-const checkedRows = ref([] as RowType[])
 
 watch(() => useTableStore().mode.includes('list'), val => {
   if ( val ) {
@@ -74,18 +58,8 @@ watch(() => useTableStore().mode.includes('list'), val => {
   }
 })
 
-watch(() => props.resetSelection, val => {
-  if ( val ) {
-    onSelectedRows([])
-  }
-})
-
 const tableView = computed(() => useTableStore().mode as ModeTypes)
 const categoryMode = computed(() => tableView.value === 'category')
-
-const calculatedTotalExpense = computed(() => {
-  return table.rows.reduce((sum, item) => sum += item.cost, 0)
-})
 
 const tableTitle = computed(() => {
   let title = 'All expenses'
@@ -121,17 +95,6 @@ const filteredRows = computed(() => {
 
   return items
 })
-
-const totalRowCount = computed(() => filteredRows.value.length)
-
-const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
-
-const doSearch = () => useExpenseStore().doSearch(0, 10, 'id', 'asc', new Date(useExpenseStore().endOfMonth))
-
-const onSelectedRows = (key: number[]) => {
-  checkedRows.value = filteredRows.value.filter((row: RowType, index: number) => key.includes(index + 1))
-  emit('selectedRows', checkedRows.value)
-}
   
 </script>
 
