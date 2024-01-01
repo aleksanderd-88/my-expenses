@@ -8,7 +8,7 @@ import { useIncomeStore } from "./income";
 import pick from "lodash/pick";
 import { useUserStore } from "./user";
 
-type RowType = {
+export type RowType = {
   _id: string
   no: number
   name: string
