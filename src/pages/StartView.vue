@@ -8,22 +8,11 @@
       class="start__date-picker"
     />
     
-    <template v-if="rowsLength">
-      <SearchField
-        :input="searchFieldInput"
-        @input-value="searchFieldInput = $event"
-        placeholder="Search in list"
-        label="Search expenses"
-        bottom-bar
-        clearable
-        icon="search"
-      />
-
-      <ExpenseTable
-        :reset-selection="resetSelection"
-        @selected-rows="onSelectedRows($event)" 
-      />
-    </template>
+    <ExpenseTable
+      v-if="rowsLength"
+      :reset-selection="resetSelection"
+      @selected-rows="onSelectedRows($event)" 
+    />
 
     <div class="start__actions" :class="modifiedClass">
       <LvOverlayPanel 
@@ -126,14 +115,12 @@ import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import EditOptions from '@/components/molecules/EditOptions.vue';
 import { useAppMenu } from '@/stores/menu';
-import SearchField from '@/components/molecules/Search/SearchField.vue';
 
 const op = ref()
 const multiSelectButtonVisible = ref(false)
 const editOptionsVisibility = ref(false)
 const selectedRows = ref()
 const resetSelection = ref(false)
-const searchFieldInput = ref('')
 
 watch(() => editOptionsVisibility.value, value => {
   if ( !value ) {
