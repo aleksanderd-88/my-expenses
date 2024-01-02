@@ -1,12 +1,15 @@
 <template>
-  <lv-input 
-    type="text" 
-    v-model="inputValue" 
-    :label="label" 
-    :placeholder="placeholder" 
-    :bottom-bar="bottomBar"
-    :clearable="clearable"
-  />
+  <div class="search-field__wrapper">
+    <LvInput 
+      type="text" 
+      v-model="inputValue" 
+      :label="label" 
+      :placeholder="placeholder" 
+      :bottom-bar="bottomBar"
+      :clearable="clearable"
+      :icon-left="icon ? `light-icon-${ icon }` : null"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
@@ -32,6 +35,10 @@ import { computed } from 'vue';
     clearable: {
       type: Boolean,
       default: false
+    },
+    icon: {
+      type: String,
+      default: null
     }
   })
 
@@ -45,6 +52,12 @@ import { computed } from 'vue';
   })
 </script>
 
-<style scoped>
-
+<style lang="scss">
+  .search-field {
+    &__wrapper {
+      margin: 4rem 0 0;
+      width: 100%;
+      max-width: 300px;
+    }
+  }
 </style>

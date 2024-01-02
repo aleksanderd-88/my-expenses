@@ -10,10 +10,13 @@
     
     <template v-if="rowsLength">
       <SearchField
-        v-model="searchFieldInput"
-        placeholder="Search expense"
+        :input="searchFieldInput"
+        @input-value="searchFieldInput = $event"
+        placeholder="Search in list"
+        label="Search expenses"
         bottom-bar
         clearable
+        icon="search"
       />
 
       <ExpenseTable
