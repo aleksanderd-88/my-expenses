@@ -2,24 +2,21 @@
   <div class="search-field__wrapper">
     <LvInput 
       type="text" 
-      v-model="inputValue" 
-      :label="label" 
+      :label="label"
       :placeholder="placeholder" 
       :bottom-bar="bottomBar"
       :clearable="clearable"
       :icon-left="icon ? `light-icon-${ icon }` : null"
+      v-model="input"
+      @update:modelValue="search()"
     />
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref } from 'vue';
 
-  const props = defineProps({
-    input: {
-      type: String,
-      default: null
-    },
+  defineProps({
     label: {
       type: String,
       default: null
@@ -43,13 +40,12 @@ import { computed } from 'vue';
   })
 
   const emit = defineEmits<{
-    (event: 'input-value', payload: string): void
+    (event: 'search', payload: string): void
   }>()
 
-  const inputValue = computed({
-    get: () => props.input,
-    set: val => emit('input-value', val)
-  })
+  const input = ref('')
+
+  const search = () => emit('search', input.value)
 </script>
 
 <style lang="scss">
@@ -57,7 +53,7 @@ import { computed } from 'vue';
     &__wrapper {
       margin: 4rem 0 0;
       width: 100%;
-      max-width: 300px;
+      max-width: 400px;
     }
   }
 </style>
