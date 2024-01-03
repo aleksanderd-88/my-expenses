@@ -7,8 +7,8 @@
       hide-input-icon
       class="start__date-picker"
     />
-
-    <ExpenseTable 
+    
+    <ExpenseTable
       v-if="rowsLength"
       :reset-selection="resetSelection"
       @selected-rows="onSelectedRows($event)" 
