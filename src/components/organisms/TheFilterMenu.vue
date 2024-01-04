@@ -8,7 +8,7 @@
         @click.stop="closeFilterMenu()"
       />
           
-      <h1 class="filter-menu__headline">Expense presets</h1>
+      <h1 class="filter-menu__headline">Choose preset</h1>
   
       <ul class="filter-menu__list">
         <li 
@@ -73,7 +73,7 @@ const items: ItemPropType[] = reactive([
 ])
 
 const presetTitles: PresetTitlePropType[] = reactive([
-  { title: 'Views', modes: ['list', 'category'] },
+  { title: 'List', modes: ['list', 'category'] },
   { title: 'Status', modes: ['paid', 'unpaid'] },
 ])
 
