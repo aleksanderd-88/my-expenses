@@ -7,6 +7,7 @@ import { useToastStore } from "./toast";
 import { useIncomeStore } from "./income";
 import pick from "lodash/pick";
 import { useUserStore } from "./user";
+import { useLoadingStore } from "./loader";
 
 export type RowType = {
   _id: string
@@ -95,7 +96,16 @@ export const useExpenseStore = defineStore('expense', () => {
       return resetDialog()
   })
 
-  
+  watch(() => table.rows, value => {
+    if ( useLoadingStore().isLoading && !value.length ) {
+      useLoadingStore().setLoading(true)
+    } else {
+      useLoadingStore().setLoading(false)
+    }
+  }, {
+    immediate: true
+  })
+
   const copyPrevious = ref(false)
   const expense = computed(() => data)
   const rowsLength = computed(() => table.rows.length)
