@@ -97,7 +97,7 @@ export const useExpenseStore = defineStore('expense', () => {
   })
 
   watch(() => table.rows, value => {
-    if ( useLoadingStore().isLoading && !value.length ) {
+    if ( !useLoadingStore().isLoading && !value.length ) {
       useLoadingStore().setLoading(true)
     } else {
       useLoadingStore().setLoading(false)
