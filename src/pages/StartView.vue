@@ -7,8 +7,8 @@
       hide-input-icon
       class="start__date-picker"
     />
-
-    <ExpenseTable 
+    
+    <ExpenseTable
       v-if="rowsLength"
       :reset-selection="resetSelection"
       @selected-rows="onSelectedRows($event)" 
@@ -129,9 +129,11 @@ watch(() => editOptionsVisibility.value, value => {
   }
 })
 
-useIncomeStore().getIncome()
-useIncomeStore().listIncome()
-useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
+Promise.all([
+  useIncomeStore().getIncome(),
+  useIncomeStore().listIncome(),
+  useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
+])
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
