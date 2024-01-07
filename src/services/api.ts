@@ -34,7 +34,9 @@ client.interceptors.request.use(req => {
 })
 
 client.interceptors.response.use(res => {
-  useLoadingStore().setLoading(false)
+  if ( res.statusText === 'OK' ) {
+    useLoadingStore().setLoading(false)
+  }
   return res
 }, err => {
   console.log(err);
