@@ -115,6 +115,7 @@ import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import EditOptions from '@/components/molecules/EditOptions.vue';
 import { useAppMenu } from '@/stores/menu';
+import { useLoadingStore } from '@/stores/loader';
 
 const op = ref()
 const multiSelectButtonVisible = ref(false)
@@ -129,11 +130,17 @@ watch(() => editOptionsVisibility.value, value => {
   }
 })
 
-Promise.all([
-  useIncomeStore().getIncome(),
-  useIncomeStore().listIncome(),
-  useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
-])
+const init = () => {
+  useLoadingStore().setLoading(true)
+  Promise.all([
+    useIncomeStore().getIncome(),
+    useIncomeStore().listIncome(),
+    useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
+  ])
+  .then(() => useLoadingStore().setLoading(false))
+}
+
+init()
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')

@@ -34,10 +34,7 @@ client.interceptors.request.use(req => {
 })
 
 client.interceptors.response.use(res => {
-  console.log(res);
-  if ( res.data ) {
-    useLoadingStore().setLoading(false)
-  }
+  useLoadingStore().setLoading(false)
   return res
 }, err => {
   console.log(err);
