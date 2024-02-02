@@ -1,21 +1,33 @@
 <template>
   <LvDialog 
-    header="Handle row(s)" 
+    :header="dialogTitle" 
     v-model="visible"
     :style="{ 
       width: '95%',
-      maxWidth: '400px'
+      maxWidth: '450px'
     }"
   >
-    <BaseButton 
+    <template #footer>
+      <BaseButton 
       icon="x" 
       class="lv-button--ml-10"
       @click="onDeleteRows()"
       danger
-      :style="{ marginTop: '1rem !important', marginLeft: 'auto !important' }"
+      :style="{ marginTop: '1rem !important' }"
     >
-      Delete
+      Delete selected
     </BaseButton>
+
+    <BaseButton 
+      icon="thumb-up" 
+      class="lv-button--ml-10"
+      @click.stop
+      success
+      :style="{ marginTop: '1rem !important' }"
+    >
+      {{ markExpenseLabel }}
+    </BaseButton>
+  </template>
   </LvDialog>
 </template>
 
@@ -23,7 +35,7 @@
 import LvDialog from 'lightvue/dialog'
 import BaseButton from '@/components/atoms/BaseButton.vue'
 import { computed, type PropType } from 'vue'
-import { useExpenseStore } from '@/stores/expense';
+import { useExpenseStore, type RowType } from '@/stores/expense';
 
 const props = defineProps({
   isVisible: {
@@ -43,6 +55,12 @@ const emit = defineEmits<{
 const visible = computed({
   get: () => props.isVisible,
   set: () => emit('close')
+})
+
+const dialogTitle = computed(() => `${ props.selectedRows.length } ${ props.selectedRows.length < 2 ? 'row' : 'rows' } selected`)
+
+const markExpenseLabel = computed(() => {
+  return `Handle ${ props.selectedRows.length < 2 ? 'payment' : 'payments'}`
 })
 
 const onDeleteRows = () => {
