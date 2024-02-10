@@ -9,25 +9,26 @@
   >
     <template #footer>
       <BaseButton 
-      icon="x" 
-      class="lv-button--ml-10"
-      @click="onDeleteRows()"
-      danger
-      :style="{ marginTop: '1rem !important' }"
-    >
-      Delete selected
-    </BaseButton>
+        icon="x" 
+        class="lv-button--ml-10"
+        @click="onDeleteRows()"
+        danger
+        :style="{ marginTop: '1rem !important' }"
+      >
+        Delete selected
+      </BaseButton>
 
-    <BaseButton 
-      icon="thumb-up" 
-      class="lv-button--ml-10"
-      @click.stop
-      success
-      :style="{ marginTop: '1rem !important' }"
-    >
-      {{ markExpenseLabel }}
-    </BaseButton>
-  </template>
+      <BaseButton 
+        icon="thumb-up" 
+        class="lv-button--ml-10"
+        @click.stop="onHandlePayments()"
+        success
+        :style="{ marginTop: '1rem !important' }"
+      >
+        {{ markExpenseLabel }}
+      </BaseButton>
+    </template>
+
   </LvDialog>
 </template>
 
@@ -50,6 +51,7 @@ const props = defineProps({
 
 const emit = defineEmits<{
   (event: 'close'): void
+  (event: 'handle-payments'): void
 }>()
 
 const visible = computed({
@@ -60,12 +62,17 @@ const visible = computed({
 const dialogTitle = computed(() => `${ props.selectedRows.length } ${ props.selectedRows.length < 2 ? 'row' : 'rows' } selected`)
 
 const markExpenseLabel = computed(() => {
-  return `Handle ${ props.selectedRows.length < 2 ? 'payment' : 'payments'}`
+  return `Handle ${ props.selectedRows.length < 2 ? 'expense' : 'expenses'}`
 })
 
 const onDeleteRows = () => {
   useExpenseStore().deleteSelectedExpenses(props.selectedRows)
   ?.then(() => emit('close'))
+}
+
+const onHandlePayments = () => {
+  emit('handle-payments')
+  emit('close')
 }
 </script>
 

@@ -89,6 +89,7 @@
       :is-visible="editOptionsVisibility"
       :selected-rows="selectedRows"
       @close="editOptionsVisibility = false"
+      @handle-payments="expenseListIsVisible = true"
     />
 
     <ExpenseDialog />
@@ -96,6 +97,12 @@
     <IncomeDialog />
 
     <CategoryDialog />
+
+    <ExpenseList
+      :expenses="selectedRows"
+      :is-visible="expenseListIsVisible"
+      @set-visibility="expenseListIsVisible = $event"
+    />
   </div>
 </template>
 
@@ -116,12 +123,14 @@ import { useUserStore } from '@/stores/user';
 import EditOptions from '@/components/molecules/EditOptions.vue';
 import { useAppMenu } from '@/stores/menu';
 import { useLoadingStore } from '@/stores/loader';
+import ExpenseList from '@/components/molecules/Expense/ExpenseList/ExpenseList.vue';
 
 const op = ref()
 const multiSelectButtonVisible = ref(false)
 const editOptionsVisibility = ref(false)
 const selectedRows = ref()
 const resetSelection = ref(false)
+const expenseListIsVisible = ref(false)
 
 watch(() => editOptionsVisibility.value, value => {
   if ( !value ) {
