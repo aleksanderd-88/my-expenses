@@ -47,9 +47,10 @@ export const useExpenseStore = defineStore('expense', () => {
     year: new Date().getFullYear()
   })
   const endOfMonth = computed(() => Sugar.Date(expenseMonth.value).endOfMonth().raw)
+  const isLoading = computed(() => useLoadingStore().isLoading)
 
   const table = reactive({
-    isLoading: false,
+    isLoading: !isLoading.value,
     columns: [
       {
         label: "No.",
