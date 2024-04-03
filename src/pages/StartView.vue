@@ -86,12 +86,8 @@ onBeforeRouteUpdate(() => {
 })
 
 const onSelectedRows = (values: Record<string, unknown>[]) => {
-  multiSelectButtonVisible.value = false
-
-  if ( values.length ) {
-    selectedRows.value = values
-    multiSelectButtonVisible.value = true
-  }
+  multiSelectButtonVisible.value = values.length ? true : false
+  selectedRows.value = values
 }
 </script>
 
