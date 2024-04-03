@@ -65,11 +65,11 @@ watch(() => editOptionsVisibility.value, value => {
 const init = () => {
   useLoadingStore().setLoading(true)
   Promise.all([
+    useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw),
     useIncomeStore().getIncome(),
     useIncomeStore().listIncome(),
-    useExpenseStore().doSearch(0, 10, 'id', 'asc', Sugar.Date(useExpenseStore().expenseMonth).endOfMonth().raw)
   ])
-  .then(() => useLoadingStore().setLoading(false))
+  .finally(() => useLoadingStore().setLoading(false))
 }
 
 init()
