@@ -104,11 +104,6 @@ const onSelectedRows = (values: Record<string, unknown>[]) => {
       top: -10px;
       z-index: 2;
     }
-    
-    &__caption {
-      width: 100%;
-      text-align: center;
-    }
 
     &__actions {
       position: fixed;
