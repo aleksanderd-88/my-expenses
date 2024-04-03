@@ -14,76 +14,11 @@
       @selected-rows="onSelectedRows($event)" 
     />
 
-    <div class="start__actions" :class="modifiedClass">
-      <LvOverlayPanel 
-        ref="op" 
-        class="start__panel"
-        align-right
-      >
-        <ul class="start__options">
-          <li class="start__option">
-            <BaseButton 
-              icon="stack"
-              icon-left
-              class="start__action-btn"
-              @click="displayExpenseDialog()"
-            >
-              Add expenses
-            </BaseButton>
-          </li>
-
-          <li class="start__option">
-            <BaseButton 
-              icon="currency-euro"
-              icon-left
-              class="start__action-btn"
-              @click="displayIncomeDialog()"
-            >
-              Update income
-            </BaseButton>
-          </li>
-
-          <li class="start__option">
-            <BaseButton 
-              icon="file-check"
-              icon-left
-              class="start__action-btn"
-              @click="displayCategoryDialog()"
-            >
-              {{ useCategoryStore().categories.length ? 'Add/edit category' : 'Add category' }}
-            </BaseButton>
-          </li>
-        </ul>
-      </LvOverlayPanel>
-
-      <div class="start__action-btns">
-        <BaseButton 
-          class="start__add-btn lv-button--center-content" 
-          icon="edit" 
-          deep-shadow
-          success
-          title="Edit row(s)"
-          @click="editOptionsVisibility = true"
-          :disabled="!multiSelectButtonVisible"
-        />
-
-        <BaseButton 
-          class="start__add-btn lv-button--center-content" 
-          icon="filter" 
-          deep-shadow
-          primary
-          @click="toggleFilterMenu()"
-          :disabled="!Boolean(useCategoryStore().expensesWithCategories)"
-        />
-    
-        <BaseButton 
-          class="start__add-btn lv-button--center-content" 
-          icon="plus" 
-          deep-shadow
-          @click="togglePanel($event)"
-        />
-      </div>
-    </div>
+    <ExpenseActionPanel
+      class="start__actions"
+      @on-edit="editOptionsVisibility = true"
+      :edit-button-disabled="!multiSelectButtonVisible"
+    />
 
     <EditOptions
       :is-visible="editOptionsVisibility"
@@ -100,8 +35,6 @@
 </template>
 
 <script setup lang="ts">
-import BaseButton from '@/components/atoms/BaseButton.vue'
-import LvOverlayPanel  from 'lightvue/overlay-panel'
 import { ref, computed, watch } from 'vue'
 import ExpenseTable from '@/components/molecules/Expense/ExpenseTable.vue'
 import ExpenseDialog from '@/components/molecules/Expense/ExpenseDialog.vue';
@@ -114,10 +47,9 @@ import { useCategoryStore } from '@/stores/category';
 import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import EditOptions from '@/components/molecules/EditOptions.vue';
-import { useAppMenu } from '@/stores/menu';
 import { useLoadingStore } from '@/stores/loader';
+import ExpenseActionPanel from '@/components/molecules/panels/ExpenseActionPanel.vue';
 
-const op = ref()
 const multiSelectButtonVisible = ref(false)
 const editOptionsVisibility = ref(false)
 const selectedRows = ref()
@@ -143,33 +75,6 @@ const init = () => {
 init()
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
-const modifiedClass = computed(() => rowsLength.value && 'start__actions--bottom-margin')
-
-const toggleFilterMenu = () => {
-  const filterMenuIsVisible = useAppMenu().filterMenuIsVisible
-  let setOpen = false
-  if ( !filterMenuIsVisible )
-    setOpen = true
-  useAppMenu().setFilterMenuVisibility(setOpen)
-}
-
-const togglePanel = (event: Event) => op.value.toggle(event)
-
-const displayExpenseDialog = () => {
-  togglePanel(op.value)
-  useExpenseStore().editMode = false
-  useExpenseStore().expenseDialogVisible = true
-}
-
-const displayIncomeDialog = () => {
-  togglePanel(op.value)
-  useIncomeStore().incomeDialogVisible = true
-}
-
-const displayCategoryDialog = () => {
-  togglePanel(op.value)
-  useCategoryStore().categoryDialogVisible = true
-}
 
 useCategoryStore().listCategories()
 useUserStore().getUser(useUserStore().currentUser?._id as string)
@@ -222,35 +127,6 @@ const onSelectedRows = (values: Record<string, unknown>[]) => {
       &--bottom-margin {
         bottom: calc(90px + 1rem)
       }
-    }
-
-    &__add-btn {
-      width: 70px;
-      height: 70px;
-      border-radius: 50%;
-    }
-
-    &__panel {
-      right: 0 !important;
-      left: unset !important;
-      top: unset !important;
-      bottom: calc(70px + .5rem) !important;
-    }
-
-    &__options {
-      display: flex;
-      flex-direction: column;
-      gap: .5rem;
-    }
-
-    &__action-btns {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    &__action-btn {
-      width: 100%;
     }
   }
 </style>
