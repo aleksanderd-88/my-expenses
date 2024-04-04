@@ -43,7 +43,7 @@ import { onBeforeRouteUpdate } from 'vue-router';
 import { useUserStore } from '@/stores/user';
 import EditOptions from '@/components/molecules/EditOptions.vue';
 import { useLoadingStore } from '@/stores/loader';
-import ExpenseActionPanel from '@/components/molecules/panels/ExpenseActionPanel.vue';
+import ExpenseActionPanel from '@/components/molecules/Panels/ExpenseActionPanel.vue';
 
 const multiSelectButtonVisible = ref(false)
 const editOptionsVisibility = ref(false)
