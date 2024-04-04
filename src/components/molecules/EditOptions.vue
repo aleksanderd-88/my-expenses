@@ -22,17 +22,13 @@
 <script setup lang="ts">
 import LvDialog from 'lightvue/dialog'
 import BaseButton from '@/components/atoms/BaseButton.vue'
-import { computed, type PropType } from 'vue'
+import { computed } from 'vue'
 import { useExpenseStore } from '@/stores/expense';
 
 const props = defineProps({
   isVisible: {
     type: Boolean,
     default: false
-  },
-  selectedRows: {
-    type: Array as PropType<{ _id: string }[]>,
-    default: () => ([])
   }
 })
 
@@ -45,9 +41,10 @@ const visible = computed({
   set: () => emit('close')
 })
 
+const selectedRows = computed(() => useExpenseStore().selectedRows)
+
 const onDeleteRows = () => {
-  useExpenseStore().deleteSelectedExpenses(props.selectedRows)
-  ?.then(() => emit('close'))
+  useExpenseStore().deleteSelectedExpenses(selectedRows.value)
 }
 </script>
 

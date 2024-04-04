@@ -8,11 +8,7 @@
       class="start__date-picker"
     />
     
-    <ExpenseTable
-      v-if="rowsLength"
-      :reset-selection="resetSelection"
-      @selected-rows="onSelectedRows($event)" 
-    />
+    <ExpenseTable v-if="rowsLength" />
 
     <ExpenseActionPanel
       class="start__actions"
@@ -22,7 +18,6 @@
 
     <EditOptions
       :is-visible="editOptionsVisibility"
-      :selected-rows="selectedRows"
       @close="editOptionsVisibility = false"
     />
 
@@ -52,14 +47,14 @@ import ExpenseActionPanel from '@/components/molecules/panels/ExpenseActionPanel
 
 const multiSelectButtonVisible = ref(false)
 const editOptionsVisibility = ref(false)
-const selectedRows = ref()
-const resetSelection = ref(false)
 
 watch(() => editOptionsVisibility.value, value => {
-  if ( !value ) {
+  if ( !value )
     multiSelectButtonVisible.value = false
-    resetSelection.value = true
-  }
+})
+
+watch(() => useExpenseStore().selectedRows, value => {
+    multiSelectButtonVisible.value = value.length ? true : false
 })
 
 const init = () => {
@@ -84,11 +79,6 @@ onBeforeRouteUpdate(() => {
   useUserStore().getUser(useUserStore().currentUser?._id as string)
   return true
 })
-
-const onSelectedRows = (values: Record<string, unknown>[]) => {
-  multiSelectButtonVisible.value = values.length ? true : false
-  selectedRows.value = values
-}
 </script>
 
 <style lang="scss" scoped>

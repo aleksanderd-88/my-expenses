@@ -99,6 +99,7 @@ export const useExpenseStore = defineStore('expense', () => {
   const expense = computed(() => data)
   const rowsLength = computed(() => table.rows.length)
   const expenseIsPaid = computed(() => rowData.value?.isPaid)
+  const selectedRows = ref<{ _id: string }[]>([])
   
   const doSearch = (offset: number, limit: number, order: string, sort: string, date: Date) => {
     console.log(offset, limit, order, sort, date);
@@ -317,6 +318,7 @@ export const useExpenseStore = defineStore('expense', () => {
     endOfMonth,
     clearAll,
     updateSelectedExpenses,
-    deleteSelectedExpenses
+    deleteSelectedExpenses,
+    selectedRows
   }
 })
