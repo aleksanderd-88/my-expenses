@@ -92,7 +92,7 @@ const displayCategoryDialog = () => {
     <div class="action-panel__action-btns">
       <BaseButton 
         class="action-panel__add-btn lv-button--center-content" 
-        icon="edit" 
+        icon="selector" 
         deep-shadow
         success
         title="Edit row(s)"
