@@ -1,4 +1,3 @@
-import { useToastStore } from '@/stores/toast'
 import { useUserStore } from '@/stores/user'
 import axios, { type AxiosResponse } from 'axios'
 import { useRouter } from 'vue-router'
@@ -26,7 +25,6 @@ client.interceptors.request.use(req => {
 
   if ( [401, 403].includes(err.response?.status) ) {
     useUserStore().clearUser()
-    useToastStore().setToast(true, err.response.data, true)
     useRouter().replace({ name: 'login' })
   }
 
@@ -42,7 +40,6 @@ client.interceptors.response.use(res => {
   
   if ( [401, 403].includes(err.response?.status) ) {
     useUserStore().clearUser()
-    useToastStore().setToast(true, err.response.data, true)
     useRouter().replace({ name: 'login' })
   }
 

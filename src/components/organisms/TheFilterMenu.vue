@@ -1,5 +1,5 @@
 <template>
-  <AppOverlay :is-visible="useAppMenu().filterMenuIsVisible">
+  <AppOverlay :is-visible="useAppMenu().filterMenuIsVisible" theme-dark>
     <div class="filter-menu" :class="modifiedClass" ref="menu">
       <BaseButton
         icon="x"

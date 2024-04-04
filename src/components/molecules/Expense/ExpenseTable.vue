@@ -7,7 +7,6 @@
         :key="item._id"
         :category-id="item._id"
         :table-title="item.label"
-        @selected-rows="$emit('selected-rows', $event)"
       />
     </template>
 
@@ -27,7 +26,6 @@
         :columns="table.columns"
         :rows="filteredRows"
         :sortable="table.sortable"
-        @selected-rows="$emit('selected-rows', $event)"
       />
     </template>
 

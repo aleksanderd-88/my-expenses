@@ -5,7 +5,6 @@
     :columns="table.columns"
     :rows="filteredCategoryRows"
     :sortable="table.sortable"
-    @selected-rows="$emit('selected-rows', $event)"
   />
 </template>
 

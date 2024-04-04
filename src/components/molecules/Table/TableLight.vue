@@ -50,7 +50,7 @@
 import AppIndicator from '@/components/atoms/AppIndicator.vue';
 import { useExpenseStore } from '@/stores/expense';
 import Sugar from 'sugar-date'
-import { computed, ref, watch, type PropType } from 'vue';
+import { computed, type PropType } from 'vue';
 import { type RowType } from '@/stores/expense';
 
   const props = defineProps({
@@ -88,20 +88,7 @@ import { type RowType } from '@/stores/expense';
     },
   })
 
-
-  const emit = defineEmits<{
-    (event: 'selected-rows', values: RowType[]): void
-  }>()
-
-
   const table = useExpenseStore().table
-  const checkedRows = ref([] as RowType[])
-
-  watch(() => props.resetSelection, val => {
-    if ( val ) {
-      onSelectedRows([])
-    }
-  })
 
   const totalRowCount = computed(() => props.rows.length)
 
@@ -144,8 +131,7 @@ import { type RowType } from '@/stores/expense';
   }
 
   const onSelectedRows = (key: number[]) => {
-    checkedRows.value = props.rows.filter((r, index) => key.includes(index + 1))
-    emit('selected-rows', checkedRows.value)
+    useExpenseStore().selectedRows = props.rows.filter((r, index) => key.includes(index + 1))
   }
 
   const rowClicked = (row: RowType) => useExpenseStore().setRowData(row)
