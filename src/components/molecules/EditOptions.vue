@@ -48,6 +48,9 @@ const titleLabel = computed(() => `${ selectedItemCount.value } ${ selectedItemC
 const selectedRows = computed(() => useExpenseStore().selectedRows)
 
 const onDeleteRows = () => {
+  if ( !confirm('This will delete the selected item(s). Continue?') )
+    return
+  
   useExpenseStore().deleteSelectedExpenses(selectedRows.value)
 }
 </script>
