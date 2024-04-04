@@ -1,6 +1,6 @@
 <template>
   <LvDialog 
-    header="Handle row(s)" 
+    :header="titleLabel" 
     v-model="visible"
     :style="{ 
       width: '95%',
@@ -40,6 +40,10 @@ const visible = computed({
   get: () => props.isVisible,
   set: () => emit('close')
 })
+
+const selectedItemCount = computed(() => useExpenseStore().selectedRows.length)
+
+const titleLabel = computed(() => `${ selectedItemCount.value } ${ selectedItemCount.value > 1 ? 'items' : 'item' } selected`)
 
 const selectedRows = computed(() => useExpenseStore().selectedRows)
 
