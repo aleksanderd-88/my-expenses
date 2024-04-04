@@ -1,4 +1,3 @@
-import { useToastStore } from '@/stores/toast'
 import { useUserStore } from '@/stores/user'
 import axios, { type AxiosResponse } from 'axios'
 import { useRouter } from 'vue-router'
