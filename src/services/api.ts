@@ -26,7 +26,6 @@ client.interceptors.request.use(req => {
 
   if ( [401, 403].includes(err.response?.status) ) {
     useUserStore().clearUser()
-    useToastStore().setToast(true, err.response.data, true)
     useRouter().replace({ name: 'login' })
   }
 
@@ -42,7 +41,6 @@ client.interceptors.response.use(res => {
   
   if ( [401, 403].includes(err.response?.status) ) {
     useUserStore().clearUser()
-    useToastStore().setToast(true, err.response.data, true)
     useRouter().replace({ name: 'login' })
   }
 
