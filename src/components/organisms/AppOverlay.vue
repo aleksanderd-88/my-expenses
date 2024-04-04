@@ -11,10 +11,22 @@ import { computed } from 'vue';
     isVisible: {
       type: Boolean,
       default: false
+    },
+    themeDark: {
+      type: Boolean,
+      default: false
     }
   })
 
-  const modifiedClass = computed(() => props.isVisible && 'app-overlay--visible')
+  const modifiedClass = computed(() => {
+    let className = ''
+    if ( props.isVisible ) 
+      className += ' app-overlay--visible'
+    if ( props.themeDark )
+      className += ' app-overlay--theme-dark'
+
+    return className
+  })
 </script>
 
 <style lang="scss" scoped>
@@ -26,10 +38,14 @@ import { computed } from 'vue';
     right: 0;
     z-index: 2;
     visibility: hidden;
-    transition: all .25s ease;
+    transition: background-color .25s, visibility .25s ease;
 
     &--visible {
       visibility: visible;
+    }
+
+    &--theme-dark {
+      background-color: rgba(#000, .5);
     }
   }
 </style>
