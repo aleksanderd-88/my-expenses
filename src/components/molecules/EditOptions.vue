@@ -50,8 +50,9 @@ const selectedRows = computed(() => useExpenseStore().selectedRows)
 const onDeleteRows = () => {
   if ( !confirm('This will delete the selected item(s). Continue?') )
     return
-  
+
   useExpenseStore().deleteSelectedExpenses(selectedRows.value)
+    ?.then(() => visible.value = false)
 }
 </script>
 
