@@ -9,6 +9,7 @@ import router from '@/router'
 import LvButton from 'lightvue/button'
 import LvDialog from 'lightvue/dialog'
 import LvInput from 'lightvue/input'
+import LvSkeleton from 'lightvue/skeleton'
 import VueTableLite from "vue3-table-lite"
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css'
@@ -24,5 +25,6 @@ app.component('LvDialog', LvDialog)
 app.component('LvInput', LvInput)
 app.component('TableLite', VueTableLite)
 app.component('VueDatePicker', VueDatePicker)
+app.component('LvSkeleton', LvSkeleton)
 
 app.mount('#app')

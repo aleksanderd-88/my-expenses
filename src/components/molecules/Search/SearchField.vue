@@ -1,6 +1,9 @@
 <template>
   <div class="search-field__wrapper">
-    <LvInput 
+    <ShimmerSearchField v-if="isLoading" />
+
+    <LvInput
+      v-else
       type="text" 
       :label="label"
       :placeholder="placeholder" 
@@ -14,7 +17,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
+import ShimmerSearchField from '../Shimmer/ShimmerSearchField.vue';
+import { useLoadingStore } from '@/stores/loader';
 
   defineProps({
     label: {
@@ -44,8 +49,11 @@ import { ref } from 'vue';
   }>()
 
   const input = ref('')
+  const loadingStore = useLoadingStore()
 
   const search = () => emit('search', input.value)
+
+  const isLoading = computed(() => loadingStore.isLoading)
 </script>
 
 <style lang="scss">

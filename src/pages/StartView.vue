@@ -71,8 +71,8 @@ init()
 
 const rowsLength = computed(() => useExpenseStore().rowsLength)
 
-useCategoryStore().listCategories()
 useUserStore().getUser(useUserStore().currentUser?._id as string)
+useCategoryStore().listCategories()
 
 onBeforeRouteUpdate(() => {
   useCategoryStore().listCategories()
